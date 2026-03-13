@@ -1,0 +1,244 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useCartStore } from "@/lib/store/useCartStore";
+import { useRouter } from "next/navigation";
+import { ShieldCheck, Lock, ArrowLeft, CheckCircle, Globe2 } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { getUserLocation, GeoData } from "@/lib/geo";
+
+export default function CheckoutPage() {
+  const [mounted, setMounted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [geo, setGeo] = useState<GeoData | null>(null);
+  
+  const [formData, setFormData] = useState({
+    firstName: "", lastName: "", email: "", address: "", city: "", zip: ""
+  });
+
+  const { items, getTotalPrice, clearCart } = useCartStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+    getUserLocation().then(data => setGeo(data));
+  }, []);
+
+  if (!mounted || !geo) return null; // Wait for geo resolution
+
+  // Adjust total based on currency (Mock conversion rate for Paystack NGN: 1 GBP = 1500 NGN)
+  const baseTotalPrice = getTotalPrice();
+  const exchangeRate = geo.isNigeria ? 1500 : 1;
+  const displayTotalPrice = baseTotalPrice * exchangeRate;
+  
+  // Format items for the API with the converted prices if needed
+  const checkoutItems = items.map(item => ({
+    ...item,
+    price: item.price * exchangeRate
+  }));
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center font-sans">
+        <div className="h-[80px]"></div>
+        <div className="text-center py-24 space-y-8">
+          <p className="text-[20px] text-[#1A1A1D]/60 uppercase tracking-widest italic font-serif">Your bag is currently empty</p>
+          <Link href="/shop" className="inline-block bg-black text-white px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-xl">
+            Explore The Collection
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handlePlaceOrder = async (provider: 'stripe' | 'paystack') => {
+    // Basic validation
+    if (!formData.email || !formData.firstName || !formData.lastName || !formData.address) {
+      alert("Please fill in all required shipping details.");
+      return;
+    }
+
+    setSubmitting(true);
+    
+    try {
+      const endpoint = provider === 'stripe' ? '/api/checkout/stripe' : '/api/checkout/paystack';
+      
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: checkoutItems,
+          shippingDetails: formData
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Payment initiation failed');
+      }
+
+      // Redirect to Paystack or Stripe Hosted Page
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error("Checkout Error:", error);
+      alert("Failed to initiate checkout. Please try again.");
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-[#1A1A1D] font-sans">
+      <div className="h-[120px]"></div>
+
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-12">
+        <div className="mb-12">
+          <Link href="/cart" className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 hover:text-black transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Back to Bag
+          </Link>
+        </div>
+
+        <div className="grid lg:grid-cols-[1fr_420px] gap-16">
+          {/* Checkout Form */}
+          <div className="space-y-10">
+            <div>
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40 mb-3">Secure Checkout</h3>
+              <h1 className="text-4xl md:text-5xl font-serif uppercase tracking-tighter italic leading-none">Your Order</h1>
+            </div>
+
+            {/* Shipping Details */}
+            <div className="space-y-6">
+              <div className="flex justify-between items-end border-b border-gray-100 pb-4">
+                <h2 className="text-[13px] font-bold uppercase tracking-widest">Shipping Details</h2>
+                <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-[#D5A754]">
+                   <Globe2 className="w-3 h-3" /> Region: {geo.country}
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { label: "First Name", name: "firstName", type: "text", placeholder: "Jane" },
+                  { label: "Last Name", name: "lastName", type: "text", placeholder: "Cooper" },
+                ].map((field) => (
+                  <div key={field.name} className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">{field.label}</label>
+                    <input type={field.type} name={field.name} placeholder={field.placeholder} value={(formData as any)[field.name]} onChange={handleInputChange} required className="w-full h-12 px-4 border border-gray-200 bg-[#FAF9F6] text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
+                  </div>
+                ))}
+                <div className="md:col-span-2 space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Email Address</label>
+                  <input type="email" name="email" placeholder="jane@example.com" value={formData.email} onChange={handleInputChange} required className="w-full h-12 px-4 border border-gray-200 bg-[#FAF9F6] text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
+                </div>
+                <div className="md:col-span-2 space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Shipping Address</label>
+                  <input type="text" name="address" placeholder="123 Luxury Lane" value={formData.address} onChange={handleInputChange} required className="w-full h-12 px-4 border border-gray-200 bg-[#FAF9F6] text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">City</label>
+                  <input type="text" name="city" placeholder="New York" value={formData.city} onChange={handleInputChange} required className="w-full h-12 px-4 border border-gray-200 bg-[#FAF9F6] text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">ZIP / Postal Code</label>
+                  <input type="text" name="zip" placeholder="10001" value={formData.zip} onChange={handleInputChange} className="w-full h-12 px-4 border border-gray-200 bg-[#FAF9F6] text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Details (Geo-Routed) */}
+            <div className="space-y-6">
+              <h2 className="text-[13px] font-bold uppercase tracking-widest border-b border-gray-100 pb-4">Secure Checkout</h2>
+              
+              <div className="p-8 bg-[#FAF9F6] border border-dashed border-gray-200 space-y-6">
+                
+                {geo.isNigeria ? (
+                   // Paystack Checkout Context
+                   <div className="text-center space-y-4">
+                      <Lock className="w-8 h-8 text-[#011B33] mx-auto" />
+                      <div>
+                        <p className="text-[13px] font-bold uppercase tracking-widest text-[#011B33]">Paystack Secure Gateway</p>
+                        <p className="text-[11px] text-[#1A1A1D]/50 mt-1 max-w-sm mx-auto">Pay securely via Bank Transfer, USSD, or Nigerian issued debit cards.</p>
+                      </div>
+                      <Button
+                        onClick={() => handlePlaceOrder('paystack')}
+                        disabled={submitting}
+                        className="w-full bg-[#011B33] hover:bg-[#000F1F] text-white py-8 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl mt-4 rounded-full transition-all"
+                      >
+                        {submitting ? "Initializing Paystack..." : `Pay ${geo.symbol}${displayTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+                      </Button>
+                   </div>
+                ) : (
+                   // Stripe Checkout Context (GBP, Intl)
+                   <div className="text-center space-y-4">
+                      <Lock className="w-8 h-8 text-[#635BFF] mx-auto" />
+                      <div>
+                        <p className="text-[13px] font-bold uppercase tracking-widest text-[#635BFF]">Stripe Verified Check</p>
+                        <p className="text-[11px] text-[#1A1A1D]/50 mt-1 max-w-sm mx-auto">Pay securely with Apple Pay, Google Pay, or any international credit card.</p>
+                      </div>
+                      <Button
+                        onClick={() => handlePlaceOrder('stripe')}
+                        disabled={submitting}
+                        className="w-full bg-[#635BFF] hover:bg-[#4C45D0] text-white py-8 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl mt-4 rounded-full transition-all"
+                      >
+                        {submitting ? "Securing Session..." : `Pay ${geo.symbol}${displayTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+                      </Button>
+                   </div>
+                )}
+                
+              </div>
+            </div>
+          </div>
+
+          {/* Order Summary */}
+          <div className="h-fit lg:sticky lg:top-[160px]">
+            <div className="bg-[#FAF9F6] p-8 border border-gray-100 shadow-sm space-y-8 rounded-[24px]">
+              <div className="flex items-center gap-3">
+                <ShieldCheck className="w-5 h-5 text-[#D5A754]" />
+                <h3 className="text-[12px] font-bold uppercase tracking-widest">Order Summary</h3>
+              </div>
+
+              <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
+                {checkoutItems.map((item, i) => (
+                  <div key={i} className="flex gap-4 items-center">
+                    <div className="w-14 h-18 bg-white border border-gray-100 overflow-hidden rounded-lg shrink-0">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-bold uppercase tracking-widest truncate">{item.name}</p>
+                      <p className="text-[10px] text-[#1A1A1D]/40">Qty: {item.quantity}</p>
+                    </div>
+                    <span className="text-[12px] font-bold">{geo.symbol}{(item.price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-3 border-t border-gray-200 pt-6">
+                <div className="flex justify-between text-[12px]">
+                  <span className="text-[#1A1A1D]/50 uppercase tracking-widest font-bold">Subtotal</span>
+                  <span className="font-bold">{geo.symbol}{displayTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div className="flex justify-between text-[12px]">
+                  <span className="text-[#1A1A1D]/50 uppercase tracking-widest font-bold">Shipping</span>
+                  <span className="font-bold text-[#D5A754] italic uppercase tracking-widest">Free</span>
+                </div>
+                <div className="flex justify-between text-[16px] font-bold border-t border-gray-200 pt-4">
+                  <span className="uppercase tracking-widest">Total</span>
+                  <span className="font-serif italic">{geo.symbol}{displayTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                </div>
+              </div>
+
+              <p className="text-[10px] text-[#1A1A1D]/30 text-center uppercase tracking-[0.2em] font-bold mt-8">
+                256-bit SSL encrypted • Safe Checkout
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
