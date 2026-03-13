@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { createOrder } from "@/lib/actions/orders";
 import { OrderInput } from "@/lib/actions/orders";
 
@@ -12,11 +13,32 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { items, shippingDetails } = body;
 
-    if (!items || !items.length) {
-      return new NextResponse("Items are required", { status: 400 });
+    // Zod Validation Schema
+    const checkoutSchema = z.object({
+      items: z.array(z.object({
+        id: z.string().uuid(),
+        quantity: z.number().int().positive(),
+        name: z.string(),
+        image: z.string(),
+        variant: z.record(z.string(), z.string()).optional()
+      })),
+      shippingDetails: z.object({
+        email: z.string().email(),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+        address: z.string().min(5),
+        city: z.string().min(2),
+        zip: z.string().default("")
+      })
+    });
+
+    const validatedData = checkoutSchema.safeParse(body);
+    if (!validatedData.success) {
+      return new NextResponse(JSON.stringify({ error: "Invalid request data", details: validatedData.error.format() }), { status: 400 });
     }
+
+    const { items, shippingDetails } = validatedData.data;
 
     // Fetch products from database to get authentic prices
     const { data: dbProducts, error: dbError } = await supabase
