@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Heart, Search } from "lucide-react";
+import { toast } from "sonner";
 import { useWishlistStore } from "@/lib/store/useWishlistStore";
 import { useCartStore } from "@/lib/store/useCartStore";
 import { useEffect, useState } from "react";
@@ -36,11 +37,15 @@ export default function ShopClient({ product }: { product: any }) {
       image: product.image,
       quantity: 1,
     });
+    toast.success("Added to Bag", {
+      description: product.name,
+    });
   };
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    const beingAdded = !isInWishlist(product.id);
     toggleItem({
       id: product.id,
       name: product.name,
@@ -48,6 +53,15 @@ export default function ShopClient({ product }: { product: any }) {
       image: product.image,
       category: product.category,
     });
+    if (beingAdded) {
+      toast.success("Added to Wishlist", {
+        description: product.name,
+      });
+    } else {
+      toast.info("Removed from Wishlist", {
+        description: product.name,
+      });
+    }
   };
 
   return (

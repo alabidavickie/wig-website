@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Heart, SlidersHorizontal, Plus, ShoppingBag } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -31,9 +32,19 @@ export default function WishlistPage() {
     addItemToCart({
       id: item.id,
       name: item.name,
-      price: parseFloat(item.price.replace(/[^0-9.]/g, '')),
+      price: parseFloat(item.price.toString().replace(/[^0-9.]/g, '')),
       image: item.image,
       quantity: 1
+    });
+    toast.success("Added to Bag", {
+      description: item.name,
+    });
+  };
+
+  const handleRemoveFromWishlist = (item: any) => {
+    removeItem(item.id);
+    toast.info("Removed from Wishlist", {
+      description: item.name,
     });
   };
 
@@ -52,7 +63,10 @@ export default function WishlistPage() {
              Refine
           </Button>
           <Button 
-            onClick={() => items.forEach(handleAddToCart)}
+            onClick={() => {
+              items.forEach(handleAddToCart);
+              toast.success(`Added ${items.length} items to Bag`);
+            }}
             className="bg-[#1A1A1D] hover:bg-black text-white font-bold rounded-full px-10 h-14 text-[11px] uppercase tracking-widest shadow-2xl transition-all flex items-center gap-3"
           >
             <ShoppingBag className="w-4 h-4" />
@@ -84,7 +98,7 @@ export default function WishlistPage() {
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
                     
                     <button 
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => handleRemoveFromWishlist(item)}
                       className="absolute top-6 right-6 w-12 h-12 bg-white flex items-center justify-center rounded-full text-[#1A1A1D] shadow-xl hover:bg-black hover:text-white transition-all scale-100 duration-300"
                     >
                        <Heart className="w-5 h-5 fill-current text-red-500" />

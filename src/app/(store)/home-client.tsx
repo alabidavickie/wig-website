@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useCartStore } from '@/lib/store/useCartStore';
 import { useWishlistStore } from '@/lib/store/useWishlistStore';
 import { Heart, Plus } from 'lucide-react';
+import { toast } from "sonner";
 import { cn } from '@/lib/utils';
 
 export default function HomeClient({ products }: { products: any[] }) {
@@ -27,11 +28,15 @@ export default function HomeClient({ products }: { products: any[] }) {
       image: product.image || product.img,
       quantity: 1
     });
+    toast.success("Added to Bag", {
+      description: product.name,
+    });
   };
 
   const handleToggleWishlist = (e: React.MouseEvent, product: any) => {
     e.preventDefault();
     e.stopPropagation();
+    const beingAdded = !isInWishlist(product.id);
     toggleItem({
       id: product.id,
       name: product.name,
@@ -39,6 +44,15 @@ export default function HomeClient({ products }: { products: any[] }) {
       image: product.image || product.img,
       category: "Silk Haus Piece"
     });
+    if (beingAdded) {
+      toast.success("Added to Wishlist", {
+        description: product.name,
+      });
+    } else {
+      toast.info("Removed from Wishlist", {
+        description: product.name,
+      });
+    }
   };
 
   if (!mounted) return null;

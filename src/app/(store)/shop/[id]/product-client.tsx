@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/store/useCartStore';
+import { toast } from "sonner";
 import { Heart, Share2, ShieldCheck, Truck } from 'lucide-react';
 
 export default function ProductClient({ product }: { product: any }) {
@@ -37,6 +38,10 @@ export default function ProductClient({ product }: { product: any }) {
         name: selectedVariant.name,
         ...selectedVariant.attributes
       } : undefined,
+    });
+    
+    toast.success("Added to Bag", {
+      description: product.name,
     });
     
     setIsAdded(true);
