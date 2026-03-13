@@ -74,7 +74,7 @@ function LoginForm() {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <Label className="text-[10px] uppercase tracking-widest text-[#1A1A1D]/40 font-bold" htmlFor="password">Password</Label>
-                <Link href="#" className="text-[10px] uppercase tracking-widest text-[#1A1A1D]/40 hover:text-black font-bold">Forgot?</Link>
+                <Link href="/forgot-password" className="text-[10px] uppercase tracking-widest text-[#1A1A1D]/40 hover:text-black font-bold">Forgot?</Link>
               </div>
               <Input
                 id="password"

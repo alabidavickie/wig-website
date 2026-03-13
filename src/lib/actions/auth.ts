@@ -105,6 +105,37 @@ export async function logout() {
   redirect("/login");
 }
 
+export async function forgotPassword(formData: FormData) {
+  const supabase = await createClient();
+  const email = formData.get("email") as string;
+
+  if (!email) return { error: "Email is required" };
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/reset-password`,
+  });
+
+  if (error) return { error: error.message };
+  return { success: "Password reset link sent to your email" };
+}
+
+export async function updatePassword(formData: FormData) {
+  const supabase = await createClient();
+  const password = formData.get("password") as string;
+
+  const validatedFields = authSchema.pick({ password: true }).safeParse({ password });
+  if (!validatedFields.success) {
+    return { error: validatedFields.error.flatten().fieldErrors };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) return { error: error.message };
+  
+  revalidatePath("/", "layout");
+  redirect("/dashboard");
+}
+
 export async function getUser() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
