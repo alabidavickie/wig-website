@@ -4,19 +4,31 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Scissors, ChevronRight, Crown, Star, Calendar } from "lucide-react";
 import { getOrdersByEmail } from "@/lib/actions/orders";
+import DashboardLoading from "./loading";
 
 export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // TODO: Replace with real user email from auth context once implemented
-  const userEmail = "guest@example.com";
   useEffect(() => {
     setMounted(true);
-    // Fetch real orders
-    getOrdersByEmail(userEmail).then(data => {
-       if (data) setOrders(data);
-    });
+    setIsLoading(true);
+    
+    const fetchUserAndOrders = async () => {
+      const supabase = await (await import("@/lib/supabase/client")).createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        // Fetch real orders by user_id for better accuracy and security
+        const { getOrdersByUserId } = await import("@/lib/actions/orders");
+        const data = await getOrdersByUserId(user.id);
+        if (data) setOrders(data);
+      }
+      setIsLoading(false);
+    };
+
+    fetchUserAndOrders();
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -28,9 +40,9 @@ export default function DashboardPage() {
 
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [userEmail]);
+  }, []);
 
-  if (!mounted) return null;
+  if (!mounted || isLoading) return <DashboardLoading />;
 
   // Calculate Real Stats
   const itemsOwned = orders.reduce((acc, order) => acc + order.order_items.length, 0);

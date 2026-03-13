@@ -64,7 +64,33 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Protected routes logic
+  const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard') || 
+                         request.nextUrl.pathname.startsWith('/admin') ||
+                         request.nextUrl.pathname.startsWith('/checkout')
+
+  if (isProtectedRoute && !user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    url.searchParams.set('returnTo', request.nextUrl.pathname)
+    return NextResponse.redirect(url)
+  }
+
+  // Admin route logic
+  if (request.nextUrl.pathname.startsWith('/admin') && user) {
+    // Check if user is admin (requires a 'users' table or custom claim)
+    const { data: userData } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (userData?.role !== 'admin') {
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+  }
 
   return response
 }

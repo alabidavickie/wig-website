@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 export type OrderStatus = "pending" | "paid" | "processing" | "shipped" | "delivered" | "cancelled";
 
 export interface OrderInput {
+  user_id?: string;
   email: string;
   shipping_info: {
     firstName: string;
@@ -24,6 +25,7 @@ export interface OrderInput {
     quantity: number;
     unit_price: number;
     image_url: string;
+    attributes?: Record<string, any>;
   }[];
 }
 
@@ -37,6 +39,7 @@ export async function createOrder(input: OrderInput) {
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert([{
+      user_id: input.user_id,
       email: input.email,
       shipping_info: input.shipping_info,
       total_amount: input.total_amount,
@@ -60,7 +63,8 @@ export async function createOrder(input: OrderInput) {
     product_name: item.product_name,
     quantity: item.quantity,
     unit_price: item.unit_price,
-    image_url: item.image_url
+    image_url: item.image_url,
+    attributes: item.attributes
   }));
 
   const { error: itemsError } = await supabase
@@ -120,7 +124,30 @@ export async function getAllOrders() {
 }
 
 /**
- * Fetches orders for a specific user (by email for now since we don't have full auth setup).
+ * Fetches orders for a specific user ID.
+ */
+export async function getOrdersByUserId(userId: string) {
+  if (!userId) return [];
+  
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("orders")
+    .select(`
+      *,
+      order_items (*)
+    `)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching user orders:", error);
+    return [];
+  }
+  return data;
+}
+
+/**
+ * Fetches orders for a specific user email.
  */
 export async function getOrdersByEmail(email: string) {
   if (!email) return [];

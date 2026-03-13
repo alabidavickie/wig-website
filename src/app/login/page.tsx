@@ -35,7 +35,7 @@ function LoginForm() {
     <div className="min-h-screen bg-white flex flex-col justify-center py-12 px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/">
-          <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-[#1A1A1D] mb-8">SOLACE</h1>
+          <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-[#1A1A1D] mb-8">SILK HAUS</h1>
         </Link>
         <h2 className="text-[14px] uppercase tracking-widest font-bold text-[#1A1A1D]">Welcome Back</h2>
         <p className="mt-2 text-[12px] text-[#1A1A1D]/60 uppercase tracking-widest">
@@ -98,16 +98,11 @@ function LoginForm() {
 
           <div className="mt-10 pt-10 border-t border-gray-100 text-center space-y-3">
             <p className="text-[11px] text-[#1A1A1D]/60 uppercase tracking-widest">
-              New to SOLACE?{" "}
+              New to SILK HAUS?{" "}
               <Link href={`/signup${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`} className="font-bold text-[#1A1A1D] hover:underline">
                 Create an Account
               </Link>
             </p>
-            {redirectTo !== "/dashboard" && (
-              <Link href={redirectTo} className="block text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 hover:text-black transition-colors">
-                Continue as Guest →
-              </Link>
-            )}
           </div>
         </div>
       </div>

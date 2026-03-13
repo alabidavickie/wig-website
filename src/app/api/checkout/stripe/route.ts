@@ -9,6 +9,13 @@ export async function POST(req: Request) {
   });
 
   try {
+    const supabase = await (await import("@/lib/supabase/server")).createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
     const body = await req.json();
     const { items, shippingDetails } = body;
 
@@ -17,21 +24,40 @@ export async function POST(req: Request) {
       return new NextResponse("Items are required", { status: 400 });
     }
 
-    // Calculate total amount
-    const total_amount = items.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0);
+    // Fetch products from database to get authentic prices
+    const { data: dbProducts, error: dbError } = await supabase
+      .from("products")
+      .select()
+      .in("id", items.map((i: any) => i.id));
 
-    // Prepare Stripe Line Items
-    const line_items = items.map((item: any) => ({
-      price_data: {
-        currency: "gbp",
-        product_data: {
-          name: item.name,
-          images: [new URL(item.image, process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").toString()],
+    if (dbError || !dbProducts) {
+      throw new Error("Failed to verify product prices");
+    }
+
+    // Prepare Stripe Line Items with DB prices
+    const line_items = items.map((item: any) => {
+      const dbProduct = dbProducts.find((p: any) => p.id === item.id);
+      if (!dbProduct) throw new Error(`Product not found: ${item.name}`);
+      
+      const price = dbProduct.base_price;
+      const attributes = item.variant ? Object.entries(item.variant).map(([k, v]) => `${k}: ${v}`).join(", ") : "";
+
+      return {
+        price_data: {
+          currency: "gbp",
+          product_data: {
+            name: item.name,
+            description: attributes, // Show variants in Stripe Checkout
+            images: [new URL(item.image, process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").toString()],
+          },
+          unit_amount: Math.round(price * 100), // Use DB price
         },
-        unit_amount: Math.round(item.price * 100), // Convert to pence
-      },
-      quantity: item.quantity,
-    }));
+        quantity: item.quantity,
+      };
+    });
+
+    // Calculate total amount from DB prices
+    const total_amount = line_items.reduce((acc: number, li: any) => acc + (li.price_data.unit_amount / 100) * li.quantity, 0);
 
     // Generate a temporary fallback reference in case webhook is slow
     const tempReference = `SH_TEMP_${Date.now()}_${Math.random().toString(36).substring(7)}`;
@@ -45,6 +71,7 @@ export async function POST(req: Request) {
       customer_email: shippingDetails?.email || undefined,
       metadata: {
         tempReference, // Pass temp reference to cross-reference with webhook
+        userId: user.id
       }
     });
 
@@ -52,9 +79,10 @@ export async function POST(req: Request) {
       throw new Error("Failed to create Stripe session URL");
     }
 
-    // Prepare Db Order Input (Pending Order)
+    // Prepare Db Order Input (Pending Order) - Link to Real User
     const orderInput: OrderInput = {
-      email: shippingDetails?.email || "guest@example.com",
+      user_id: user.id, // Explicitly link to authenticated user
+      email: user.email || shippingDetails?.email || "unknown@example.com",
       shipping_info: shippingDetails || {},
       total_amount,
       currency: "GBP",
@@ -66,6 +94,7 @@ export async function POST(req: Request) {
         quantity: i.quantity,
         unit_price: i.price,
         image_url: i.image,
+        attributes: i.variant // Save variant to DB
       }))
     };
 

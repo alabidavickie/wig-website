@@ -36,11 +36,11 @@ function SignupForm() {
     <div className="min-h-screen bg-white flex flex-col justify-center py-12 px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/">
-          <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-[#1A1A1D] mb-8">SOLACE</h1>
+          <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-[#1A1A1D] mb-8">SILK HAUS</h1>
         </Link>
         <h2 className="text-[14px] uppercase tracking-widest font-bold text-[#1A1A1D]">Create Account</h2>
         <p className="mt-2 text-[12px] text-[#1A1A1D]/60 uppercase tracking-widest">
-          {redirectTo === "/checkout" ? "Create an account to complete your order" : "Join the SOLACE elite circle"}
+          {redirectTo === "/checkout" ? "Create an account to complete your order" : "Join the SILK HAUS elite circle"}
         </p>
       </div>
 

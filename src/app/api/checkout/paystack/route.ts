@@ -4,6 +4,13 @@ import { OrderInput } from "@/lib/actions/orders";
 
 export async function POST(req: Request) {
   try {
+    const supabase = await (await import("@/lib/supabase/server")).createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
     const body = await req.json();
     const { items, shippingDetails } = body;
 
@@ -11,14 +18,31 @@ export async function POST(req: Request) {
       return new NextResponse("Items are required", { status: 400 });
     }
 
-    const email = shippingDetails?.email || "guest@example.com";
-    const total_amount = items.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0);
+    // Fetch products from database to get authentic prices
+    const { data: dbProducts, error: dbError } = await supabase
+      .from("products")
+      .select()
+      .in("id", items.map((i: any) => i.id));
 
+    if (dbError || !dbProducts) {
+      throw new Error("Failed to verify product prices");
+    }
+
+    // Calculate total amount from DB prices
+    const total_amount = items.reduce((acc: number, item: any) => {
+      const dbProduct = dbProducts.find((p: any) => p.id === item.id);
+      if (!dbProduct) throw new Error(`Product not found: ${item.name}`);
+      return acc + (dbProduct.base_price * item.quantity);
+    }, 0);
+
+    const email = user.email || shippingDetails?.email || "unknown@example.com";
+    
     // Paystack Reference
     const reference = `SH_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
     // Prepare Db Order Input (Pending Order)
     const orderInput: OrderInput = {
+      user_id: user.id, // Link to real user
       email,
       shipping_info: shippingDetails || {},
       total_amount,
@@ -31,6 +55,7 @@ export async function POST(req: Request) {
         quantity: i.quantity,
         unit_price: i.price,
         image_url: i.image,
+        attributes: i.variant // Save variant to DB
       }))
     };
 
