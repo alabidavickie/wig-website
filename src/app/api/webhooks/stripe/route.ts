@@ -3,13 +3,19 @@ import Stripe from "stripe";
 import { headers } from "next/headers";
 import { updateOrderStatus } from "@/lib/actions/orders";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-02-25.clover" as any,
-});
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
 export async function POST(req: Request) {
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!stripeSecretKey || !webhookSecret) {
+    console.error("[STRIPE_WEBHOOK_ERROR] Missing environment variables");
+    return new NextResponse("Configuration error", { status: 500 });
+  }
+
+  const stripe = new Stripe(stripeSecretKey, {
+    apiVersion: "2026-02-25.clover" as any,
+  });
+
   try {
     const body = await req.text();
     const signature = (await headers()).get("Stripe-Signature") as string;
