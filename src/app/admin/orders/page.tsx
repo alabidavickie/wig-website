@@ -1,29 +1,20 @@
-
 import { Package, Truck, CheckCircle, Clock, Search, Filter, MoreVertical, Eye } from "lucide-react";
 import { format } from "date-fns";
+import { getAllOrders } from "@/lib/actions/orders";
 
-// For now, using mock data for orders to show the layout. 
-// We will connect this to createClient() next.
-const mockOrders = [
-  {
-    id: "ORD-7721",
-    customer: "Jane Cooper",
-    items: "HD Lace Wig, Maintenance Kit",
-    total: 1350.00,
-    status: "processing",
-    date: new Date().toISOString()
-  },
-  {
-    id: "ORD-9912",
-    customer: "Sarah Wilson",
-    items: "Virgin Body Wave Set",
-    total: 350.00,
-    status: "shipped",
-    date: new Date().toISOString()
-  }
-];
+export default async function AdminOrdersPage() {
+  const orders = await getAllOrders();
 
-export default function AdminOrdersPage() {
+  // Helper to get status styles
+  const getStatusInfo = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'processing': return { bg: 'bg-blue-50', text: 'text-blue-600' };
+      case 'shipped': return { bg: 'bg-purple-50', text: 'text-purple-600' };
+      case 'delivered': return { bg: 'bg-emerald-50', text: 'text-emerald-600' };
+      case 'pending': return { bg: 'bg-amber-50', text: 'text-amber-600' };
+      default: return { bg: 'bg-gray-50', text: 'text-gray-600' };
+    }
+  };
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -92,37 +83,56 @@ export default function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {mockOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-8 py-5">
-                    <span className="text-[13px] font-bold font-mono text-[#1A1A1D]">{order.id}</span>
-                  </td>
-                  <td className="px-8 py-5">
-                    <div className="flex flex-col">
-                      <span className="text-[13px] font-bold uppercase tracking-wide">{order.customer}</span>
-                      <span className="text-[11px] text-gray-400 truncate max-w-[150px]">{format(new Date(order.date), 'MMM dd, HH:mm')}</span>
-                    </div>
-                  </td>
-                  <td className="px-8 py-5 text-[12px] text-gray-500 italic max-w-xs truncate">
-                    {order.items}
-                  </td>
-                  <td className="px-8 py-5 text-[13px] font-bold">
-                    ${order.total.toLocaleString()}
-                  </td>
-                  <td className="px-8 py-5">
-                    <span className={`px-3 py-1 text-[9px] font-bold uppercase tracking-widest ${
-                      order.status === 'processing' ? 'bg-blue-50 text-blue-600' : 'bg-emerald-50 text-emerald-600'
-                    }`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-8 py-5 text-right">
-                    <button className="p-2 border border-gray-100 hover:border-[#1A1A1D] transition-all">
-                      <Eye className="w-4 h-4" />
-                    </button>
+              {orders.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-8 py-20 text-center text-gray-400 uppercase tracking-widest text-xs font-bold">
+                    No orders in the fulfillment queue.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                orders.map((order: any) => {
+                  const statusInfo = getStatusInfo(order.status);
+                  const itemCount = order.order_items.reduce((acc: number, item: any) => acc + item.quantity, 0);
+                  const productsPreview = order.order_items.map((item: any) => item.product_name).join(", ");
+                  
+                  return (
+                    <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
+                      <td className="px-8 py-5">
+                        <span className="text-[13px] font-bold font-mono text-[#1A1A1D]">{order.id.slice(0, 8)}...</span>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className="flex flex-col">
+                          <span className="text-[13px] font-bold uppercase tracking-wide">{order.email}</span>
+                          <span className="text-[11px] text-gray-400 truncate max-w-[150px]">{format(new Date(order.created_at), 'MMM dd, HH:mm')}</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-5 text-[12px] text-gray-500 italic max-w-xs truncate">
+                        {itemCount} {itemCount === 1 ? 'Item' : 'Items'}: {productsPreview}
+                      </td>
+                      <td className="px-8 py-5 text-[13px] font-bold">
+                        ${Number(order.total_amount).toLocaleString()}
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className="flex flex-col gap-1.5">
+                          <span className={`px-3 py-1 text-[9px] font-bold uppercase tracking-widest w-fit ${statusInfo.bg} ${statusInfo.text}`}>
+                            {order.status}
+                          </span>
+                          {order.is_guest && (
+                            <span className="px-2 py-0.5 text-[8px] font-black uppercase tracking-tighter bg-gray-900 text-white w-fit">
+                              Guest Account
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-8 py-5 text-right">
+                        <button className="p-2 border border-gray-100 hover:border-[#1A1A1D] transition-all">
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

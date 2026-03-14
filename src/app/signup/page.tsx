@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useSearchParams, useRouter } from "next/navigation";
 
 function SignupForm() {
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const searchParams = useSearchParams();
@@ -24,16 +25,13 @@ function SignupForm() {
     if (result?.error) {
       if (typeof result.error === "string") {
         setError(result.error);
-      } else if ((result.error as any).message) {
-        setError((result.error as any).message);
+      } else if (typeof result.error === "object" && "message" in result.error) {
+        setError((result.error as { message: string }).message);
       } else {
         setError("Could not complete registration");
       }
-      setPending(false);
-    } else if (result?.success) {
-      setSuccess(result.success);
-      setPending(false);
     }
+    setPending(false);
   }
 
   return (
@@ -129,7 +127,14 @@ function SignupForm() {
             </div>
           </form>
 
-          <div className="mt-10 pt-10 border-t border-gray-100 text-center space-y-3">
+          <div className="mt-10 pt-10 border-t border-gray-100 text-center space-y-4">
+            <Link
+              href={redirectTo === "/checkout" ? "/checkout" : "/shop"}
+              className="block w-full border border-gray-200 text-[#1A1A1D] hover:bg-gray-50 py-4 rounded-none text-[13px] uppercase tracking-[0.2em] font-medium transition-all text-center"
+            >
+              Continue as Guest
+            </Link>
+
             <p className="text-[11px] text-[#1A1A1D]/60 uppercase tracking-widest">
               Already have an account?{" "}
               <Link href={`/login${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`} className="font-bold text-[#1A1A1D] hover:underline">

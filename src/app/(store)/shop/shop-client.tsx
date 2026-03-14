@@ -8,6 +8,8 @@ import { useWishlistStore } from "@/lib/store/useWishlistStore";
 import { useCartStore } from "@/lib/store/useCartStore";
 import { useEffect, useState } from "react";
 
+import { Price } from "@/components/storefront/price";
+
 export default function ShopClient({ product }: { product: any }) {
   const [mounted, setMounted] = useState(false);
   const { toggleItem, isInWishlist } = useWishlistStore();
@@ -49,7 +51,7 @@ export default function ShopClient({ product }: { product: any }) {
     toggleItem({
       id: product.id,
       name: product.name,
-      price: `$${product.base_price}`,
+      price: product.base_price,
       image: product.image,
       category: product.category,
     });
@@ -100,7 +102,9 @@ export default function ShopClient({ product }: { product: any }) {
       <div className="flex flex-col text-center px-4">
         <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D] mb-1">{product.name}</h3>
         <p className="text-[#1A1A1D]/40 text-[11px] uppercase tracking-widest font-bold mb-4">{product.category} • SILK HAUS</p>
-        <span className="text-[16px] font-serif italic text-[#1A1A1D]">${product.base_price}</span>
+        <div className="text-[16px] font-serif italic text-[#1A1A1D]">
+          <Price amount={product.base_price} />
+        </div>
       </div>
     </div>
   );

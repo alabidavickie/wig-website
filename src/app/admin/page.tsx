@@ -139,7 +139,7 @@ export default async function AdminDashboardPage() {
             </Link>
           </div>
           <div className="space-y-8 flex-1">
-              {products.slice(0, 5).map((product: any) => (
+              {products.slice(0, 5).map((product) => (
                 <div key={product.id} className="flex gap-5 items-center group cursor-pointer">
                   <div className="w-14 h-18 bg-[#FAF9F6] border border-gray-100 flex-shrink-0 group-hover:border-[#C5A880] transition-colors overflow-hidden relative">
                     <Image 

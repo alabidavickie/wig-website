@@ -6,16 +6,12 @@ import { OrderInput } from "@/lib/actions/orders";
 
 export async function POST(req: Request) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2026-02-25.clover" as any,
+    apiVersion: "2024-04-10" as any,
   });
 
   try {
     const supabase = await (await import("@/lib/supabase/server")).createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    const { data: { user } } = await supabase.auth.getUser();
 
     const body = await req.json();
     
@@ -80,19 +76,16 @@ export async function POST(req: Request) {
     // Calculate total amount from DB prices
     const total_amount = line_items.reduce((acc: number, li: any) => acc + (li.price_data.unit_amount / 100) * li.quantity, 0);
 
-    // Generate a temporary fallback reference in case webhook is slow
-    const tempReference = `SH_TEMP_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       line_items,
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout/success?session_id={CHECKOUT_SESSION_ID}&provider=stripe`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout`,
-      customer_email: shippingDetails?.email || undefined,
+      customer_email: user?.email || shippingDetails?.email || undefined,
       metadata: {
-        tempReference, // Pass temp reference to cross-reference with webhook
-        userId: user.id
+        userId: user?.id || "guest",
+        isGuest: (!user).toString()
       }
     });
 
@@ -100,23 +93,27 @@ export async function POST(req: Request) {
       throw new Error("Failed to create Stripe session URL");
     }
 
-    // Prepare Db Order Input (Pending Order) - Link to Real User
+    // Prepare Db Order Input (Pending Order)
     const orderInput: OrderInput = {
-      user_id: user.id, // Explicitly link to authenticated user
-      email: user.email || shippingDetails?.email || "unknown@example.com",
+      user_id: user?.id || null, 
+      email: user?.email || shippingDetails?.email || "unknown@example.com",
       shipping_info: shippingDetails || {},
       total_amount,
       currency: "GBP",
       payment_provider: "stripe",
       payment_reference: session.id, // Save the actual Stripe session ID
-      items: items.map((i: any) => ({
-        product_id: i.id,
-        product_name: i.name,
-        quantity: i.quantity,
-        unit_price: i.price,
-        image_url: i.image,
-        attributes: i.variant // Save variant to DB
-      }))
+      is_guest: !user,
+      items: items.map((i: any) => {
+        const dbProduct = dbProducts.find((p: any) => p.id === i.id);
+        return {
+          product_id: i.id,
+          product_name: i.name,
+          quantity: i.quantity,
+          unit_price: dbProduct?.base_price || 0, // SECURE: Use DB price instead of client-provided price
+          image_url: i.image,
+          attributes: i.variant
+        };
+      })
     };
 
     // Save Pending Order to Database

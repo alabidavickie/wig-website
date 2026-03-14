@@ -6,6 +6,64 @@ import { revalidatePath } from "next/cache";
 import { MOCK_PRODUCTS } from "@/lib/mock-data";
 
 // ─────────────────────────────────────────────
+// TYPES
+// ─────────────────────────────────────────────
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  created_at?: string;
+}
+
+export interface ProductImage {
+  id?: string;
+  product_id?: string;
+  image_url: string;
+  is_main: boolean;
+  display_order: number;
+}
+
+export interface ProductVariant {
+  id?: string;
+  product_id?: string;
+  name: string;
+  sku: string;
+  inventory_count: number;
+  price_override?: number | null;
+  attributes: Record<string, unknown>;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  base_price: number;
+  category_id?: string;
+  created_at?: string; // Added/moved created_at
+  is_featured: boolean;
+  // Transformed fields for UI
+  category?: string; // Made optional
+  image?: string; // Made optional
+  categories?: { name: string };
+  product_images?: ProductImage[];
+  variants?: ProductVariant[]; // Renamed from product_variants
+}
+
+export interface CreateProductInput {
+  name: string;
+  slug: string;
+  description?: string;
+  base_price: number;
+  category_id: string;
+  is_featured: boolean;
+  variants?: Omit<ProductVariant, "id" | "product_id">[];
+  images?: { url: string }[];
+}
+
+// ─────────────────────────────────────────────
 // PRODUCT ACTIONS
 // ─────────────────────────────────────────────
 
@@ -33,7 +91,7 @@ export async function createCategory(formData: { name: string; slug: string; des
   return data;
 }
 
-export async function getProducts() {
+export async function getProducts(): Promise<Product[]> {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -50,16 +108,20 @@ export async function getProducts() {
         base_price: p.base_price,
         category: p.category,
         image: p.image,
-      }));
+        created_at: new Date().toISOString(),
+        is_featured: false
+      })) as Product[];
     }
 
-    return (data as any[]).map(p => ({
+    return (data as unknown as Product[]).map(p => ({
       ...p,
       category: p.categories?.name || "Uncategorized",
       image:
-        p.product_images?.find((img: any) => img.is_main)?.image_url ||
+        p.product_images?.find((img) => img.is_main)?.image_url ||
         p.product_images?.[0]?.image_url ||
         "/hero_luxury_wig_1773402385371.png",
+      created_at: (p as any).created_at || new Date().toISOString(),
+      is_featured: (p as any).is_featured || false
     }));
   } catch {
     return MOCK_PRODUCTS.map(p => ({
@@ -69,7 +131,9 @@ export async function getProducts() {
       base_price: p.base_price,
       category: p.category,
       image: p.image,
-    }));
+      created_at: new Date().toISOString(),
+      is_featured: false
+    })) as Product[];
   }
 }
 
@@ -99,7 +163,7 @@ export async function getProductById(id: string) {
   }
 }
 
-export async function createProduct(formData: any) {
+export async function createProduct(formData: CreateProductInput) {
   const supabase = await createClient();
 
   const { data: product, error: productError } = await supabase
@@ -117,9 +181,9 @@ export async function createProduct(formData: any) {
 
   if (productError) throw new Error(productError.message);
 
-  if (formData.variants?.length > 0) {
+  if (formData.variants && formData.variants.length > 0) {
     const { error: variantError } = await supabase.from("product_variants").insert(
-      formData.variants.map((v: any) => ({
+      formData.variants.map((v) => ({
         product_id: product.id,
         name: v.name, sku: v.sku,
         inventory_count: v.inventory_count,
@@ -130,9 +194,9 @@ export async function createProduct(formData: any) {
     if (variantError) throw new Error(variantError.message);
   }
 
-  if (formData.images?.length > 0) {
+  if (formData.images && formData.images.length > 0) {
     const { error: imageError } = await supabase.from("product_images").insert(
-      formData.images.map((img: any, idx: number) => ({
+      formData.images.map((img, idx) => ({
         product_id: product.id,
         image_url: img.url,
         is_main: idx === 0,

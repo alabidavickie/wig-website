@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     first_name TEXT,
     last_name TEXT,
     email TEXT,
+    role TEXT NOT NULL DEFAULT 'customer', -- 'customer' or 'admin'
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 

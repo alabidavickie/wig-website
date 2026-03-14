@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Scissors, ChevronRight, Crown, Star, Calendar } from "lucide-react";
-import { getOrdersByEmail } from "@/lib/actions/orders";
+import { getOrdersByEmail, getOrdersByUserId, type OrderWithItems } from "@/lib/actions/orders";
 import DashboardLoading from "./loading";
 
 export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function DashboardPage() {
             Silk Haus <br /> Hub
           </h1>
           <p className="text-[#1A1A1D]/80 text-[16px] leading-relaxed max-w-xl font-sans">
-            Welcome back, Elena. Your status as a <span className="text-[#1A1A1D] font-bold">Diamond Member</span> grants you priority maintenance and bespoke styling privileges in the Elite Studio.
+            Welcome back, Elena. Your status as a <span className="text-[#1A1A1D] font-bold">Diamond Member</span> grants you priority maintenance and bespoke styling privileges in the Silk Haus Atelier.
           </p>
         </div>
         <Button className="bg-[#1A1A1D] hover:bg-black text-white px-10 h-16 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] shadow-2xl transition-all shrink-0">
@@ -166,7 +166,7 @@ export default function DashboardPage() {
                 <Scissors className="absolute -right-8 top-12 w-48 h-48 text-white/5 transition-transform duration-[1s] group-hover:scale-110 group-hover:-rotate-12" />
                 <h4 className="text-4xl font-serif italic uppercase tracking-tighter mb-4 z-10 leading-none">Private <br/> Consultation</h4>
                 <p className="text-white/50 text-[14px] mb-10 z-10 font-sans leading-relaxed">
-                  Book an exclusive session with our Master Stylist or @follienn to discuss your identity refinement.
+                  Book an exclusive session with our Master Stylist or @follien to discuss your identity refinement.
                 </p>
                 <Button className="w-full bg-white hover:bg-gray-100 text-black h-16 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] transition-all z-10 shadow-xl">
                   Message Stylist

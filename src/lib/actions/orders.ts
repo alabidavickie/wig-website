@@ -19,14 +19,46 @@ export interface OrderInput {
   currency: string;
   payment_provider: string; // 'stripe' | 'paystack'
   payment_reference?: string;
+  is_guest?: boolean;
   items: {
     product_id: string;
     product_name: string;
     quantity: number;
     unit_price: number;
     image_url: string;
-    attributes?: Record<string, any>;
+    attributes?: Record<string, unknown>;
   }[];
+}
+export interface OrderItem {
+  id: string;
+  order_id: string;
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
+  image_url: string;
+  attributes?: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface OrderWithItems {
+  id: string;
+  user_id?: string;
+  email: string;
+  shipping_info: {
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    zip: string;
+  };
+  total_amount: number;
+  currency: string;
+  status: OrderStatus;
+  payment_provider: string;
+  payment_reference?: string;
+  created_at: string;
+  order_items: OrderItem[];
 }
 
 /**
@@ -39,14 +71,15 @@ export async function createOrder(input: OrderInput) {
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert([{
-      user_id: input.user_id,
+      user_id: input.user_id || null,
       email: input.email,
       shipping_info: input.shipping_info,
       total_amount: input.total_amount,
       currency: input.currency,
       payment_provider: input.payment_provider,
       payment_reference: input.payment_reference,
-      status: "pending"
+      status: "pending",
+      is_guest: input.is_guest || false
     }])
     .select()
     .single();
@@ -108,6 +141,22 @@ export async function updateOrderStatus(reference: string, provider: string, sta
  */
 export async function getAllOrders() {
   const supabase = await createClient();
+  
+  // SECURE: Check if current user is an admin
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+  
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+    
+  if (profile?.role !== "admin") {
+    console.warn(`Unauthorized access attempt to getAllOrders by user ${user.id}`);
+    return [];
+  }
+
   const { data, error } = await supabase
     .from("orders")
     .select(`
@@ -130,6 +179,24 @@ export async function getOrdersByUserId(userId: string) {
   if (!userId) return [];
   
   const supabase = await createClient();
+  
+  // SECURE: Check if current user is the owner or an admin
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+  
+  if (user.id !== userId) {
+     const { data: profile } = await supabase
+       .from("profiles")
+       .select("role")
+       .eq("id", user.id)
+       .single();
+       
+     if (profile?.role !== "admin") {
+       console.warn(`Unauthorized access attempt to getOrdersByUserId by user ${user.id} for user ${userId}`);
+       return [];
+     }
+  }
+
   const { data, error } = await supabase
     .from("orders")
     .select(`
@@ -148,11 +215,34 @@ export async function getOrdersByUserId(userId: string) {
 
 /**
  * Fetches orders for a specific user email.
+ * This is primarily for guest order tracking.
  */
 export async function getOrdersByEmail(email: string) {
   if (!email) return [];
   
   const supabase = await createClient();
+  
+  // SECURE: Check if caller is admin OR matches the requested email
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (user) {
+    if (user.email !== email) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+        
+      if (profile?.role !== "admin") {
+         console.warn(`Unauthorized access attempt to getOrdersByEmail by user ${user.id} for email ${email}`);
+         return [];
+      }
+    }
+  }
+  // For non-authenticated guests, we rely on email matching, 
+  // though it's technically public if they know the email.
+  // In a production app, we'd send a magic link or use a session token.
+
   const { data, error } = await supabase
     .from("orders")
     .select(`
@@ -173,8 +263,13 @@ export async function getOrdersByEmail(email: string) {
  * Fetches a single order by ID.
  */
 export async function getOrderById(id: string) {
+  if (!id) return null;
   const supabase = await createClient();
-  const { data, error } = await supabase
+
+  // SECURE: Check if caller is admin OR owner OR it's a guest order
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  const { data: order, error } = await supabase
     .from("orders")
     .select(`
       *,
@@ -183,6 +278,25 @@ export async function getOrderById(id: string) {
     .eq("id", id)
     .single();
 
-  if (error) return null;
-  return data;
+  if (error || !order) return null;
+
+  // Authorization logic
+  const isOwner = user && order.user_id === user.id;
+  const isGuestOrder = order.is_guest === true;
+  
+  if (isOwner || isGuestOrder) return order;
+
+  // Final check for admin
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+      
+    if (profile?.role === "admin") return order;
+  }
+
+  console.warn(`Unauthorized access attempt to getOrderById for order ${id}`);
+  return null;
 }

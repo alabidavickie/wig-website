@@ -6,11 +6,7 @@ import { OrderInput } from "@/lib/actions/orders";
 export async function POST(req: Request) {
   try {
     const supabase = await (await import("@/lib/supabase/server")).createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    const { data: { user } } = await supabase.auth.getUser();
 
     const body = await req.json();
 
@@ -57,28 +53,32 @@ export async function POST(req: Request) {
       return acc + (dbProduct.base_price * item.quantity);
     }, 0);
 
-    const email = user.email || shippingDetails?.email || "unknown@example.com";
+    const email = user?.email || shippingDetails?.email || "unknown@example.com";
     
     // Paystack Reference
     const reference = `SH_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
     // Prepare Db Order Input (Pending Order)
     const orderInput: OrderInput = {
-      user_id: user.id, // Link to real user
+      user_id: user?.id || null, // Guest support
       email,
       shipping_info: shippingDetails || {},
       total_amount,
       currency: "NGN",
       payment_provider: "paystack",
       payment_reference: reference, 
-      items: items.map((i: any) => ({
-        product_id: i.id,
-        product_name: i.name,
-        quantity: i.quantity,
-        unit_price: i.price,
-        image_url: i.image,
-        attributes: i.variant // Save variant to DB
-      }))
+      is_guest: !user, // Flag as guest if no auth session
+      items: items.map((i: any) => {
+        const dbProduct = dbProducts.find((p: any) => p.id === i.id);
+        return {
+          product_id: i.id,
+          product_name: i.name,
+          quantity: i.quantity,
+          unit_price: dbProduct?.base_price || 0, // SECURE: Use DB price instead of client-provided price
+          image_url: i.image,
+          attributes: i.variant
+        };
+      })
     };
 
     // Initialize Paystack Transaction via REST API
@@ -90,7 +90,7 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         email: email,
-        amount: Math.round(total_amount * 100), // Convert to kobo
+        amount: Math.round(total_amount * 100 * 1500), // Convert to kobo AND apply NGN rate (1500)
         reference: reference,
         callback_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout/success?reference=${reference}&provider=paystack`,
         metadata: {

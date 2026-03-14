@@ -8,8 +8,10 @@ import { useCartStore } from '@/lib/store/useCartStore';
 import { toast } from "sonner";
 import { Heart, Share2, ShieldCheck, Truck } from 'lucide-react';
 
+import { Price } from "@/components/storefront/price";
+
 export default function ProductClient({ product }: { product: any }) {
-  const [selectedVariant, setSelectedVariant] = useState<any>(product.variants[0] || null);
+  const [selectedVariant, setSelectedVariant] = useState<any>(product.variants?.[0] || null);
   const [isAdded, setIsAdded] = useState(false);
   
   const addItem = useCartStore((state) => state.addItem);
@@ -31,8 +33,8 @@ export default function ProductClient({ product }: { product: any }) {
     addItem({
       id: product.id,
       name: product.name,
-      price: selectedVariant?.price_override || product.price,
-      image: product.images[0],
+      price: selectedVariant?.price_override || product.base_price || product.price,
+      image: product.image || product.images?.[0],
       quantity: 1,
       variant: selectedVariant ? {
         name: selectedVariant.name,
@@ -65,7 +67,7 @@ export default function ProductClient({ product }: { product: any }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-12 lg:gap-20" suppressHydrationWarning>
           <div className="space-y-6 reveal">
-            {product.images.map((src: string, idx: number) => (
+            {(product.images || [product.image]).map((src: string, idx: number) => (
               <div key={idx} className="bg-[#FAF9F6] aspect-[3/4] overflow-hidden rounded-[32px] border border-gray-100/50 group relative">
                 <Image
                   src={src}
@@ -87,9 +89,9 @@ export default function ProductClient({ product }: { product: any }) {
                   {product.name}
                 </h1>
               </div>
-              <p className="text-xl md:text-2xl font-serif text-[#1A1A1D]">
-                ${(selectedVariant?.price_override || product.price).toFixed(2)}
-              </p>
+              <div className="text-xl md:text-2xl font-serif text-[#1A1A1D]">
+                <Price amount={selectedVariant?.price_override || product.base_price || product.price} />
+              </div>
             </div>
 
             <div className="space-y-6" suppressHydrationWarning>

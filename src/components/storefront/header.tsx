@@ -9,8 +9,9 @@ import { useEffect, useState } from 'react';
 export const Header = () => {
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const getItemCount = useCartStore((state) => state.getItemCount);
-  const itemCount = mounted ? getItemCount() : 0;
+  const itemCount = useCartStore((state) => 
+    mounted ? state.items.reduce((total, item) => total + item.quantity, 0) : 0
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -26,94 +27,68 @@ export const Header = () => {
       </div>
 
       {/* Main Header */}
-      <header className={`relative px-6 md:px-12 py-4 lg:py-5 transition-all duration-300 border-b border-gray-100 bg-white shadow-sm`} suppressHydrationWarning>
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
+      <header className="fixed w-full top-[31px] lg:top-[35px] left-0 z-40 px-6 md:px-12 py-2.5 lg:py-3.5 transition-all duration-500 border-b border-[#1A1A1D]/5 bg-white/70 backdrop-blur-md" suppressHydrationWarning>
+        <div className="max-w-[1600px] mx-auto grid grid-cols-2 lg:grid-cols-3 items-center">
           
           {/* Mobile Menu Trigger & Left Mobile Nav */}
-          <div className="flex items-center justify-between w-full lg:w-auto lg:hidden" suppressHydrationWarning>
-            <div className="flex items-center gap-4">
-              <button 
-                className="hover:opacity-60 transition-opacity cursor-pointer flex items-center justify-center p-2 -ml-2"
-                onClick={() => setIsMobileMenuOpen(true)}
-                suppressHydrationWarning
-              >
-                <Menu className="w-[22px] h-[22px] text-[#1A1A1D]" strokeWidth={1.5} />
-              </button>
-              <button className="hover:opacity-60 transition-opacity cursor-pointer" suppressHydrationWarning>
-                <Search className="w-[20px] h-[20px] text-[#1A1A1D]" strokeWidth={1.5} />
-              </button>
-            </div>
-            <Link href="/" className="cursor-pointer mx-auto absolute left-1/2 -translate-x-1/2">
-               <span className="inline-block bg-[#C5A880] rounded-lg px-4 py-2">
-                 <Image 
-                 src="/images/logo2.png" 
-                 alt="SILK HAUS" 
-                 width={100}
-                 height={50}
-                 className="h-[40px] w-auto object-contain scale-110" 
-               />
-               </span>
-            </Link>
-            <Link href="/cart" className="hover:opacity-60 transition-opacity relative cursor-pointer flex items-center justify-end w-[60px]" suppressHydrationWarning>
-              <ShoppingBag className="w-[20px] h-[20px] text-[#1A1A1D]" strokeWidth={1.5} />
-              {itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-2 bg-[#1A1A1D] text-white text-[9px] w-[16px] h-[16px] flex items-center justify-center rounded-full shadow-sm">
-                  {itemCount}
-                </span>
-              )}
-            </Link>
-          </div>
-
-          {/* Desktop Left: Logo + Navigation */}
-          <div className="hidden lg:flex items-center gap-12 xl:gap-16">
-            
-            {/* Logo */}
-            <Link href="/" className="cursor-pointer shrink-0">
-              <span className="inline-block bg-[#C5A880] rounded-xl px-6 py-2.5 uppercase font-bold text-white tracking-widest text-[14px]">
-                <Image 
-                  src="/images/logo2.png" 
-                  alt="SILK HAUS" 
-                  width={140}
-                  height={70}
-                  className="h-[60px] xl:h-[70px] w-auto object-contain scale-125" 
-                  priority
-                />
-              </span>
-            </Link>
-
-            {/* Navigation Links */}
-            <nav className="flex items-center gap-8 xl:gap-10 text-[11px] xl:text-[12px] font-medium tracking-[0.15em] text-[#1A1A1D]/80 uppercase" suppressHydrationWarning>
-              <Link href="/" className="hover:text-black hover:opacity-100 transition-colors cursor-pointer">
-                HOME
-              </Link>
-              <Link href="/shop" className="hover:text-black hover:opacity-100 transition-colors cursor-pointer flex items-center gap-1">
-                SHOP
-                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-50 mt-0.5"><path d="m6 9 6 6 6-6"/></svg>
-              </Link>
-              <Link href="/contact" className="hover:text-black hover:opacity-100 transition-colors cursor-pointer">
-                CONTACT
-              </Link>
-              <Link href="/faq" className="hover:text-black hover:opacity-100 transition-colors cursor-pointer">
-                FAQ
-              </Link>
-              <Link href="/about" className="hover:text-black hover:opacity-100 transition-colors cursor-pointer">
-                ABOUT
-              </Link>
-            </nav>
-          </div>
-
-          {/* Desktop Right: Utility Icons */}
-          <div className="hidden lg:flex items-center justify-end gap-6" suppressHydrationWarning>
-            <button className="hover:opacity-60 transition-opacity cursor-pointer p-2 flex items-center" suppressHydrationWarning>
-              <Search className="w-[18px] h-[18px] text-[#1A1A1D]" strokeWidth={1.5} />
+          <div className="flex items-center gap-4 lg:hidden" suppressHydrationWarning>
+            <button 
+              className="hover:opacity-60 transition-opacity cursor-pointer flex items-center justify-center p-2 -ml-2"
+              onClick={() => setIsMobileMenuOpen(true)}
+              suppressHydrationWarning
+            >
+              <Menu className="w-[20px] h-[20px] text-[#1A1A1D]" strokeWidth={1.2} />
             </button>
-            <Link href="/dashboard/wishlist" className="hover:opacity-60 transition-opacity cursor-pointer p-2" suppressHydrationWarning>
-              <User className="w-[18px] h-[18px] text-[#1A1A1D]" strokeWidth={1.5} />
+            <button className="hover:opacity-60 transition-opacity cursor-pointer" suppressHydrationWarning>
+              <Search className="w-[18px] h-[18px] text-[#1A1A1D]" strokeWidth={1.2} />
+            </button>
+          </div>
+
+          {/* Desktop Left: Navigation */}
+          <nav className="hidden lg:flex items-center gap-10 text-[10px] xl:text-[11px] font-semibold tracking-[0.25em] text-[#1A1A1D]/60 uppercase" suppressHydrationWarning>
+            <Link href="/" className="hover:text-black transition-all duration-300 relative group cursor-pointer">
+              HOME
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link href="/shop" className="hover:text-black transition-all duration-300 relative group cursor-pointer">
+              SHOP
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link href="/about" className="hover:text-black transition-all duration-300 relative group cursor-pointer">
+              ABOUT
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+          </nav>
+
+          {/* Center: Logo */}
+          <div className="flex justify-center flex-1">
+            <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity">
+              <Image 
+                src="/images/logo_premium_v2.png" 
+                alt="SILK HAUS" 
+                width={150}
+                height={75}
+                className="h-[40px] lg:h-[55px] w-auto object-contain" 
+                priority
+              />
+            </Link>
+          </div>
+
+          {/* Right: Icons */}
+          <div className="flex items-center justify-end gap-2 md:gap-5" suppressHydrationWarning>
+            <button className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-2 items-center" suppressHydrationWarning>
+              <Search className="w-[17px] h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+            </button>
+            <Link href="/login" className="hover:opacity-60 transition-opacity cursor-pointer p-2" suppressHydrationWarning>
+              <User className="w-[17px] h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+            </Link>
+            <Link href="/dashboard/wishlist" className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-2" suppressHydrationWarning>
+              <Heart className="w-[17px] h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
             </Link>
             <Link href="/cart" className="hover:opacity-60 transition-opacity relative cursor-pointer flex items-center p-2" suppressHydrationWarning>
-              <ShoppingBag className="w-[18px] h-[18px] text-[#1A1A1D]" strokeWidth={1.5} />
+              <ShoppingBag className="w-[17px] h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
               {itemCount > 0 && (
-                <span className="absolute top-0 right-0 bg-[#1A1A1D] text-white text-[9px] w-[15px] h-[15px] flex items-center justify-center rounded-full font-medium shadow-sm">
+                <span className="absolute top-1 right-1 bg-[#1A1A1D] text-white text-[8px] w-[13px] h-[13px] flex items-center justify-center rounded-full font-medium">
                   {itemCount}
                 </span>
               )}

@@ -5,7 +5,7 @@ To ensure the new security and profile features work correctly, you need to run 
 ### Step-by-Step Instructions:
 
 1.  Log in to your [Supabase Dashboard](https://supabase.com/dashboard).
-2.  Select your project (**Elite Studio** / **wig-website**).
+2.  Select your project (**Silk Haus** / **wig-website**).
 3.  Click on the **SQL Editor** tab in the left sidebar.
 4.  Click **New Query**.
 5.  **Copy and Paste** the following SQL snippets one by one and click **Run**.

@@ -4,9 +4,15 @@ import { Package, Truck, CheckCircle2, ChevronRight, Clock } from "lucide-react"
 import { getOrdersByEmail } from "@/lib/actions/orders";
 
 export default async function OrdersPage() {
-  // TODO: Get actual email from auth session when implemented
-  const userEmail = "guest@example.com";
-  const orders = await getOrdersByEmail(userEmail);
+  const supabase = await (await import("@/lib/supabase/server")).createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    const { redirect } = await import("next/navigation");
+    redirect("/login");
+  }
+
+  const orders = await getOrdersByEmail(user.email!);
 
   // Find most recent active order (not delivered/cancelled)
   const activeOrder = orders.find(o => 

@@ -23,9 +23,10 @@ function VerifyEmailContent() {
         </div>
         
         <div className="space-y-6 text-center max-w-md mx-auto">
-           <p className="text-[14px] text-[#1A1A1D]/80 tracking-wide leading-relaxed">
-             A secure authentication link has been dispatched to your inbox. Please follow the instructions within to activate your **SILK HAUS** account.
-           </p>
+            <p className="text-[14px] text-[#1A1A1D]/80 tracking-wide leading-relaxed">
+              Welcome to **Silk Haus by Follien**. A secure activation link has been dispatched to your inbox. 
+              Please click the link to confirm your identity and unlock your exclusive membership access.
+            </p>
            
            <div className="bg-[#FAF9F6] p-6 border-l-2 border-black">
               <p className="text-[11px] font-bold uppercase tracking-widest text-black/40 text-left mb-2">Next Destination</p>

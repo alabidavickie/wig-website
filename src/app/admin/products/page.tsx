@@ -1,11 +1,12 @@
 import { Plus, Search, Filter, MoreHorizontal, Edit, Trash2, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { getProducts } from "@/lib/actions/products";
+import { getProducts, getCategories } from "@/lib/actions/products";
 import { format } from "date-fns";
 
 export default async function AdminProductsPage() {
   const products = await getProducts();
+  const categories = await getCategories();
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -21,7 +22,7 @@ export default async function AdminProductsPage() {
           <Plus className="w-4 h-4" /> Add Product
         </Link>
       </div>
-
+// ... (filters)
       {/* Filters & Search */}
       <div className="bg-white p-4 border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4 items-center">
         <div className="relative flex-1 w-full">
@@ -38,9 +39,9 @@ export default async function AdminProductsPage() {
           </button>
           <select className="px-4 py-2 border border-gray-100 text-sm font-medium hover:bg-gray-50 transition-all bg-white outline-none">
             <option>All Categories</option>
-            <option>Lace Front</option>
-            <option>Silk Top</option>
-            <option>Glueless</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
           </select>
         </div>
       </div>
@@ -70,20 +71,17 @@ export default async function AdminProductsPage() {
                   </td>
                 </tr>
               ) : (
-                products.map((product: any) => (
+                products.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-50/50 transition-colors group">
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-16 bg-[#FAF9F6] border border-gray-100 flex-shrink-0 overflow-hidden">
-                          {product.product_images?.[0]?.image_url && (
-                             <Image 
-                               src={product.product_images[0].image_url} 
-                               alt={product.name} 
-                               width={48}
-                               height={64}
-                               className="w-full h-full object-cover" 
-                             />
-                          )}
+                        <div className="w-12 h-16 bg-[#FAF9F6] border border-gray-100 flex-shrink-0 overflow-hidden relative">
+                          <Image 
+                            src={product.image || "/hero_luxury_wig_1773402385371.png"} 
+                            alt={product.name} 
+                            fill
+                            className="object-cover" 
+                          />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[13px] font-bold uppercase tracking-wide truncate max-w-[200px]">{product.name}</span>
@@ -92,7 +90,7 @@ export default async function AdminProductsPage() {
                       </div>
                     </td>
                     <td className="px-8 py-5 text-[13px] font-medium text-gray-600 uppercase tracking-widest">
-                      {product.categories?.name || 'Uncategorized'}
+                      {product.category}
                     </td>
                     <td className="px-8 py-5 text-[13px] font-bold">
                       ${Number(product.base_price).toLocaleString()}
@@ -102,9 +100,9 @@ export default async function AdminProductsPage() {
                     </td>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-2 border border-gray-100 hover:bg-white hover:border-[#1A1A1D] transition-all">
+                        <Link href={`/admin/products/${product.id}`} className="p-2 border border-gray-100 hover:bg-white hover:border-[#1A1A1D] transition-all">
                           <Edit className="w-4 h-4" />
-                        </button>
+                        </Link>
                         <button className="p-2 border border-gray-100 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-all">
                           <Trash2 className="w-4 h-4" />
                         </button>

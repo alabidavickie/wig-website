@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { ShieldCheck, Lock, ArrowLeft, CheckCircle, Globe2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getUserLocation, GeoData } from "@/lib/geo";
+import { useGeoStore } from "@/lib/store/useGeoStore";
+import { Price } from "@/components/storefront/price";
 
 export default function CheckoutPage() {
   const [mounted, setMounted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [geo, setGeo] = useState<GeoData | null>(null);
+  const { geo, getExchangeRate, initialize } = useGeoStore();
   
   const [formData, setFormData] = useState({
     firstName: "", lastName: "", email: "", address: "", city: "", zip: ""
@@ -22,14 +23,13 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     setMounted(true);
-    getUserLocation().then(data => setGeo(data));
-  }, []);
+    initialize();
+  }, [initialize]);
 
   if (!mounted || !geo) return null; // Wait for geo resolution
 
-  // Adjust total based on currency (Mock conversion rate for Paystack NGN: 1 GBP = 1500 NGN)
   const baseTotalPrice = getTotalPrice();
-  const exchangeRate = geo.isNigeria ? 1500 : 1;
+  const exchangeRate = getExchangeRate();
   const displayTotalPrice = baseTotalPrice * exchangeRate;
   
   // Format items for the API with the converted prices if needed
@@ -44,7 +44,7 @@ export default function CheckoutPage() {
         <div className="h-[80px]"></div>
         <div className="text-center py-24 space-y-8">
           <p className="text-[20px] text-[#1A1A1D]/60 uppercase tracking-widest italic font-serif">Your bag is currently empty</p>
-          <Link href="/shop" className="inline-block bg-black text-white px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-xl">
+          <Link href="/shop" className="inline-block bg-black text-white px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-xl cursor-pointer">
             Explore The Collection
           </Link>
         </div>
@@ -73,7 +73,8 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: checkoutItems,
-          shippingDetails: formData
+          shippingDetails: formData,
+          currency: geo.currency
         }),
       });
 
@@ -128,7 +129,7 @@ export default function CheckoutPage() {
                 ].map((field) => (
                   <div key={field.name} className="space-y-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">{field.label}</label>
-                    <input type={field.type} name={field.name} placeholder={field.placeholder} value={(formData as any)[field.name]} onChange={handleInputChange} required className="w-full h-12 px-4 border border-gray-200 bg-[#FAF9F6] text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
+                    <input type={field.type} name={field.name} placeholder={field.placeholder} value={formData[field.name as keyof typeof formData]} onChange={handleInputChange} required className="w-full h-12 px-4 border border-gray-200 bg-[#FAF9F6] text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
                   </div>
                 ))}
                 <div className="md:col-span-2 space-y-2">
@@ -169,7 +170,7 @@ export default function CheckoutPage() {
                         disabled={submitting}
                         className="w-full bg-[#011B33] hover:bg-[#000F1F] text-white py-8 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl mt-4 rounded-full transition-all"
                       >
-                        {submitting ? "Initializing Paystack..." : `Pay ${geo.symbol}${displayTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+                        {submitting ? "Initializing Paystack..." : <span className="flex items-center justify-center gap-2">Pay <Price amount={baseTotalPrice} /></span>}
                       </Button>
                    </div>
                 ) : (
@@ -185,7 +186,7 @@ export default function CheckoutPage() {
                         disabled={submitting}
                         className="w-full bg-[#635BFF] hover:bg-[#4C45D0] text-white py-8 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl mt-4 rounded-full transition-all"
                       >
-                        {submitting ? "Securing Session..." : `Pay ${geo.symbol}${displayTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+                        {submitting ? "Securing Session..." : <span className="flex items-center justify-center gap-2">Pay <Price amount={baseTotalPrice} /></span>}
                       </Button>
                    </div>
                 )}
@@ -203,7 +204,7 @@ export default function CheckoutPage() {
               </div>
 
               <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
-                {checkoutItems.map((item, i) => (
+                {items.map((item, i) => (
                   <div key={i} className="flex gap-4 items-center">
                     <div className="w-14 h-18 bg-white border border-gray-100 overflow-hidden rounded-lg shrink-0">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
@@ -212,7 +213,9 @@ export default function CheckoutPage() {
                       <p className="text-[11px] font-bold uppercase tracking-widest truncate">{item.name}</p>
                       <p className="text-[10px] text-[#1A1A1D]/40">Qty: {item.quantity}</p>
                     </div>
-                    <span className="text-[12px] font-bold">{geo.symbol}{(item.price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                    <span className="text-[12px] font-bold">
+                      <Price amount={item.price * item.quantity} />
+                    </span>
                   </div>
                 ))}
               </div>
@@ -220,7 +223,9 @@ export default function CheckoutPage() {
               <div className="space-y-3 border-t border-gray-200 pt-6">
                 <div className="flex justify-between text-[12px]">
                   <span className="text-[#1A1A1D]/50 uppercase tracking-widest font-bold">Subtotal</span>
-                  <span className="font-bold">{geo.symbol}{displayTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                  <span className="font-bold">
+                    <Price amount={baseTotalPrice} />
+                  </span>
                 </div>
                 <div className="flex justify-between text-[12px]">
                   <span className="text-[#1A1A1D]/50 uppercase tracking-widest font-bold">Shipping</span>
@@ -228,7 +233,9 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-[16px] font-bold border-t border-gray-200 pt-4">
                   <span className="uppercase tracking-widest">Total</span>
-                  <span className="font-serif italic">{geo.symbol}{displayTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                  <div className="font-serif italic">
+                    <Price amount={baseTotalPrice} />
+                  </div>
                 </div>
               </div>
 

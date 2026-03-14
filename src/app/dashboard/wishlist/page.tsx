@@ -9,6 +9,8 @@ import Image from "next/image";
 import { useWishlistStore } from "@/lib/store/useWishlistStore";
 import { useCartStore } from "@/lib/store/useCartStore";
 
+import { Price } from "@/components/storefront/price";
+
 export default function WishlistPage() {
   const [mounted, setMounted] = useState(false);
   const { items, removeItem } = useWishlistStore();
@@ -32,7 +34,7 @@ export default function WishlistPage() {
     addItemToCart({
       id: item.id,
       name: item.name,
-      price: parseFloat(item.price.toString().replace(/[^0-9.]/g, '')),
+      price: item.price,
       image: item.image,
       quantity: 1
     });
@@ -115,7 +117,9 @@ export default function WishlistPage() {
                  <div className="pt-8 px-4 text-center">
                     <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D] mb-1">{item.name}</h3>
                     <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#1A1A1D]/30 mb-4">{item.category}</p>
-                    <span className="text-[20px] font-serif italic text-[#1A1A1D]">{item.price}</span>
+                    <div className="text-[20px] font-serif italic text-[#1A1A1D]">
+                      <Price amount={item.price} />
+                    </div>
                  </div>
               </div>
            ))}

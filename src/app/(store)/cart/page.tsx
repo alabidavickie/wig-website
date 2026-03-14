@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+import { Price } from "@/components/storefront/price";
+
 export default function CartPage() {
   const [mounted, setMounted] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(false);
@@ -108,7 +110,9 @@ export default function CartPage() {
                             <Plus className="w-3 h-3" />
                           </button>
                         </div>
-                        <span className="text-[20px] font-serif italic text-[#1A1A1D]">${(item.price * item.quantity).toFixed(2)}</span>
+                        <div className="text-[20px] font-serif italic text-[#1A1A1D]">
+                          <Price amount={item.price * item.quantity} />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -127,7 +131,9 @@ export default function CartPage() {
                 <div className="space-y-6">
                   <div className="flex justify-between text-[13px]">
                     <span className="text-[#1A1A1D]/40 font-bold uppercase tracking-widest">Subtotal</span>
-                    <span className="font-bold">${totalPrice.toFixed(2)}</span>
+                    <span className="font-bold">
+                      <Price amount={totalPrice} />
+                    </span>
                   </div>
                   <div className="flex justify-between text-[13px]">
                     <span className="text-[#1A1A1D]/40 font-bold uppercase tracking-widest">Silk Haus Delivery</span>
@@ -137,7 +143,9 @@ export default function CartPage() {
 
                 <div className="pt-10 border-t border-gray-200 flex justify-between items-end">
                   <span className="text-[14px] font-bold uppercase tracking-[0.2em]">Total Amount</span>
-                  <span className="text-3xl font-serif italic font-bold text-[#1A1A1D]">${totalPrice.toFixed(2)}</span>
+                  <div className="text-3xl font-serif italic font-bold text-[#1A1A1D]">
+                    <Price amount={totalPrice} />
+                  </div>
                 </div>
 
                 <div className="space-y-4">

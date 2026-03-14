@@ -1,4 +1,4 @@
-# Project Overview: Luxe Edit E-Commerce Dashboard
+# Project Overview: Silk Haus by Follien Dashboard
 
 ## 📖 Introduction
 This project is a high-end, luxury e-commerce client dashboard tailored for a premium wig and hair extension brand (internally referred to as "Luxe Edit" or "Elite Studio"). It is built using **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Shadcn UI**.

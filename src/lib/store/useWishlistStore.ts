@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 export interface WishlistItem {
   id: string;
   name: string;
-  price: string; // Storing as string to match catalog UI for now
+  price: number;
   image: string;
   category: string;
 }

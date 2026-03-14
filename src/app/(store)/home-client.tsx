@@ -9,6 +9,8 @@ import { Heart, Plus } from 'lucide-react';
 import { toast } from "sonner";
 import { cn } from '@/lib/utils';
 
+import { Price } from '@/components/storefront/price';
+
 export default function HomeClient({ products }: { products: any[] }) {
   const [mounted, setMounted] = useState(false);
   const addItemToCart = useCartStore((state) => state.addItem);
@@ -60,28 +62,25 @@ export default function HomeClient({ products }: { products: any[] }) {
   return (
     <div className="bg-background min-h-screen font-sans text-[#1A1A1D]" suppressHydrationWarning>
       {/* Header Spacer */}
-      <div className="h-[120px]" suppressHydrationWarning></div>
+      <div className="h-[110px] lg:h-[130px]" suppressHydrationWarning></div>
 
       {/* Hero Section */}
-      <section className="px-6 md:px-12 mb-12">
-        <section className="relative h-[85vh] flex items-center justify-center overflow-hidden rounded-2xl group" suppressHydrationWarning>
-          <div className="absolute inset-0 bg-black/20 z-10"></div>
+      <section className="px-4 md:px-8 lg:px-12 mb-12">
+        <section className="relative h-[85vh] flex items-center justify-center overflow-hidden rounded-3xl group" suppressHydrationWarning>
+          <div className="absolute inset-0 bg-black/10 z-10 transition-colors group-hover:bg-black/20"></div>
           <Image 
-            src="/hero_luxury_wig_1773402385371.png" 
-            alt="Luxury HD Lace Wig" 
+            src="/images/hero_premium_v2.png" 
+            alt="Silk Haus by Follien" 
             fill
             priority
-            className="w-full h-full object-cover scale-105 active transition-transform duration-[2s] ease-out group-hover:scale-105" 
+            className="w-full h-full object-cover scale-100 transition-transform duration-[4s] ease-out group-hover:scale-105" 
           />
-          <div className="absolute inset-0 bg-black/5 flex flex-col items-center justify-center text-center px-4">
-            <h2 className="font-serif text-5xl md:text-8xl lg:text-9xl text-white mb-10 uppercase tracking-tighter leading-none italic">
-              Silk <br /> Living
-            </h2>
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-32 text-center px-4">
             <Link 
               href="/shop" 
-              className="bg-white text-[#1A1A1D] px-12 py-5 text-[14px] uppercase tracking-[0.3em] font-bold hover:bg-[#1A1A1D] hover:text-white transition-all rounded-full shadow-xl cursor-pointer"
+              className="bg-white text-[#1A1A1D] px-16 py-5 text-[12px] uppercase tracking-[0.4em] font-extrabold hover:bg-[#1A1A1D] hover:text-white transition-all duration-500 rounded-full shadow-2xl cursor-pointer scale-100 hover:scale-110"
             >
-              Enter The Salon
+              Shop Now
             </Link>
           </div>
         </section>
@@ -171,7 +170,9 @@ export default function HomeClient({ products }: { products: any[] }) {
 
                   <Link href={`/shop/${product.id}`}>
                     <h4 className="text-[14px] font-bold uppercase tracking-widest text-[#1A1A1D] mb-1 truncate">{product.name}</h4>
-                    <p className="text-[#1A1A1D]/60 text-[14px] font-medium">${product.base_price || product.price}</p>
+                    <div className="text-[#1A1A1D]/60 text-[14px] font-medium">
+                      <Price amount={product.base_price || product.price} />
+                    </div>
                   </Link>
                 </div>
               ))
