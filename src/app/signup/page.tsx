@@ -10,13 +10,14 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 function SignupForm() {
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/dashboard";
 
   async function handleSubmit(formData: FormData) {
     setPending(true);
     setError(null);
+    setSuccess(null);
     // Add redirect hint to form
     formData.append("redirectTo", redirectTo);
     const result = await signup(formData);
@@ -28,6 +29,9 @@ function SignupForm() {
       } else {
         setError("Could not complete registration");
       }
+      setPending(false);
+    } else if (result?.success) {
+      setSuccess(result.success);
       setPending(false);
     }
   }
@@ -55,6 +59,11 @@ function SignupForm() {
             {error && (
               <div className="bg-red-50 text-red-600 text-[11px] p-4 uppercase tracking-widest font-bold border-l-2 border-red-600">
                 {error}
+              </div>
+            )}
+            {success && (
+              <div className="bg-emerald-50 text-emerald-600 text-[11px] p-4 uppercase tracking-widest font-bold border-l-2 border-emerald-600">
+                {success}
               </div>
             )}
 

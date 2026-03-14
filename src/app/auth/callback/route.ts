@@ -10,7 +10,16 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      // Check if next is a relative path or absolute URL
+      const isAbsoluteNext = next.startsWith('http')
+      const redirectUrl = isAbsoluteNext ? next : `${origin}${next.startsWith('/') ? next : `/${next}`}`
+      
+      // Default to dashboard if no valid next is provided
+      if (next === '/') {
+        return NextResponse.redirect(`${origin}/dashboard`)
+      }
+
+      return NextResponse.redirect(redirectUrl)
     }
   }
 

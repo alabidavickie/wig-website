@@ -79,7 +79,7 @@ export async function signup(formData: FormData) {
     return { error: validatedFields.error.flatten().fieldErrors };
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -92,6 +92,12 @@ export async function signup(formData: FormData) {
 
   if (error) {
     return { error: { message: error.message } };
+  }
+
+  // If email confirmation is enabled, session will be null
+  if (!data.session) {
+    const next = formData.get("redirectTo") as string || "/dashboard";
+    redirect(`/verify-email?next=${encodeURIComponent(next)}`);
   }
 
   revalidatePath("/", "layout");
