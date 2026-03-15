@@ -218,3 +218,11 @@ export async function deleteProduct(id: string) {
   revalidatePath("/shop");
   revalidatePath("/admin/products");
 }
+
+export async function deleteCategory(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("categories").delete().eq("id", id);
+  if (error) throw new Error(`Failed to delete category: ${error.message}`);
+  revalidatePath("/admin/categories");
+  revalidatePath("/admin/products");
+}

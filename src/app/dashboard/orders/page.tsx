@@ -7,12 +7,13 @@ export default async function OrdersPage() {
   const supabase = await (await import("@/lib/supabase/server")).createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user || !user.email) {
     const { redirect } = await import("next/navigation");
     redirect("/login");
   }
 
-  const orders = await getOrdersByEmail(user.email!);
+  const userEmail = user!.email!;
+  const orders = await getOrdersByEmail(userEmail);
 
   // Find most recent active order (not delivered/cancelled)
   const activeOrder = orders.find(o => 

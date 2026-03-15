@@ -1,4 +1,4 @@
--- SOLACE E-Commerce Database Schema
+-- SILK HAUS E-Commerce Database Schema
 -- Designed for high-performance luxury hair retail
 
 -- 1. EXTENSIONS
@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   first_name TEXT,
   last_name TEXT,
   email TEXT UNIQUE NOT NULL,
+  role TEXT DEFAULT 'customer', -- 'customer' | 'admin'
   member_status TEXT DEFAULT 'Standard', -- e.g., 'Gold Member', 'Elite'
   avatar_url TEXT,
   phone text,
@@ -71,26 +72,33 @@ CREATE TABLE IF NOT EXISTS public.product_images (
   display_order INTEGER DEFAULT 0
 );
 
--- ORDERS
+-- ORDERS (Updated to match application code)
 CREATE TABLE IF NOT EXISTS public.orders (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  status TEXT DEFAULT 'pending' NOT NULL, -- pending, processing, shipped, delivered, cancelled
+  email TEXT NOT NULL,
+  status TEXT DEFAULT 'pending' NOT NULL, -- pending, paid, processing, shipped, delivered, cancelled
   total_amount DECIMAL(12,2) NOT NULL,
-  shipping_address JSONB NOT NULL,
-  stripe_session_id TEXT UNIQUE,
+  currency TEXT DEFAULT 'GBP' NOT NULL,
+  shipping_info JSONB NOT NULL,
+  payment_provider TEXT NOT NULL, -- 'stripe' | 'paystack'
+  payment_reference TEXT UNIQUE,
+  is_guest BOOLEAN DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- ORDER ITEMS
+-- ORDER ITEMS (Updated to match application code)
 CREATE TABLE IF NOT EXISTS public.order_items (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE NOT NULL,
   product_id UUID REFERENCES public.products(id) ON DELETE SET NULL,
-  variant_id UUID REFERENCES public.product_variants(id) ON DELETE SET NULL,
+  product_name TEXT NOT NULL,
   quantity INTEGER NOT NULL,
-  price_at_purchase DECIMAL(12,2) NOT NULL
+  unit_price DECIMAL(12,2) NOT NULL,
+  image_url TEXT,
+  attributes JSONB DEFAULT '{}',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- 3. RLS POLICIES (Expert Security)
@@ -116,7 +124,7 @@ CREATE POLICY "Allow public read access to products" ON public.products FOR SELE
 CREATE POLICY "Allow public read access to product_variants" ON public.product_variants FOR SELECT USING (true);
 CREATE POLICY "Allow public read access to product_images" ON public.product_images FOR SELECT USING (true);
 
--- Orders: Users can only see their own orders
+-- Orders: Users can see their own orders
 CREATE POLICY "Users can see their own orders." ON public.orders
   FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users can see their own order items." ON public.order_items
@@ -128,8 +136,15 @@ CREATE POLICY "Users can see their own order items." ON public.order_items
     )
   );
 
--- Admin Override (Placeholder for service role or admin flag)
--- In a real scenario, we'd add checks for an 'admin' role in JWT or a separate table.
+-- Orders: Allow insert for any authenticated user or service role (for checkout)
+CREATE POLICY "Allow authenticated users to create orders." ON public.orders
+  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow authenticated users to create order items." ON public.order_items
+  FOR INSERT WITH CHECK (true);
+
+-- Products/Categories: Allow admin write operations via service role
+-- In production, admin operations go through server actions using service role key.
+-- The anon key + RLS blocks direct writes from clients.
 
 -- 4. TRIGGERS FOR UPDATED_AT
 
@@ -151,12 +166,13 @@ CREATE TRIGGER on_orders_updated BEFORE UPDATE ON public.orders FOR EACH ROW EXE
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, first_name, last_name)
+  INSERT INTO public.profiles (id, email, first_name, last_name, role)
   VALUES (
     NEW.id,
     NEW.email,
     NEW.raw_user_meta_data->>'first_name',
-    NEW.raw_user_meta_data->>'last_name'
+    NEW.raw_user_meta_data->>'last_name',
+    'customer'
   );
   RETURN NEW;
 END;

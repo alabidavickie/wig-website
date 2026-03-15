@@ -1,12 +1,42 @@
-import { Plus, Search, Filter, MoreHorizontal, Edit, Trash2, Package } from "lucide-react";
+"use client";
+
+import { useEffect, useState, useTransition } from "react";
+import { Plus, Search, Filter, Edit, Trash2, Package, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { getProducts, getCategories } from "@/lib/actions/products";
+import { getProducts, getCategories, deleteProduct, type Product, type Category } from "@/lib/actions/products";
 import { format } from "date-fns";
 
-export default async function AdminProductsPage() {
-  const products = await getProducts();
-  const categories = await getCategories();
+export default function AdminProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    const [prods, cats] = await Promise.all([getProducts(), getCategories()]);
+    setProducts(prods);
+    setCategories(cats);
+    setLoading(false);
+  };
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) return;
+    setDeletingId(id);
+    try {
+      await deleteProduct(id);
+      setProducts(prev => prev.filter(p => p.id !== id));
+    } catch (error) {
+      alert("Failed to delete product");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -22,7 +52,7 @@ export default async function AdminProductsPage() {
           <Plus className="w-4 h-4" /> Add Product
         </Link>
       </div>
-// ... (filters)
+
       {/* Filters & Search */}
       <div className="bg-white p-4 border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4 items-center">
         <div className="relative flex-1 w-full">
@@ -60,7 +90,16 @@ export default async function AdminProductsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {products.length === 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-8 py-20 text-center">
+                    <div className="flex flex-col items-center gap-2 text-gray-400">
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                      <p className="text-sm font-medium uppercase tracking-widest">Loading products...</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : products.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-8 py-20 text-center">
                     <div className="flex flex-col items-center gap-2 text-gray-400">
@@ -103,8 +142,16 @@ export default async function AdminProductsPage() {
                         <Link href={`/admin/products/${product.id}`} className="p-2 border border-gray-100 hover:bg-white hover:border-[#1A1A1D] transition-all">
                           <Edit className="w-4 h-4" />
                         </Link>
-                        <button className="p-2 border border-gray-100 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-all">
-                          <Trash2 className="w-4 h-4" />
+                        <button 
+                          onClick={() => handleDelete(product.id, product.name)}
+                          disabled={deletingId === product.id}
+                          className="p-2 border border-gray-100 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-all disabled:opacity-50"
+                        >
+                          {deletingId === product.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
                         </button>
                       </div>
                     </td>

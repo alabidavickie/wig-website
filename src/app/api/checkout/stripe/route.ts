@@ -95,7 +95,7 @@ export async function POST(req: Request) {
 
     // Prepare Db Order Input (Pending Order)
     const orderInput: OrderInput = {
-      user_id: user?.id || null, 
+      user_id: user?.id || undefined, 
       email: user?.email || shippingDetails?.email || "unknown@example.com",
       shipping_info: shippingDetails || {},
       total_amount,

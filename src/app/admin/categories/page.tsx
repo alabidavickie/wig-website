@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Tag, Loader2, Check } from "lucide-react";
-import { getCategories, createCategory } from "@/lib/actions/products";
+import { getCategories, createCategory, deleteCategory } from "@/lib/actions/products";
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -10,6 +10,20 @@ export default function AdminCategoriesPage() {
   const [isAdding, setIsAdding] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "", slug: "", description: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDeleteCategory = async (id: string, name: string) => {
+    if (!confirm(`Delete category "${name}"? Products in this category will become uncategorized.`)) return;
+    setDeletingId(id);
+    try {
+      await deleteCategory(id);
+      setCategories(prev => prev.filter(c => c.id !== id));
+    } catch (error) {
+      alert("Failed to delete category. It may still have products assigned.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -141,8 +155,16 @@ export default function AdminCategoriesPage() {
                   <td className="px-8 py-5 text-[12px] font-mono text-gray-400">{cat.slug}</td>
                   <td className="px-8 py-5 text-[12px] font-bold">--</td>
                   <td className="px-8 py-5">
-                    <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                      <Trash2 className="w-4 h-4" />
+                    <button 
+                      onClick={() => handleDeleteCategory(cat.id, cat.name)}
+                      disabled={deletingId === cat.id}
+                      className="p-2 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                    >
+                      {deletingId === cat.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
                     </button>
                   </td>
                 </tr>
