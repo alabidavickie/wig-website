@@ -3,13 +3,13 @@ import { Instagram, MessageCircle, Mail } from 'lucide-react';
 
 export const Footer = () => {
   return (
-    <footer className="bg-[#1A1A1D] text-white pt-24 mt-auto" suppressHydrationWarning>
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+    <footer className="bg-[#1A1A1D] text-white pt-12 sm:pt-16 md:pt-24 mt-auto" suppressHydrationWarning>
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12">
         
         {/* Top — Newsletter + Brand */}
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-24 pb-16 border-b border-white/10">
+        <div className="grid md:grid-cols-2 gap-8 sm:gap-12 lg:gap-24 pb-10 sm:pb-16 border-b border-white/10">
           <div>
-            <h2 className="font-serif text-5xl md:text-6xl italic uppercase tracking-tighter leading-none mb-4">
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl italic uppercase tracking-tighter leading-none mb-3 sm:mb-4">
               Inside<br />
               <span className="text-[#D5A754]">Silk Haus.</span>
             </h2>
@@ -19,7 +19,7 @@ export const Footer = () => {
           </div>
           <div className="flex flex-col justify-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-white/50 mb-4">Join The List</p>
-            <div className="flex" suppressHydrationWarning>
+            <div className="flex flex-col sm:flex-row" suppressHydrationWarning>
               <input
                 type="email"
                 placeholder="your@email.com"
@@ -34,7 +34,7 @@ export const Footer = () => {
         </div>
 
         {/* Middle — Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 py-16 border-b border-white/10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10 py-10 sm:py-16 border-b border-white/10">
           <div>
             <h4 className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#D5A754] mb-6">Shop</h4>
             <ul className="space-y-3">
@@ -102,7 +102,7 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 py-6 sm:py-8">
           <div className="flex items-center gap-4">
             <h2 className="font-serif text-2xl tracking-widest uppercase">SILK HAUS</h2>
             <span className="text-white/20 hidden md:inline">|</span>

@@ -37,7 +37,7 @@ export async function getUserLocation(): Promise<GeoData> {
       symbol: isNigeria ? "₦" : "£",
     };
   } catch (error) {
-    console.error("Error fetching geo location:", error);
+    console.warn("Could not determine user location (network/adblocker), defaulting to GB.");
     return DEFAULT_GEO;
   }
 }

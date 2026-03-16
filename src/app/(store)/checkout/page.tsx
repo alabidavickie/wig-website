@@ -8,11 +8,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useGeoStore } from "@/lib/store/useGeoStore";
 import { Price } from "@/components/storefront/price";
+import { toast } from "sonner";
 
 export default function CheckoutPage() {
   const [mounted, setMounted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const { geo, getExchangeRate, initialize } = useGeoStore();
+  const { geo, getExchangeRate, initialize, refreshRate } = useGeoStore();
   
   const [formData, setFormData] = useState({
     firstName: "", lastName: "", email: "", address: "", city: "", zip: ""
@@ -24,7 +25,9 @@ export default function CheckoutPage() {
   useEffect(() => {
     setMounted(true);
     initialize();
-  }, [initialize]);
+    // Always fetch the latest exchange rate before checkout
+    refreshRate();
+  }, [initialize, refreshRate]);
 
   if (!mounted || !geo) return null; // Wait for geo resolution
 
@@ -59,7 +62,9 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async (provider: 'stripe' | 'paystack') => {
     // Basic validation
     if (!formData.email || !formData.firstName || !formData.lastName || !formData.address) {
-      alert("Please fill in all required shipping details.");
+      toast.error("Missing Details", {
+        description: "Please fill in all required shipping details.",
+      });
       return;
     }
 
@@ -88,30 +93,32 @@ export default function CheckoutPage() {
       if (data.url) {
         window.location.href = data.url;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Checkout Error:", error);
-      alert("Failed to initiate checkout. Please try again.");
+      toast.error("Checkout Failed", {
+        description: error.message || "Something went wrong. Please try again.",
+      });
       setSubmitting(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-white text-[#1A1A1D] font-sans">
-      <div className="h-[120px]"></div>
+      <div className="h-[100px] sm:h-[120px]"></div>
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-12">
-        <div className="mb-12">
-          <Link href="/cart" className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 hover:text-black transition-colors">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12">
+        <div className="mb-8 sm:mb-12">
+          <Link href="/cart" className="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 hover:text-black transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Bag
           </Link>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_420px] gap-16">
+        <div className="grid lg:grid-cols-[1fr_420px] gap-10 md:gap-12 lg:gap-16">
           {/* Checkout Form */}
-          <div className="space-y-10">
+          <div className="space-y-6 sm:space-y-8 md:space-y-10">
             <div>
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40 mb-3">Secure Checkout</h3>
-              <h1 className="text-4xl md:text-5xl font-serif uppercase tracking-tighter italic leading-none">Your Order</h1>
+              <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-[#1A1A1D]/40 mb-2 sm:mb-3">Secure Checkout</h3>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif uppercase tracking-tighter italic leading-none">Your Order</h1>
             </div>
 
             {/* Shipping Details */}
@@ -197,7 +204,7 @@ export default function CheckoutPage() {
 
           {/* Order Summary */}
           <div className="h-fit lg:sticky lg:top-[160px]">
-            <div className="bg-[#FAF9F6] p-8 border border-gray-100 shadow-sm space-y-8 rounded-[24px]">
+            <div className="bg-[#FAF9F6] p-5 sm:p-6 md:p-8 border border-gray-100 shadow-sm space-y-6 sm:space-y-8 rounded-[16px] sm:rounded-[20px] md:rounded-[24px]">
               <div className="flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-[#D5A754]" />
                 <h3 className="text-[12px] font-bold uppercase tracking-widest">Order Summary</h3>

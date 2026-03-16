@@ -17,30 +17,40 @@ export const Header = () => {
     setMounted(true);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50" suppressHydrationWarning>
       {/* Announcement Bar */}
       <div className="bg-[#C5A880] text-white py-2 flex justify-center items-center" suppressHydrationWarning>
-        <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.2em]" suppressHydrationWarning>
+        <span className="text-[9px] sm:text-[10px] md:text-[11px] font-medium uppercase tracking-[0.15em] sm:tracking-[0.2em]" suppressHydrationWarning>
           CRAFTED FOR SOFTNESS • DESIGNED FOR CONFIDENCE
         </span>
       </div>
 
       {/* Main Header */}
-      <header className="fixed w-full top-[31px] lg:top-[35px] left-0 z-40 px-6 md:px-12 py-2.5 lg:py-3.5 transition-all duration-500 border-b border-[#1A1A1D]/5 bg-white/70 backdrop-blur-md" suppressHydrationWarning>
-        <div className="max-w-[1600px] mx-auto grid grid-cols-2 lg:grid-cols-3 items-center">
+      <header className="fixed w-full top-[29px] sm:top-[31px] lg:top-[35px] left-0 z-40 px-4 sm:px-6 md:px-12 py-2 sm:py-2.5 lg:py-3.5 transition-all duration-500 border-b border-[#1A1A1D]/5 bg-white/70 backdrop-blur-md" suppressHydrationWarning>
+        <div className="max-w-[1600px] mx-auto grid grid-cols-3 items-center">
           
-          {/* Mobile Menu Trigger & Left Mobile Nav */}
-          <div className="flex items-center gap-4 lg:hidden" suppressHydrationWarning>
+          {/* Left: Mobile Menu Trigger + Search (mobile) or Desktop Nav (desktop) */}
+          <div className="flex items-center gap-3 sm:gap-4 lg:hidden" suppressHydrationWarning>
             <button 
-              className="hover:opacity-60 transition-opacity cursor-pointer flex items-center justify-center p-2 -ml-2"
+              className="hover:opacity-60 transition-opacity cursor-pointer flex items-center justify-center p-1.5 sm:p-2 -ml-1"
               onClick={() => setIsMobileMenuOpen(true)}
               suppressHydrationWarning
             >
-              <Menu className="w-[20px] h-[20px] text-[#1A1A1D]" strokeWidth={1.2} />
+              <Menu className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px] text-[#1A1A1D]" strokeWidth={1.2} />
             </button>
-            <button className="hover:opacity-60 transition-opacity cursor-pointer" suppressHydrationWarning>
-              <Search className="w-[18px] h-[18px] text-[#1A1A1D]" strokeWidth={1.2} />
+            <button className="hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2" suppressHydrationWarning>
+              <Search className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] text-[#1A1A1D]" strokeWidth={1.2} />
             </button>
           </div>
 
@@ -61,34 +71,34 @@ export const Header = () => {
           </nav>
 
           {/* Center: Logo */}
-          <div className="flex justify-center flex-1">
+          <div className="flex justify-center">
             <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity">
               <Image 
                 src="/images/logo_premium_v2.png" 
                 alt="SILK HAUS" 
                 width={150}
                 height={75}
-                className="h-[40px] lg:h-[55px] w-auto object-contain" 
+                className="h-[35px] sm:h-[40px] lg:h-[55px] w-auto object-contain" 
                 priority
               />
             </Link>
           </div>
 
           {/* Right: Icons */}
-          <div className="flex items-center justify-end gap-2 md:gap-5" suppressHydrationWarning>
-            <button className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-2 items-center" suppressHydrationWarning>
-              <Search className="w-[17px] h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+          <div className="flex items-center justify-end gap-1 sm:gap-2 md:gap-5" suppressHydrationWarning>
+            <button className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2 items-center" suppressHydrationWarning>
+              <Search className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
             </button>
-            <Link href="/login" className="hover:opacity-60 transition-opacity cursor-pointer p-2" suppressHydrationWarning>
-              <User className="w-[17px] h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+            <Link href="/login" className="hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2" suppressHydrationWarning>
+              <User className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
             </Link>
-            <Link href="/dashboard/wishlist" className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-2" suppressHydrationWarning>
-              <Heart className="w-[17px] h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+            <Link href="/dashboard/wishlist" className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2" suppressHydrationWarning>
+              <Heart className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
             </Link>
-            <Link href="/cart" className="hover:opacity-60 transition-opacity relative cursor-pointer flex items-center p-2" suppressHydrationWarning>
-              <ShoppingBag className="w-[17px] h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+            <Link href="/cart" className="hover:opacity-60 transition-opacity relative cursor-pointer flex items-center p-1.5 sm:p-2" suppressHydrationWarning>
+              <ShoppingBag className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
               {itemCount > 0 && (
-                <span className="absolute top-1 right-1 bg-[#1A1A1D] text-white text-[8px] w-[13px] h-[13px] flex items-center justify-center rounded-full font-medium">
+                <span className="absolute top-0.5 sm:top-1 right-0.5 sm:right-1 bg-[#1A1A1D] text-white text-[7px] sm:text-[8px] w-[12px] h-[12px] sm:w-[13px] sm:h-[13px] flex items-center justify-center rounded-full font-medium">
                   {itemCount}
                 </span>
               )}
@@ -97,37 +107,43 @@ export const Header = () => {
         </div>
       </header>
 
-      {/* Mobile Fullscreen Menu - Moved outside <header> for true isolation */}
+      {/* Mobile Fullscreen Menu */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 bg-white z-[100] flex flex-col p-8 animate-in slide-in-from-left duration-500 overflow-y-auto" suppressHydrationWarning>
-          <div className="flex justify-between items-center mb-16" suppressHydrationWarning>
-            <span className="inline-block bg-[#C5A880] rounded-lg px-4 py-2">
+        <div className="fixed inset-0 bg-white z-[100] flex flex-col p-6 sm:p-8 animate-in slide-in-from-left duration-500 overflow-y-auto" suppressHydrationWarning>
+          <div className="flex justify-between items-center mb-12 sm:mb-16" suppressHydrationWarning>
+            <span className="inline-block bg-[#C5A880] rounded-lg px-3 sm:px-4 py-1.5 sm:py-2">
               <Image 
                 src="/images/logo2.png" 
                 alt="SILK HAUS" 
                 width={80}
                 height={40}
-                className="h-[40px] w-auto object-contain scale-110" 
+                className="h-[32px] sm:h-[40px] w-auto object-contain scale-110" 
               />
             </span>
-            <button onClick={() => setIsMobileMenuOpen(false)} className="cursor-pointer" suppressHydrationWarning>
-              <X className="w-6 h-6 text-[#1A1A1D]" />
+            <button onClick={() => setIsMobileMenuOpen(false)} className="cursor-pointer p-2" suppressHydrationWarning>
+              <X className="w-5 h-5 sm:w-6 sm:h-6 text-[#1A1A1D]" />
             </button>
           </div>
           
-          <nav className="flex flex-col gap-8 text-[12px] font-bold tracking-[0.2em] text-[#1A1A1D]/90" suppressHydrationWarning>
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer">HOME</Link>
-            <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer">SHOP</Link>
-            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer">ABOUT</Link>
-            <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer">FAQ</Link>
-            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer">CONTACT</Link>
+          <nav className="flex flex-col gap-6 sm:gap-8 text-[13px] sm:text-[12px] font-bold tracking-[0.2em] text-[#1A1A1D]/90" suppressHydrationWarning>
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">HOME</Link>
+            <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">SHOP</Link>
+            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">ABOUT</Link>
+            <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">FAQ</Link>
+            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">CONTACT</Link>
           </nav>
 
-          <div className="mt-auto border-t border-[#1A1A1D]/10 pt-12 space-y-6" suppressHydrationWarning>
-             <Link href="/dashboard/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#1A1A1D]/70 cursor-pointer hover:text-black transition-colors">
+          <div className="mt-auto border-t border-[#1A1A1D]/10 pt-8 sm:pt-12 space-y-5 sm:space-y-6" suppressHydrationWarning>
+             <Link href="/cart" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#1A1A1D]/70 cursor-pointer hover:text-black transition-colors py-1">
+                <ShoppingBag className="w-4 h-4" /> Shopping Bag
+                {itemCount > 0 && (
+                  <span className="ml-auto bg-[#1A1A1D] text-white text-[9px] px-2 py-0.5 rounded-full font-medium">{itemCount}</span>
+                )}
+             </Link>
+             <Link href="/dashboard/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#1A1A1D]/70 cursor-pointer hover:text-black transition-colors py-1">
                 <Heart className="w-4 h-4" /> Wishlist
              </Link>
-             <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#1A1A1D]/70 cursor-pointer hover:text-black transition-colors">
+             <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#1A1A1D]/70 cursor-pointer hover:text-black transition-colors py-1">
                 <User className="w-4 h-4" /> My Account
              </Link>
           </div>

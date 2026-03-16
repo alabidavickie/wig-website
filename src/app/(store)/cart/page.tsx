@@ -49,12 +49,12 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-white text-[#1A1A1D] font-sans" suppressHydrationWarning>
       {/* Header Spacer */}
-      <div className="h-[120px]"></div>
+      <div className="h-[100px] sm:h-[120px]"></div>
 
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-12" suppressHydrationWarning>
-        <header className="mb-16 reveal">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40 mb-4">Your Selection</h3>
-          <h1 className="text-5xl md:text-7xl font-serif uppercase tracking-tighter italic leading-none">Shopping <br /> Bag</h1>
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12" suppressHydrationWarning>
+        <header className="mb-8 sm:mb-12 md:mb-16 reveal">
+          <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-[#1A1A1D]/40 mb-2 sm:mb-4">Your Selection</h3>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif uppercase tracking-tighter italic leading-none">Shopping <br /> Bag</h1>
         </header>
 
         {items.length === 0 ? (
@@ -65,7 +65,7 @@ export default function CartPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid lg:grid-cols-[1fr_450px] gap-20">
+          <div className="grid lg:grid-cols-[1fr_450px] gap-10 md:gap-16 lg:gap-20">
             {/* Cart Items List */}
             <div className="space-y-12">
               {items.map((item) => {
@@ -122,7 +122,7 @@ export default function CartPage() {
 
             {/* Summary Panel */}
             <div className="h-fit lg:sticky lg:top-[160px] reveal" suppressHydrationWarning>
-              <div className="bg-[#FAF9F6] p-6 md:p-10 space-y-10 rounded-[32px] md:rounded-[40px] border border-gray-100 shadow-2xl">
+               <div className="bg-[#FAF9F6] p-5 sm:p-6 md:p-10 space-y-6 sm:space-y-8 md:space-y-10 rounded-[24px] sm:rounded-[32px] md:rounded-[40px] border border-gray-100 shadow-2xl">
                 <div className="flex items-center gap-4 text-[#1A1A1D]">
                    <ShieldCheck className="w-6 h-6 text-[#D5A754]" />
                    <h2 className="text-[12px] font-bold uppercase tracking-[0.2em]">Bag Summary</h2>

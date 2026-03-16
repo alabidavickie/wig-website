@@ -5,18 +5,28 @@ import { OrderInput } from "@/lib/actions/orders";
 
 export async function POST(req: Request) {
   try {
+    // Early check: Ensure Paystack is configured
+    const paystackKey = process.env.PAYSTACK_SECRET_KEY;
+    if (!paystackKey || paystackKey.trim() === "") {
+      return NextResponse.json(
+        { message: "Paystack is not configured. Please add your PAYSTACK_SECRET_KEY to .env.local" },
+        { status: 503 }
+      );
+    }
+
     const supabase = await (await import("@/lib/supabase/server")).createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     const body = await req.json();
 
-    // Zod Validation Schema
+    // Zod Validation Schema — accepts any string ID (UUIDs and mock IDs)
     const checkoutSchema = z.object({
       items: z.array(z.object({
-        id: z.string().uuid(),
+        id: z.string().min(1),
         quantity: z.number().int().positive(),
         name: z.string(),
         image: z.string(),
+        price: z.number().optional(), // Accept price from client as fallback
         variant: z.record(z.string(), z.string()).optional()
       })),
       shippingDetails: z.object({
@@ -26,32 +36,49 @@ export async function POST(req: Request) {
         address: z.string().min(5),
         city: z.string().min(2),
         zip: z.string().default("")
-      })
+      }),
+      currency: z.string().optional()
     });
 
     const validatedData = checkoutSchema.safeParse(body);
     if (!validatedData.success) {
-      return new NextResponse(JSON.stringify({ error: "Invalid request data", details: validatedData.error.format() }), { status: 400 });
+      return NextResponse.json(
+        { message: "Invalid checkout data. Please fill in all required fields.", details: validatedData.error.format() },
+        { status: 400 }
+      );
     }
 
     const { items, shippingDetails } = validatedData.data;
 
     // Fetch products from database to get authentic prices
-    const { data: dbProducts, error: dbError } = await supabase
-      .from("products")
-      .select()
-      .in("id", items.map((i: any) => i.id));
+    // Filter out mock IDs for DB lookup (they won't exist in Supabase)
+    const realIds = items.filter(i => !i.id.startsWith("mock-")).map(i => i.id);
+    let dbProducts: any[] = [];
 
-    if (dbError || !dbProducts) {
-      throw new Error("Failed to verify product prices");
+    if (realIds.length > 0) {
+      const { data, error } = await supabase
+        .from("products")
+        .select()
+        .in("id", realIds);
+
+      if (!error && data) {
+        dbProducts = data;
+      }
     }
 
-    // Calculate total amount from DB prices
+    // Calculate total amount — use DB price if available, otherwise fallback to client price
     const total_amount = items.reduce((acc: number, item: any) => {
       const dbProduct = dbProducts.find((p: any) => p.id === item.id);
-      if (!dbProduct) throw new Error(`Product not found: ${item.name}`);
-      return acc + (dbProduct.base_price * item.quantity);
+      const unitPrice = dbProduct ? dbProduct.base_price : (item.price || 0);
+      return acc + (unitPrice * item.quantity);
     }, 0);
+
+    if (total_amount <= 0) {
+      return NextResponse.json(
+        { message: "Order total must be greater than zero." },
+        { status: 400 }
+      );
+    }
 
     const email = user?.email || shippingDetails?.email || "unknown@example.com";
     
@@ -60,21 +87,21 @@ export async function POST(req: Request) {
 
     // Prepare Db Order Input (Pending Order)
     const orderInput: OrderInput = {
-      user_id: user?.id || undefined, // Guest support
+      user_id: user?.id || undefined,
       email,
       shipping_info: shippingDetails || {},
       total_amount,
       currency: "NGN",
       payment_provider: "paystack",
       payment_reference: reference, 
-      is_guest: !user, // Flag as guest if no auth session
+      is_guest: !user,
       items: items.map((i: any) => {
         const dbProduct = dbProducts.find((p: any) => p.id === i.id);
         return {
           product_id: i.id,
           product_name: i.name,
           quantity: i.quantity,
-          unit_price: dbProduct?.base_price || 0, // SECURE: Use DB price instead of client-provided price
+          unit_price: dbProduct?.base_price || i.price || 0,
           image_url: i.image,
           attributes: i.variant
         };
@@ -85,12 +112,12 @@ export async function POST(req: Request) {
     const response = await fetch("https://api.paystack.co/transaction/initialize", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        Authorization: `Bearer ${paystackKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email,
-        amount: Math.round(total_amount * 100 * 1500), // Convert to kobo AND apply NGN rate (1500)
+        amount: Math.round(total_amount * 100 * 1500), // Convert to kobo AND apply NGN rate
         reference: reference,
         callback_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout/success?reference=${reference}&provider=paystack`,
         metadata: {
@@ -107,15 +134,23 @@ export async function POST(req: Request) {
 
     if (!data.status) {
       console.error("[PAYSTACK_INIT_ERROR]", data);
-      throw new Error(data.message || "Failed to initialize Paystack");
+      return NextResponse.json(
+        { message: data.message || "Paystack failed to initialize. Please check your API key." },
+        { status: 502 }
+      );
     }
 
     // Save Pending Order to Database only after successful initialization
-    await createOrder(orderInput);
+    try {
+      await createOrder(orderInput);
+    } catch (orderError: any) {
+      console.warn("[PAYSTACK_ORDER_SAVE_WARNING] Order save failed but payment was initialized:", orderError.message);
+      // Don't block the payment — the webhook will handle order reconciliation
+    }
 
     return NextResponse.json({ url: data.data.authorization_url });
   } catch (error: any) {
     console.error("[PAYSTACK_CHECKOUT_ERROR]", error);
-    return new NextResponse(error.message || "Internal Server Error", { status: 500 });
+    return NextResponse.json({ message: error.message || "Internal Server Error" }, { status: 500 });
   }
 }

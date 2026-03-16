@@ -9,11 +9,12 @@ interface GeoState {
   loading: boolean;
   initialized: boolean;
   initialize: () => Promise<void>;
+  refreshRate: () => Promise<void>;
   getExchangeRate: () => number;
   formatPrice: (amount: number) => string;
 }
 
-const RATE_EXPIRY = 3600000; // 1 hour in milliseconds
+const RATE_EXPIRY = 60000; // 1 minute — keep rates fresh to avoid financial discrepancy
 
 export const useGeoStore = create<GeoState>()(
   persist(
@@ -25,7 +26,7 @@ export const useGeoStore = create<GeoState>()(
       initialized: false,
 
       initialize: async () => {
-        const { initialized, lastFetched, rate } = get();
+        const { initialized, lastFetched } = get();
         const now = Date.now();
         
         // If already initialized and rate is fresh, skip
@@ -40,7 +41,7 @@ export const useGeoStore = create<GeoState>()(
           }
 
           // 2. Get Exchange Rate (always GBP base)
-          let currentRate = rate;
+          let currentRate = get().rate;
           try {
             const rateRes = await fetch("https://open.er-api.com/v6/latest/GBP");
             const rateData = await rateRes.json();
@@ -60,6 +61,27 @@ export const useGeoStore = create<GeoState>()(
           });
         } catch (error) {
           console.error("Failed to initialize geo store:", error);
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      // Force-refresh the exchange rate (bypasses cache). 
+      // Call this before checkout to ensure the price is accurate.
+      refreshRate: async () => {
+        set({ loading: true });
+        try {
+          const rateRes = await fetch("https://open.er-api.com/v6/latest/GBP");
+          const rateData = await rateRes.json();
+          if (rateData?.rates?.NGN) {
+            set({ 
+              rate: rateData.rates.NGN, 
+              lastFetched: Date.now() 
+            });
+            console.log(`[GEO_STORE] Rate Refreshed: 1 GBP = ${rateData.rates.NGN} NGN`);
+          }
+        } catch (e) {
+          console.warn("[GEO_STORE] Failed to refresh rate:", e);
         } finally {
           set({ loading: false });
         }
