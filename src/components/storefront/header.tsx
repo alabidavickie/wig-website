@@ -38,7 +38,7 @@ export const Header = () => {
 
       {/* Main Header */}
       <header className="fixed w-full top-[29px] sm:top-[31px] lg:top-[35px] left-0 z-40 px-4 sm:px-6 md:px-12 py-2 sm:py-2.5 lg:py-3.5 transition-all duration-500 border-b border-[#1A1A1D]/5 bg-white/70 backdrop-blur-md" suppressHydrationWarning>
-        <div className="max-w-[1600px] mx-auto grid grid-cols-3 items-center">
+        <div className="max-w-[1600px] mx-auto grid grid-cols-3 items-center" suppressHydrationWarning>
           
           {/* Left: Mobile Menu Trigger + Search (mobile) or Desktop Nav (desktop) */}
           <div className="flex items-center gap-3 sm:gap-4 lg:hidden" suppressHydrationWarning>
@@ -71,7 +71,7 @@ export const Header = () => {
           </nav>
 
           {/* Center: Logo */}
-          <div className="flex justify-center">
+          <div className="flex justify-center" suppressHydrationWarning>
             <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity">
               <Image 
                 src="/images/logo_premium_v2.png" 

@@ -4,11 +4,11 @@ import { Instagram, MessageCircle, Mail } from 'lucide-react';
 export const Footer = () => {
   return (
     <footer className="bg-[#1A1A1D] text-white pt-12 sm:pt-16 md:pt-24 mt-auto" suppressHydrationWarning>
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12" suppressHydrationWarning>
         
         {/* Top — Newsletter + Brand */}
-        <div className="grid md:grid-cols-2 gap-8 sm:gap-12 lg:gap-24 pb-10 sm:pb-16 border-b border-white/10">
-          <div>
+        <div className="grid md:grid-cols-2 gap-8 sm:gap-12 lg:gap-24 pb-10 sm:pb-16 border-b border-white/10" suppressHydrationWarning>
+          <div suppressHydrationWarning>
             <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl italic uppercase tracking-tighter leading-none mb-3 sm:mb-4">
               Inside<br />
               <span className="text-[#D5A754]">Silk Haus.</span>
@@ -17,7 +17,7 @@ export const Footer = () => {
               Be first to know about new arrivals, exclusive offers, hair care tutorials, and member-only early access events.
             </p>
           </div>
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center" suppressHydrationWarning>
             <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-white/50 mb-4">Join The List</p>
             <div className="flex flex-col sm:flex-row" suppressHydrationWarning>
               <input
@@ -34,8 +34,8 @@ export const Footer = () => {
         </div>
 
         {/* Middle — Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10 py-10 sm:py-16 border-b border-white/10">
-          <div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10 py-10 sm:py-16 border-b border-white/10" suppressHydrationWarning>
+          <div suppressHydrationWarning>
             <h4 className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#D5A754] mb-6">Shop</h4>
             <ul className="space-y-3">
               {[
@@ -51,7 +51,7 @@ export const Footer = () => {
               ))}
             </ul>
           </div>
-          <div>
+          <div suppressHydrationWarning>
             <h4 className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#D5A754] mb-6">Company</h4>
             <ul className="space-y-3">
               {[
@@ -67,7 +67,7 @@ export const Footer = () => {
               ))}
             </ul>
           </div>
-          <div>
+          <div suppressHydrationWarning>
             <h4 className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#D5A754] mb-6">Support</h4>
             <ul className="space-y-3">
               {[
@@ -83,7 +83,7 @@ export const Footer = () => {
               ))}
             </ul>
           </div>
-          <div>
+          <div suppressHydrationWarning>
             <h4 className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#D5A754] mb-6">Account</h4>
             <ul className="space-y-3">
               {[
@@ -102,14 +102,14 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 py-6 sm:py-8">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 py-6 sm:py-8" suppressHydrationWarning>
+          <div className="flex items-center gap-4" suppressHydrationWarning>
             <h2 className="font-serif text-2xl tracking-widest uppercase">SILK HAUS</h2>
             <span className="text-white/20 hidden md:inline">|</span>
             <p className="text-[11px] text-white/30 uppercase tracking-widest hidden md:block">Premium Wigs</p>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5" suppressHydrationWarning>
             <a href="https://instagram.com/follienn_hair" target="_blank" rel="noopener noreferrer" className="w-9 h-9 border border-white/20 flex items-center justify-center hover:border-[#D5A754] hover:text-[#D5A754] transition-all cursor-pointer">
               <Instagram className="w-4 h-4" />
             </a>
@@ -121,7 +121,7 @@ export const Footer = () => {
             </a>
           </div>
 
-          <p className="text-[11px] text-white/30 uppercase tracking-widest">
+          <p className="text-[11px] text-white/30 uppercase tracking-widest" suppressHydrationWarning>
             &copy; {new Date().getFullYear()} Silk Haus. All Rights Reserved.
           </p>
         </div>
