@@ -125,6 +125,15 @@ export const Header = () => {
             </button>
           </div>
           
+          {/* Shop Now CTA — prominent on mobile */}
+          <Link 
+            href="/shop" 
+            onClick={() => setIsMobileMenuOpen(false)} 
+            className="block w-full text-center bg-[#C5A880] text-white py-4 text-[11px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-[#D5A754] transition-all duration-300 shadow-lg mb-8 sm:mb-10"
+          >
+            Shop Now
+          </Link>
+
           <nav className="flex flex-col gap-6 sm:gap-8 text-[13px] sm:text-[12px] font-bold tracking-[0.2em] text-[#1A1A1D]/90" suppressHydrationWarning>
             <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">HOME</Link>
             <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">SHOP</Link>

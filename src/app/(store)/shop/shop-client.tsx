@@ -68,7 +68,7 @@ export default function ShopClient({ product }: { product: any }) {
 
   return (
     <div className="reveal group cursor-pointer flex flex-col">
-      <Link href={`/shop/${product.id}`} className="relative aspect-[3/4] bg-[#FAF9F6] border border-gray-50 overflow-hidden rounded-[24px] mb-8 shadow-sm">
+      <Link href={`/shop/${product.id}`} className="relative aspect-[3/4] bg-[#FAF9F6] border border-gray-50 overflow-hidden rounded-[16px] sm:rounded-[20px] md:rounded-[24px] mb-5 sm:mb-8 shadow-sm">
         <Image 
           src={product.image} 
           alt={product.name} 
@@ -78,23 +78,23 @@ export default function ShopClient({ product }: { product: any }) {
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
         
-        {/* Actions overlay */}
-        <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+        {/* Actions overlay — always visible on mobile, hover on desktop */}
+        <div className="absolute top-3 sm:top-4 right-3 sm:right-4 flex flex-col gap-2 md:opacity-0 md:translate-x-4 md:group-hover:opacity-100 md:group-hover:translate-x-0 transition-all">
           <button 
             onClick={handleWishlistToggle}
-            className={`w-11 h-11 bg-white flex items-center justify-center hover:bg-black hover:text-white transition-all rounded-full shadow-lg cursor-pointer ${mounted && isInWishlist(product.id) ? 'bg-black text-white' : 'text-[#1A1A1D]'}`}
+            className={`w-10 h-10 sm:w-11 sm:h-11 bg-white flex items-center justify-center hover:bg-black hover:text-white transition-all rounded-full shadow-lg cursor-pointer ${mounted && isInWishlist(product.id) ? 'bg-black text-white' : 'text-[#1A1A1D]'}`}
           >
-            <Heart className={`w-5 h-5 ${mounted && isInWishlist(product.id) ? 'fill-current' : ''}`} />
+            <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${mounted && isInWishlist(product.id) ? 'fill-current' : ''}`} />
           </button>
-          <button className="w-11 h-11 bg-white text-[#1A1A1D] flex items-center justify-center hover:bg-black hover:text-white transition-all rounded-full shadow-lg cursor-pointer">
-            <Search className="w-5 h-5" />
+          <button className="w-10 h-10 sm:w-11 sm:h-11 bg-white text-[#1A1A1D] flex items-center justify-center hover:bg-black hover:text-white transition-all rounded-full shadow-lg cursor-pointer">
+            <Search className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
 
-        {/* Quick Add Pill */}
+        {/* Quick Add Pill — always visible on mobile, hover on desktop */}
         <button 
           onClick={handleQuickAdd}
-          className="absolute bottom-6 left-6 right-6 bg-white text-[#1A1A1D] py-4 text-[11px] font-bold uppercase tracking-widest rounded-full opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-xl cursor-pointer"
+          className="absolute bottom-3 sm:bottom-6 left-3 sm:left-6 right-3 sm:right-6 bg-white text-[#1A1A1D] py-2.5 sm:py-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest rounded-full md:opacity-0 md:translate-y-6 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-300 shadow-xl cursor-pointer"
         >
           Quick Add to Bag
         </button>

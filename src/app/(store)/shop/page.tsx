@@ -13,20 +13,20 @@ export default async function ShopPage() {
   return (
     <div className="min-h-screen bg-white text-[#1A1A1D] font-sans" suppressHydrationWarning>
       {/* Header Spacer */}
-      <div className="h-[120px]"></div>
+      <div className="h-[90px] sm:h-[110px] lg:h-[120px]"></div>
 
       {/* Page Header */}
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-16 reveal">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40 mb-4">Storefront</h3>
-        <h1 className="text-5xl md:text-7xl font-serif text-[#1A1A1D] uppercase tracking-tighter mb-6 italic">The <br /> Collection</h1>
-        <p className="text-[15px] text-[#1A1A1D]/80 max-w-xl leading-relaxed">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12 md:py-16 reveal">
+        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40 mb-3">Storefront</h3>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif text-[#1A1A1D] uppercase tracking-tighter mb-4 sm:mb-6 italic">The <br /> Collection</h1>
+        <p className="text-[13px] sm:text-[15px] text-[#1A1A1D]/80 max-w-xl leading-relaxed">
           Curated with meticulous precision for the modern elite. Discover ethically sourced raw human hair and hand-crafted Silk Haus pieces.
         </p>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-12 flex flex-col lg:flex-row gap-16">
-        {/* Sidebar Filtering */}
-        <aside className="w-full lg:w-72 shrink-0 reveal" suppressHydrationWarning>
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-8 md:gap-16">
+        {/* Sidebar Filtering — hidden on mobile/tablet, visible on desktop */}
+        <aside className="hidden lg:block w-72 shrink-0 reveal" suppressHydrationWarning>
           <div className="sticky top-[140px] space-y-12" suppressHydrationWarning>
             <div>
               <div className="flex items-center justify-between mb-8">
@@ -69,15 +69,16 @@ export default async function ShopPage() {
 
         {/* Product Grid Area */}
         <main className="flex-1" suppressHydrationWarning>
-          <div className="flex justify-between items-center mb-12 reveal">
+          {/* Mobile/Tablet sort bar */}
+          <div className="flex justify-between items-center mb-8 sm:mb-10 md:mb-12 reveal">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">{products.length} Products Found</span>
-            <div className="flex items-center gap-2 cursor-pointer group px-4 py-2 border border-gray-100 rounded-full hover:border-black transition-all">
-              <span className="text-[11px] font-bold uppercase tracking-widest group-hover:text-black transition-colors">Sort: Featured</span>
+            <div className="flex items-center gap-2 cursor-pointer group px-3 sm:px-4 py-2 border border-gray-100 rounded-full hover:border-black transition-all">
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest group-hover:text-black transition-colors">Sort: Featured</span>
               <ChevronDown className="w-3 h-3 text-[#1A1A1D]/60 group-hover:text-black transition-colors" />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16" suppressHydrationWarning>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-10 sm:gap-y-12 md:gap-y-16" suppressHydrationWarning>
             {products.length === 0 ? (
                <div className="col-span-full py-20 text-center text-gray-400 font-serif italic uppercase tracking-widest">
                   No products have been curated for this collection yet.

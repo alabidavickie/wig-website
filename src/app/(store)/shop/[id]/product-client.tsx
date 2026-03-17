@@ -52,16 +52,16 @@ export default function ProductClient({ product }: { product: any }) {
 
   return (
     <div className="bg-white min-h-screen font-sans text-[#1A1A1D]" suppressHydrationWarning>
-      <div className="h-[120px]"></div>
+      <div className="h-[80px] sm:h-[100px] md:h-[120px]"></div>
 
-      <div className="max-w-[1600px] mx-auto py-12 px-6 md:px-12">
-        <div className="mb-12 reveal">
-          <nav className="flex items-center gap-4 text-[11px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D]/40">
+      <div className="max-w-[1600px] mx-auto py-8 sm:py-12 px-4 sm:px-6 md:px-12">
+        <div className="mb-8 sm:mb-12 reveal">
+          <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D]/40">
             <Link href="/" className="hover:text-black transition-colors">Home</Link>
             <span>/</span>
             <Link href="/shop" className="hover:text-black transition-colors">Shop</Link>
             <span>/</span>
-            <span className="text-[#1A1A1D]">{product.name}</span>
+            <span className="text-[#1A1A1D] truncate max-w-[120px] sm:max-w-xs">{product.name}</span>
           </nav>
         </div>
 
@@ -85,7 +85,7 @@ export default function ProductClient({ product }: { product: any }) {
             <div className="space-y-4 md:space-y-6" suppressHydrationWarning>
               <div className="space-y-2">
                 <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40">{product.category}</h3>
-                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl uppercase tracking-tighter leading-tight italic">
+                <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase tracking-tighter leading-tight italic">
                   {product.name}
                 </h1>
               </div>
@@ -131,10 +131,10 @@ export default function ProductClient({ product }: { product: any }) {
                 </div>
               )}
 
-              <div className="flex gap-4">
+              <div className="flex gap-3 sm:gap-4">
                 <Button 
                   onClick={handleAddToCart}
-                  className={`flex-1 py-8 text-[12px] font-bold uppercase tracking-[0.2em] transition-all rounded-full shadow-2xl cursor-pointer ${
+                  className={`flex-1 py-7 sm:py-8 text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.2em] transition-all rounded-full shadow-2xl cursor-pointer ${
                     isAdded 
                     ? 'bg-green-600 text-white hover:bg-green-600' 
                     : 'bg-[#1A1A1D] text-white hover:bg-black'
@@ -142,11 +142,11 @@ export default function ProductClient({ product }: { product: any }) {
                 >
                   {isAdded ? 'Piece Added to Bag' : 'Add to Bag'}
                 </Button>
-                <button className="w-16 h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-black transition-all cursor-pointer">
-                  <Heart className="w-6 h-6" />
+                <button className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-black transition-all cursor-pointer">
+                  <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
-                <button className="w-16 h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-black transition-all cursor-pointer">
-                  <Share2 className="w-5 h-5" />
+                <button className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-black transition-all cursor-pointer">
+                  <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
               

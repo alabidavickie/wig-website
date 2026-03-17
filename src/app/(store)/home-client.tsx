@@ -62,11 +62,12 @@ export default function HomeClient({ products }: { products: any[] }) {
   return (
     <div className="bg-background min-h-screen font-sans text-[#1A1A1D]" suppressHydrationWarning>
       {/* Header Spacer */}
-      <div className="h-[110px] lg:h-[130px]" suppressHydrationWarning></div>
+      <div className="h-[90px] sm:h-[110px] lg:h-[130px]" suppressHydrationWarning></div>
 
       {/* Hero Section */}
       <section className="px-3 sm:px-4 md:px-8 lg:px-12 mb-8 md:mb-12">
-        <section className="relative h-[75vh] md:h-[75vh] lg:h-[85vh] w-full flex items-center justify-center overflow-hidden rounded-2xl md:rounded-3xl group" suppressHydrationWarning>
+        {/* Portrait on mobile (3:4), slightly wider on tablet (4:5), full-height on desktop */}
+        <section className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-auto md:h-[75vh] lg:h-[85vh] w-full flex items-center justify-center overflow-hidden rounded-2xl md:rounded-3xl group" suppressHydrationWarning>
           <div className="absolute inset-0 bg-black/10 z-10 transition-colors group-hover:bg-black/20"></div>
           <Image 
             src="/images/hero_premium_v2.png" 
@@ -74,12 +75,14 @@ export default function HomeClient({ products }: { products: any[] }) {
             fill
             priority
             sizes="100vw"
-            className="w-full h-full object-cover object-[25%_center] md:object-center scale-100 transition-transform duration-[4s] ease-out group-hover:scale-105" 
+            className="w-full h-full object-cover object-top sm:object-[25%_20%] md:object-[25%_center] lg:object-center scale-100 transition-transform duration-[4s] ease-out group-hover:scale-105" 
           />
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-10 sm:pb-16 md:pb-24 lg:pb-32 text-center px-4">
+          {/* Gradient overlay at bottom to ensure button legibility */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/40 to-transparent z-15" />
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-8 sm:pb-12 md:pb-20 lg:pb-28 text-center px-4">
             <Link 
               href="/shop" 
-              className="bg-white text-[#1A1A1D] px-10 sm:px-12 md:px-16 py-3.5 sm:py-4 md:py-5 text-[10px] sm:text-[11px] md:text-[12px] uppercase tracking-[0.3em] md:tracking-[0.4em] font-extrabold hover:bg-[#1A1A1D] hover:text-white transition-all duration-500 rounded-full shadow-2xl cursor-pointer scale-100 hover:scale-110"
+              className="bg-white text-[#1A1A1D] px-8 sm:px-12 md:px-16 py-3.5 sm:py-4 md:py-5 text-[10px] sm:text-[11px] md:text-[12px] uppercase tracking-[0.3em] md:tracking-[0.4em] font-extrabold hover:bg-[#1A1A1D] hover:text-white transition-all duration-500 rounded-full shadow-2xl cursor-pointer hover:scale-110"
             >
               Shop Now
             </Link>
@@ -152,21 +155,21 @@ export default function HomeClient({ products }: { products: any[] }) {
                     />
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     
-                    {/* Quick Add Overlay Button — hidden on mobile, visible on hover on desktop */}
+                    {/* Quick Add Button — always visible on mobile, hover on desktop */}
                     <button 
                       onClick={(e) => handleQuickAdd(e, product)}
-                      className="absolute bottom-4 md:bottom-6 left-3 md:left-6 right-3 md:right-6 bg-white text-[#1A1A1D] py-3 md:py-4 text-[9px] md:text-[11px] font-bold uppercase tracking-widest rounded-full opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-lg flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer"
+                      className="absolute bottom-3 md:bottom-6 left-3 md:left-6 right-3 md:right-6 bg-white text-[#1A1A1D] py-2.5 md:py-4 text-[9px] md:text-[11px] font-bold uppercase tracking-widest rounded-full md:opacity-0 md:translate-y-4 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-300 shadow-lg flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer"
                     >
                       <Plus className="w-3 h-3 md:w-4 md:h-4" /> Quick Add
                     </button>
                   </Link>
 
-                  {/* Wishlist Button */}
+                  {/* Wishlist Button — always visible on mobile, hover on desktop */}
                   <button 
                     onClick={(e) => handleToggleWishlist(e, product)}
                     className={cn(
                       "absolute top-3 right-3 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer",
-                      isInWishlist(product.id) ? "bg-black text-white" : "bg-white text-gray-400 opacity-0 group-hover:opacity-100"
+                      isInWishlist(product.id) ? "bg-black text-white" : "bg-white text-gray-400 md:opacity-0 md:group-hover:opacity-100"
                     )}
                   >
                     <Heart className={cn("w-3 h-3 md:w-4 md:h-4", isInWishlist(product.id) && "fill-current")} />
