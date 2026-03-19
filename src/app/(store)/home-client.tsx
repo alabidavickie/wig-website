@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useCartStore } from '@/lib/store/useCartStore';
 import { useWishlistStore } from '@/lib/store/useWishlistStore';
-import { Heart, Plus } from 'lucide-react';
+import { Heart, Plus, ShoppingBag } from 'lucide-react';
 import { toast } from "sonner";
 import { cn } from '@/lib/utils';
 
@@ -64,55 +64,68 @@ export default function HomeClient({ products }: { products: any[] }) {
       {/* Header Spacer */}
       <div className="h-[90px] sm:h-[110px] lg:h-[130px]" suppressHydrationWarning></div>
 
-      {/* Hero Section */}
-      <section className="px-3 sm:px-4 md:px-8 lg:px-12 mb-8 md:mb-12">
-        {/* Portrait on mobile (3:4), slightly wider on tablet (4:5), full-height on desktop */}
-        <section className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-auto md:h-[75vh] lg:h-[85vh] w-full flex items-center justify-center overflow-hidden rounded-2xl md:rounded-3xl group bg-[#0A0A0A]" suppressHydrationWarning>
-          <div className="absolute inset-0 bg-black/10 z-10 transition-colors group-hover:bg-black/20"></div>
+      {/* Hero Section — Full-bleed responsive hero with 4 breakpoints */}
+      <section className="px-2 sm:px-3 md:px-6 lg:px-10 mb-8 md:mb-12">
+        <section className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-[4/3] lg:aspect-auto lg:h-[88vh] w-full flex items-center justify-center overflow-hidden rounded-2xl sm:rounded-3xl group" suppressHydrationWarning>
           
-          {/* Mobile Image (< 640px) */}
+          {/* Mobile Image (< 640px) — Tall portrait */}
           <div className="block sm:hidden absolute inset-0 w-full h-full">
             <Image 
-              src="/images/hero_mobile_v2.png" 
-              alt="Silk Haus by Follien" 
+              src="/images/hero_mobile_v3.jpg" 
+              alt="Silk Haus by Follienn" 
               fill
               priority
               sizes="100vw"
-              className="w-full h-full object-cover object-center scale-100 transition-transform duration-[4s] ease-out group-hover:scale-105" 
+              className="w-full h-full object-cover object-top scale-100 transition-transform duration-[5s] ease-out group-hover:scale-[1.03]" 
             />
           </div>
 
-          {/* Tablet Image (640px - 768px) */}
+          {/* Mini Tablet Image (640px - 768px) — Narrower portrait */}
           <div className="hidden sm:block md:hidden absolute inset-0 w-full h-full">
             <Image 
-              src="/images/hero_tablet_v2.jpg" 
-              alt="Silk Haus by Follien" 
+              src="/images/hero_mini_tablet_v3.jpg" 
+              alt="Silk Haus by Follienn" 
               fill
               priority
               sizes="100vw"
-              className="w-full h-full object-cover object-center scale-100 transition-transform duration-[4s] ease-out group-hover:scale-105" 
+              className="w-full h-full object-cover object-top scale-100 transition-transform duration-[5s] ease-out group-hover:scale-[1.03]" 
             />
           </div>
 
-          {/* Desktop Image (>= 768px) */}
-          <div className="hidden md:block absolute inset-0 w-full h-full">
+          {/* Tablet Image (768px - 1024px) — Landscape with silks */}
+          <div className="hidden md:block lg:hidden absolute inset-0 w-full h-full">
             <Image 
-              src="/images/hero_premium_v2.png" 
-              alt="Silk Haus by Follien" 
+              src="/images/hero_tablet_v3.jpg" 
+              alt="Silk Haus by Follienn" 
               fill
               priority
               sizes="100vw"
-              className="w-full h-full object-cover object-center scale-100 transition-transform duration-[4s] ease-out group-hover:scale-105" 
+              className="w-full h-full object-cover object-center scale-100 transition-transform duration-[5s] ease-out group-hover:scale-[1.03]" 
             />
           </div>
 
-          {/* Gradient overlay at bottom to ensure button legibility */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/40 to-transparent z-15" />
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-8 sm:pb-12 md:pb-20 lg:pb-28 text-center px-4">
+          {/* Desktop Image (>= 1024px) — Wide landscape with logo on right */}
+          <div className="hidden lg:block absolute inset-0 w-full h-full">
+            <Image 
+              src="/images/hero_desktop_v3.jpg" 
+              alt="Silk Haus by Follienn" 
+              fill
+              priority
+              sizes="100vw"
+              className="w-full h-full object-cover object-center scale-100 transition-transform duration-[5s] ease-out group-hover:scale-[1.03]" 
+            />
+          </div>
+
+          {/* Subtle gradient overlay at bottom for button legibility */}
+          <div className="absolute bottom-0 left-0 right-0 h-44 sm:h-52 bg-gradient-to-t from-black/50 via-black/20 to-transparent z-10" />
+          
+          {/* Shop Now CTA + Shop Icon */}
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-8 sm:pb-10 md:pb-14 lg:pb-20 text-center px-4">
             <Link 
               href="/shop" 
-              className="bg-white text-[#1A1A1D] px-8 sm:px-12 md:px-16 py-3.5 sm:py-4 md:py-5 text-[10px] sm:text-[11px] md:text-[12px] uppercase tracking-[0.3em] md:tracking-[0.4em] font-extrabold hover:bg-[#1A1A1D] hover:text-white transition-all duration-500 rounded-full shadow-2xl cursor-pointer hover:scale-110"
+              className="group/btn relative inline-flex items-center gap-2.5 sm:gap-3 bg-white/95 backdrop-blur-sm text-[#1A1A1D] px-7 sm:px-10 md:px-14 py-3 sm:py-3.5 md:py-4 text-[10px] sm:text-[11px] md:text-[12px] uppercase tracking-[0.25em] sm:tracking-[0.3em] md:tracking-[0.35em] font-extrabold hover:bg-[#1A1A1D] hover:text-white transition-all duration-500 rounded-full shadow-2xl cursor-pointer hover:scale-105 hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
             >
+              <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-[18px] md:h-[18px] transition-transform duration-300 group-hover/btn:scale-110" strokeWidth={1.5} />
               Shop Now
             </Link>
           </div>

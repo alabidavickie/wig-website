@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { updateOrderStatus } from "@/lib/actions/orders";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 const secret = process.env.PAYSTACK_SECRET_KEY!;
 
@@ -35,6 +36,8 @@ export async function POST(req: Request) {
       if (verifyData.data.status === "success") {
          // Update order status to paid
          await updateOrderStatus(reference, "paystack", "paid");
+         revalidatePath("/admin/orders");
+         revalidatePath("/admin");
       }
     }
 

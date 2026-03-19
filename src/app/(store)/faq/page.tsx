@@ -63,11 +63,32 @@ const faqs = [
     questions: [
       {
         q: "What is your return policy?",
-        a: "We offer a 14-day hassle-free return window for all unaltered, unworn units in original packaging. Custom-coloured, cut, or worn pieces cannot be returned for hygiene reasons. To initiate a return, contact our team within 14 days of delivery."
+        a: "All sales are final due to hygiene reasons. Returns are only accepted if the item is unused, unwashed, in original packaging, with the security seal intact, and requested within 48 hours of delivery. Refunds are only issued for wrong or defective items."
       },
       {
         q: "What does the Lifetime Warranty cover?",
         a: "Our Lifetime Warranty covers manufacturing defects, including uneven knot density, weft splitting, and lace fraying not caused by user handling. It does not cover damage from chemical processing, heat styling beyond recommended temperatures, or improper maintenance."
+      },
+    ]
+  },
+  {
+    category: "General & Support",
+    questions: [
+      {
+        q: "How do I track my order?",
+        a: "You will receive a tracking number via email/SMS once your order is dispatched."
+      },
+      {
+        q: "Can I return hair I’ve already installed?",
+        a: "No. All installed or used hair is non-returnable due to hygiene reasons."
+      },
+      {
+        q: "What if I receive the wrong item?",
+        a: "Contact us within 48 hours with photos. We will replace or refund the item."
+      },
+      {
+        q: "Can I change my delivery address after ordering?",
+        a: "Please check carefully before confirming your order. We are not responsible for incorrect addresses."
       },
     ]
   },

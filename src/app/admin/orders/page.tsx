@@ -34,13 +34,13 @@ export default async function AdminOrdersPage() {
         </div>
       </div>
 
-      {/* Stats Quick View */}
+      {/* Stats Quick View — Live from DB */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Pending", value: "08", icon: Clock, color: "text-amber-500", bg: "bg-amber-50" },
-          { label: "Processing", value: "04", icon: Package, color: "text-blue-500", bg: "bg-blue-50" },
-          { label: "Shipped", value: "21", icon: Truck, color: "text-purple-500", bg: "bg-purple-50" },
-          { label: "Fulfilled", value: "142", icon: CheckCircle, color: "text-emerald-500", bg: "bg-emerald-50" },
+          { label: "Pending", value: orders.filter((o: any) => o.status === "pending").length.toString().padStart(2, "0"), icon: Clock, color: "text-amber-500", bg: "bg-amber-50" },
+          { label: "Processing", value: orders.filter((o: any) => o.status === "paid" || o.status === "processing").length.toString().padStart(2, "0"), icon: Package, color: "text-blue-500", bg: "bg-blue-50" },
+          { label: "Shipped", value: orders.filter((o: any) => o.status === "shipped").length.toString().padStart(2, "0"), icon: Truck, color: "text-purple-500", bg: "bg-purple-50" },
+          { label: "Fulfilled", value: orders.filter((o: any) => o.status === "delivered").length.toString(), icon: CheckCircle, color: "text-emerald-500", bg: "bg-emerald-50" },
         ].map((stat) => (
           <div key={stat.label} className="bg-white p-6 border border-gray-100 shadow-sm flex items-center gap-4">
             <div className={`p-3 ${stat.bg} ${stat.color}`}>

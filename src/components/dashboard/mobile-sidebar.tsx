@@ -19,8 +19,10 @@ export const MobileSidebar = () => {
 
   return (
     <Sheet>
-      <SheetTrigger render={<Button variant="ghost" size="icon" className="md:hidden" />}>
-        <Menu className="w-6 h-6" />
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden text-zinc-400 hover:text-white hover:bg-[#1A1A1D]">
+          <Menu className="w-6 h-6" />
+        </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0 bg-[#0A0A0A] border-r border-[#1F1F1F] text-white w-[280px]">
         <Sidebar />

@@ -22,11 +22,15 @@ export default function AboutPage() {
       <section className="max-w-[1400px] mx-auto px-6 md:px-12 py-20">
         <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#1A1A1D]/40 mb-6">Our Story</p>
         <h1 className="font-serif text-6xl md:text-8xl lg:text-[110px] uppercase tracking-tighter italic leading-none mb-12 text-[#1A1A1D]">
-          Born From<br />Passion.
+          Bridging<br />Heritage.
         </h1>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <p className="text-[17px] leading-[2] text-[#1A1A1D]/70 max-w-xl">
-            Silk Haus was founded by @follienn on a simple but powerful belief: every woman deserves to feel extraordinary. What began as a personal journey — searching for luxury hair that matched our exacting standards — grew into a world-class curated Silk Haus wig experience.
+            SilkHaus by Follienn is a luxury hair house built between the UK and Nigeria, created to deliver premium-quality hair with unmatched softness and longevity.
+            <br /><br />
+            We carefully source and curate every collection to meet the highest standards, blending expert craftsmanship with modern elegance. Our hair is designed to feel natural, move effortlessly, and elevate confidence — whether worn daily or for special moments.
+            <br /><br />
+            With roots in Nigeria and a base in the UK, SilkHaus by Follienn represents a bridge between heritage and luxury. Every strand reflects quality, care, and refinement.
           </p>
           <div className="aspect-[4/5] bg-[#FAF9F6] overflow-hidden relative">
             <img src="/images/ceo.jpg" alt="CEO Vision" className="w-full h-full object-cover" />

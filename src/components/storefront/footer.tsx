@@ -73,9 +73,10 @@ export const Footer = () => {
               {[
                 { label: "Help & FAQ", href: "/faq" },
                 { label: "Contact Us", href: "/contact" },
-                { label: "Shipping Info", href: "/faq" },
-                { label: "Returns Policy", href: "/faq" },
-                { label: "Size Guide", href: "/faq" },
+                { label: "Shipping Policy", href: "/shipping-policy" },
+                { label: "Refund Policy", href: "/refund-policy" },
+                { label: "Payment Policy", href: "/payment-policy" },
+                { label: "Terms & Conditions", href: "/terms-and-conditions" },
               ].map(l => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-[13px] text-white/50 hover:text-white transition-colors">{l.label}</Link>

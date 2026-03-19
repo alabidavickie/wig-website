@@ -4,43 +4,62 @@ import {
   DollarSign, 
   ShoppingBag, 
   Users, 
-  TrendingUp,
   Package,
   Clock,
   ChevronRight
 } from "lucide-react";
 import Link from "next/link";
 import { getProducts, getCategories } from "@/lib/actions/products";
+import { getAllOrders } from "@/lib/actions/orders";
 import Image from "next/image";
+import { format } from "date-fns";
 
 export default async function AdminDashboardPage() {
   const products = await getProducts();
   const categories = await getCategories();
+  const allOrders = await getAllOrders();
+
+  // Compute live stats from real orders
+  const totalRevenue = allOrders
+    .filter((o: any) => o.status === "paid" || o.status === "processing" || o.status === "shipped" || o.status === "delivered")
+    .reduce((sum: number, o: any) => sum + Number(o.total_amount || 0), 0);
+
+  const totalOrders = allOrders.length;
+
+  // Unique customers by email
+  const uniqueEmails = new Set(allOrders.map((o: any) => o.email));
+  const totalCustomers = uniqueEmails.size;
+
+  // Order counts by status
+  const pendingCount = allOrders.filter((o: any) => o.status === "pending").length;
+  const paidCount = allOrders.filter((o: any) => o.status === "paid" || o.status === "processing").length;
+  const shippedCount = allOrders.filter((o: any) => o.status === "shipped").length;
+  const deliveredCount = allOrders.filter((o: any) => o.status === "delivered").length;
 
   const stats = [
     { 
       label: "Total Revenue", 
-      value: "$42,850.00", 
-      change: "+12.5%", 
-      trend: "up", 
+      value: `$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
+      change: `${totalOrders} orders`, 
+      trend: "up" as const, 
       icon: DollarSign,
       color: "text-[#C5A880]",
       bg: "bg-[#FAF9F6]"
     },
     { 
       label: "Total Orders", 
-      value: "156", 
-      change: "+18.2%", 
-      trend: "up", 
+      value: totalOrders.toString(), 
+      change: `${pendingCount} pending`, 
+      trend: "up" as const, 
       icon: ShoppingBag,
       color: "text-blue-600",
       bg: "bg-blue-50"
     },
     { 
       label: "Active Customers", 
-      value: "1,240", 
-      change: "-2.4%", 
-      trend: "down", 
+      value: totalCustomers.toLocaleString(), 
+      change: `${deliveredCount} fulfilled`, 
+      trend: "up" as const, 
       icon: Users,
       color: "text-purple-600",
       bg: "bg-purple-50"
@@ -48,20 +67,16 @@ export default async function AdminDashboardPage() {
     { 
       label: "Inventory Items", 
       value: products.length.toString(), 
-      change: `+${categories.length} Collections`, 
-      trend: "up", 
+      change: `${categories.length} Collections`, 
+      trend: "up" as const, 
       icon: Package,
       color: "text-emerald-600",
       bg: "bg-emerald-50"
     },
   ];
 
-  const recentOrders = [
-    { id: "ORD-7234", customer: "Elena Gilbert", product: "HD Lace Frontal - 24\"", amount: "$1,250.00", status: "Processing" },
-    { id: "ORD-7233", customer: "Stefan Salvatore", product: "Raw Virgin Yaki - 18\"", amount: "$720.00", status: "Shipped" },
-    { id: "ORD-7232", customer: "Bonnie Bennett", product: "Deep Wave Wig - 22\"", amount: "$950.00", status: "Delivered" },
-    { id: "ORD-7231", customer: "Caroline Forbes", product: "Blonde Frontal - 24\"", amount: "$1,150.00", status: "Delivered" },
-  ];
+  // Real recent orders (latest 5)
+  const recentOrders = allOrders.slice(0, 5);
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
@@ -166,44 +181,82 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Recent Orders Table */}
+      {/* Recent Orders Table — Now from real DB data */}
       <div className="bg-white border border-gray-100 shadow-sm overflow-hidden">
         <div className="p-8 border-b border-gray-100 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Clock className="w-4 h-4 text-[#C5A880]" />
             <h3 className="text-[12px] font-bold uppercase tracking-widest">Recent Fulfillment Queue</h3>
           </div>
-          <button className="text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:underline">View All Directives</button>
+          <Link href="/admin/orders" className="text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:underline">View All Orders</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-gray-50/50 text-[9px] font-bold uppercase tracking-[0.3em] text-gray-400">
                 <th className="px-8 py-6">Identifier</th>
-                <th className="px-8 py-6">Patron</th>
-                <th className="px-8 py-6">Selection</th>
+                <th className="px-8 py-6">Customer</th>
+                <th className="px-8 py-6">Items</th>
                 <th className="px-8 py-6">Value</th>
-                <th className="px-8 py-6">Workflow Status</th>
+                <th className="px-8 py-6">Provider</th>
+                <th className="px-8 py-6">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {recentOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-8 py-6 text-[12px] font-bold tracking-tighter">{order.id}</td>
-                  <td className="px-8 py-6 text-[12px] uppercase tracking-wide">{order.customer}</td>
-                  <td className="px-8 py-6 text-[11px] text-gray-400 uppercase tracking-widest">{order.product}</td>
-                  <td className="px-8 py-6 text-[12px] font-bold tracking-tighter">{order.amount}</td>
-                  <td className="px-8 py-6">
-                    <span className={`px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-full ${
-                      order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-600' :
-                      order.status === 'Shipped' ? 'bg-blue-50 text-blue-600' :
-                      'bg-amber-50 text-amber-600'
-                    }`}>
-                      {order.status}
-                    </span>
+              {recentOrders.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-8 py-20 text-center text-gray-400 uppercase tracking-widest text-xs font-bold">
+                    No orders yet. Orders will appear here in real-time.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                recentOrders.map((order: any) => {
+                  const itemCount = order.order_items?.reduce((acc: number, item: any) => acc + item.quantity, 0) || 0;
+                  const productsPreview = order.order_items?.map((item: any) => item.product_name).join(", ") || "—";
+                  return (
+                    <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
+                      <td className="px-8 py-6 text-[12px] font-bold tracking-tighter font-mono">
+                        {order.id.slice(0, 8)}...
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex flex-col">
+                          <span className="text-[12px] uppercase tracking-wide font-bold">{order.email}</span>
+                          <span className="text-[10px] text-gray-400">
+                            {format(new Date(order.created_at), "MMM dd, HH:mm")}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-6 text-[11px] text-gray-400 uppercase tracking-widest max-w-[200px] truncate">
+                        {itemCount} {itemCount === 1 ? "item" : "items"}: {productsPreview}
+                      </td>
+                      <td className="px-8 py-6 text-[12px] font-bold tracking-tighter">
+                        {order.currency === "NGN" ? "₦" : order.currency === "GBP" ? "£" : "$"}
+                        {Number(order.total_amount).toLocaleString()}
+                      </td>
+                      <td className="px-8 py-6">
+                        <span className={`px-3 py-1 text-[9px] font-bold uppercase tracking-widest ${
+                          order.payment_provider === "stripe"
+                            ? "bg-indigo-50 text-indigo-600"
+                            : "bg-teal-50 text-teal-600"
+                        }`}>
+                          {order.payment_provider}
+                        </span>
+                      </td>
+                      <td className="px-8 py-6">
+                        <span className={`px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-full ${
+                          order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
+                          order.status === 'shipped' ? 'bg-blue-50 text-blue-600' :
+                          order.status === 'paid' || order.status === 'processing' ? 'bg-amber-50 text-amber-600' :
+                          order.status === 'pending' ? 'bg-gray-100 text-gray-500' :
+                          'bg-red-50 text-red-500'
+                        }`}>
+                          {order.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
@@ -211,4 +264,3 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
-

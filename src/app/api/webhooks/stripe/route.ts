@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { headers } from "next/headers";
 import { updateOrderStatus } from "@/lib/actions/orders";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -39,6 +40,8 @@ export async function POST(req: Request) {
       
       // Update order status to paid
       await updateOrderStatus(reference, "stripe", "paid");
+      revalidatePath("/admin/orders");
+      revalidatePath("/admin");
     }
 
     return new NextResponse("Webhook received", { status: 200 });

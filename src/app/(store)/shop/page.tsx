@@ -11,15 +11,15 @@ export default async function ShopPage() {
   const products = Array.isArray(productsResult) ? productsResult : [];
 
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1D] font-sans" suppressHydrationWarning>
+    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans" suppressHydrationWarning>
       {/* Header Spacer */}
       <div className="h-[90px] sm:h-[110px] lg:h-[120px]"></div>
 
       {/* Page Header */}
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12 md:py-16 reveal">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40 mb-3">Storefront</h3>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif text-[#1A1A1D] uppercase tracking-tighter mb-4 sm:mb-6 italic">The <br /> Collection</h1>
-        <p className="text-[13px] sm:text-[15px] text-[#1A1A1D]/80 max-w-xl leading-relaxed">
+        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-500 mb-3">Storefront</h3>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif text-white uppercase tracking-tighter mb-4 sm:mb-6 italic">The <br /> Collection</h1>
+        <p className="text-[13px] sm:text-[15px] text-zinc-400 max-w-xl leading-relaxed">
           Curated with meticulous precision for the modern elite. Discover ethically sourced raw human hair and hand-crafted Silk Haus pieces.
         </p>
       </div>

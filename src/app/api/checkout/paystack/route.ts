@@ -117,7 +117,7 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         email: email,
-        amount: Math.round(total_amount * 100 * 1500), // Convert to kobo AND apply NGN rate
+        amount: Math.round(total_amount * 100), // Convert to kobo (client already sends NGN amount)
         reference: reference,
         callback_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout/success?reference=${reference}&provider=paystack`,
         metadata: {

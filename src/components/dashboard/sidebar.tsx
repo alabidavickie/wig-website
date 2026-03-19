@@ -17,14 +17,14 @@ export const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="space-y-12 py-10 flex flex-col h-full bg-[#FAF9F6] text-[#1A1A1D] border-r border-gray-100 font-sans">
+    <div className="space-y-12 py-10 flex flex-col h-full bg-[#0A0A0A] text-white border-r border-[#2A2A2D] font-sans">
       <div className="px-8 flex-1">
         <Link href="/" className="flex items-center mb-16 gap-3 group">
           <img src="/images/logo.jpg" alt="Silk Haus Logo" className="w-16 h-auto object-contain transition-transform group-hover:scale-105" />
         </Link>
         
         {/* Navigation Links */}
-        <div className="space-y-3">
+        <div className="space-y-1">
           {routes.map((route) => {
             const isActive = pathname === route.href;
             return (
@@ -32,13 +32,13 @@ export const Sidebar = () => {
                 href={route.href}
                 key={route.href}
                 className={cn(
-                  "flex items-center px-5 py-4 text-[11px] font-bold transition-all uppercase tracking-[0.2em] rounded-2xl",
+                  "flex items-center px-5 py-4 text-[11px] font-bold transition-all uppercase tracking-[0.2em] rounded-sm",
                   isActive 
-                    ? "text-black bg-white shadow-xl shadow-black/5" 
-                    : "text-[#1A1A1D]/40 hover:text-black hover:bg-white/50"
+                    ? "text-[#D5A754] bg-[#1A1A1D] border-l-2 border-[#D5A754]" 
+                    : "text-zinc-500 hover:text-white hover:bg-[#141414]"
                 )}
               >
-                <route.icon className={cn("h-4 w-4 mr-4 transition-all", isActive ? "text-black scale-110" : "text-[#1A1A1D]/20")} />
+                <route.icon className={cn("h-4 w-4 mr-4 transition-all", isActive ? "text-[#D5A754] scale-110" : "text-zinc-600")} />
                 {route.label}
               </Link>
             );
@@ -46,22 +46,22 @@ export const Sidebar = () => {
         </div>
       </div>
 
-      <div className="mt-auto px-8 space-y-4">
-        <div className="p-6 bg-white rounded-[32px] shadow-sm border border-gray-50 flex items-center gap-4">
+      <div className="mt-auto px-8 space-y-4 pb-4">
+        <div className="p-4 bg-[#141414] rounded-sm border border-[#2A2A2D] flex items-center gap-4">
           <div className="relative">
-            <img src="https://i.pravatar.cc/150?img=12" alt="User" className="w-12 h-12 rounded-full object-cover border-2 border-[#FAF9F6]" />
-            <div className="absolute -bottom-1 -right-0.5 w-5 h-5 bg-[#D5A754] rounded-full flex items-center justify-center border-2 border-white">
-              <Crown className="w-2.5 h-2.5 text-white" />
+            <img src="https://i.pravatar.cc/150?img=12" alt="User" className="w-10 h-10 rounded-full object-cover border-2 border-[#2A2A2D]" />
+            <div className="absolute -bottom-1 -right-0.5 w-4 h-4 bg-[#D5A754] rounded-full flex items-center justify-center border-2 border-[#141414]">
+              <Crown className="w-2 h-2 text-white" />
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="text-[11px] font-bold text-[#1A1A1D] uppercase tracking-wider">Elena Vane</span>
+            <span className="text-[11px] font-bold text-white uppercase tracking-wider">Elena Vane</span>
             <span className="text-[9px] font-bold text-[#D5A754] uppercase tracking-[0.2em]">Diamond Elite</span>
           </div>
         </div>
         
-        <button className="flex items-center justify-center w-full px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all text-[#1A1A1D]/30 hover:text-black hover:bg-white rounded-2xl">
-          <LogOut className="h-4 w-4 mr-3" />
+        <button className="flex items-center justify-center w-full px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all text-zinc-600 hover:text-white hover:bg-[#1A1A1D] rounded-sm border border-transparent hover:border-[#2A2A2D]">
+          <LogOut className="h-4 w-4 mr-4" />
           Secure Logout
         </button>
       </div>
