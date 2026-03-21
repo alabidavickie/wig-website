@@ -198,23 +198,12 @@ export async function getOrdersByUserId(userId: string) {
 
       if (error) {
         console.error("Database error fetching user orders:", error);
-        // Fallback to mock data for testing/demo purposes if DB fails
-        const { mockOrders } = await import("@/lib/mock-data");
-        return mockOrders.map(o => ({
-          ...o,
-          order_items: o.items.map(item => ({
-            ...item,
-            product_name: item.name,
-            unit_price: item.price,
-            image_url: "/hero_luxury_wig_1773402385371.png"
-          }))
-        }));
+        return [] as OrderWithItems[];
       }
       return data;
     } catch (err) {
       console.error("Unexpected error in getOrdersByUserId:", err);
-      const { mockOrders } = await import("@/lib/mock-data");
-      return mockOrders;
+      return [] as OrderWithItems[];
     }
 }
 
@@ -259,9 +248,7 @@ export async function getOrdersByEmail(email: string) {
 
     if (error) {
       console.error("Database error fetching orders by email:", error);
-      // Fallback to mock data for testing/demo
-      const { mockOrders } = await import("@/lib/mock-data");
-      return mockOrders;
+      return [] as OrderWithItems[];
     }
     return data;
   } catch (err) {

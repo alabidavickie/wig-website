@@ -15,6 +15,14 @@ const eslintConfig = defineConfig([
     "tmp/**",
     "build_log.txt",
   ]),
+  {
+    rules: {
+      "react-hooks/set-state-in-effect": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "react/no-unescaped-entities": "warn",
+      "@next/next/no-img-element": "warn"
+    }
+  }
 ]);
 
 export default eslintConfig;

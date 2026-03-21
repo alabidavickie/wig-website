@@ -33,7 +33,14 @@ export async function login(formData: FormData) {
   });
 
   if (error) {
-    return { error: { message: error.message } };
+    if (error.message.includes("Email not confirmed")) {
+      return { 
+        error: { 
+          message: "Membership pending verification. Please check your inbox for the activation link." 
+        } 
+      };
+    }
+    return { error: { message: error.message === "Invalid login credentials" ? "Identity unrecognized or incorrect credentials." : error.message } };
   }
 
   revalidatePath("/", "layout");

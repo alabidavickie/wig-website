@@ -16,77 +16,77 @@ export default async function AdminOrdersPage() {
     }
   };
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 text-white pb-20">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Order Management</h1>
-          <p className="text-gray-500 text-sm mt-1">Review and fulfill luxury hair orders from your clients.</p>
+          <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Fulfillment Center</h1>
+          <p className="text-zinc-500 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">Review and fulfill luxury hair orders from your clients.</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
            <div className="flex -space-x-2">
              {[1,2,3].map(i => (
-               <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-bold">
+               <div key={i} className="w-9 h-9 rounded-full border-2 border-[#141414] bg-[#2A2A2D] flex items-center justify-center text-[10px] font-bold text-[#D5A754] shadow-xl">
                  {String.fromCharCode(64 + i)}
                </div>
              ))}
            </div>
-           <span className="text-xs text-gray-400 font-medium">+12 active shoppers</span>
+           <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">+12 active shoppers</span>
         </div>
       </div>
 
       {/* Stats Quick View — Live from DB */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Pending", value: orders.filter((o: any) => o.status === "pending").length.toString().padStart(2, "0"), icon: Clock, color: "text-amber-500", bg: "bg-amber-50" },
-          { label: "Processing", value: orders.filter((o: any) => o.status === "paid" || o.status === "processing").length.toString().padStart(2, "0"), icon: Package, color: "text-blue-500", bg: "bg-blue-50" },
-          { label: "Shipped", value: orders.filter((o: any) => o.status === "shipped").length.toString().padStart(2, "0"), icon: Truck, color: "text-purple-500", bg: "bg-purple-50" },
-          { label: "Fulfilled", value: orders.filter((o: any) => o.status === "delivered").length.toString(), icon: CheckCircle, color: "text-emerald-500", bg: "bg-emerald-50" },
+          { label: "Pending", value: orders.filter((o: any) => o.status === "pending").length.toString().padStart(2, "0"), icon: Clock, color: "text-amber-400", bg: "bg-amber-400/5", border: "border-amber-400/20" },
+          { label: "Processing", value: orders.filter((o: any) => o.status === "paid" || o.status === "processing").length.toString().padStart(2, "0"), icon: Package, color: "text-blue-400", bg: "bg-blue-400/5", border: "border-blue-400/20" },
+          { label: "Shipped", value: orders.filter((o: any) => o.status === "shipped").length.toString().padStart(2, "0"), icon: Truck, color: "text-purple-400", bg: "bg-purple-400/5", border: "border-purple-400/20" },
+          { label: "Fulfilled", value: orders.filter((o: any) => o.status === "delivered").length.toString(), icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-400/5", border: "border-emerald-400/20" },
         ].map((stat) => (
-          <div key={stat.label} className="bg-white p-6 border border-gray-100 shadow-sm flex items-center gap-4">
-            <div className={`p-3 ${stat.bg} ${stat.color}`}>
+          <div key={stat.label} className="bg-[#141414] p-6 border border-[#2A2A2D] shadow-sm flex items-center gap-5 group hover:border-[#D5A754]/30 transition-all rounded-sm">
+            <div className={`p-3.5 ${stat.bg} ${stat.color} border ${stat.border} rounded-sm group-hover:scale-110 transition-transform`}>
               <stat.icon className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{stat.label}</p>
-              <p className="text-xl font-bold">{stat.value}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">{stat.label}</p>
+              <p className="text-2xl font-bold tracking-tighter">{stat.value}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white border border-gray-100 shadow-sm">
-        <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center">
-          <div className="relative w-full sm:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+      <div className="bg-[#141414] border border-[#2A2A2D] shadow-sm rounded-sm">
+        <div className="p-6 border-b border-[#2A2A2D] flex flex-col sm:flex-row gap-6 justify-between items-center bg-[#0A0A0A]/30">
+          <div className="relative w-full sm:w-96 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-[#D5A754] transition-colors" />
             <input 
               type="text" 
-              placeholder="Search by Order ID or Customer..." 
-              className="w-full pl-10 pr-4 py-2 text-sm border-gray-100 bg-gray-50/50 outline-none focus:border-[#1A1A1D] transition-colors"
+              placeholder="Search by ID or Customer..." 
+              className="w-full pl-12 pr-4 py-3 text-[12px] font-bold uppercase tracking-widest border-[#2A2A2D] focus:border-[#D5A754] focus:ring-0 transition-colors bg-[#0A0A0A] placeholder:text-zinc-700 outline-none"
             />
           </div>
-          <button className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 border border-gray-100 text-sm font-medium hover:bg-gray-50 transition-all">
-            <Filter className="w-4 h-4" /> Export CSV
+          <button className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 border border-[#2A2A2D] text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:border-white transition-all bg-[#0A0A0A]">
+            <Filter className="w-4 h-4 text-[#D5A754]" /> Export CSV
           </button>
         </div>
         
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-gray-50 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                <th className="px-8 py-5">Order ID</th>
-                <th className="px-8 py-5">Customer</th>
-                <th className="px-8 py-5">Items</th>
-                <th className="px-8 py-5">Total</th>
-                <th className="px-8 py-5">Status</th>
-                <th className="px-8 py-5 text-right">Action</th>
+              <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500 border-b border-[#2A2A2D]">
+                <th className="px-8 py-6">Order Hex</th>
+                <th className="px-8 py-6">Client Identity</th>
+                <th className="px-8 py-6">Manifest</th>
+                <th className="px-8 py-6">Valuation</th>
+                <th className="px-8 py-6">Fulfillment</th>
+                <th className="px-8 py-6 text-right">Operations</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#2A2A2D]">
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-8 py-20 text-center text-gray-400 uppercase tracking-widest text-xs font-bold">
-                    No orders in the fulfillment queue.
+                  <td colSpan={6} className="px-8 py-24 text-center text-zinc-600 uppercase tracking-widest text-[10px] font-bold">
+                    No active orders in the fulfillment queue.
                   </td>
                 </tr>
               ) : (
@@ -96,36 +96,41 @@ export default async function AdminOrdersPage() {
                   const productsPreview = order.order_items.map((item: any) => item.product_name).join(", ");
                   
                   return (
-                    <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
-                      <td className="px-8 py-5">
-                        <span className="text-[13px] font-bold font-mono text-[#1A1A1D]">{order.id.slice(0, 8)}...</span>
+                    <tr key={order.id} className="hover:bg-[#2A2A2D]/20 transition-colors group">
+                      <td className="px-8 py-6">
+                        <span className="text-[12px] font-bold font-mono text-zinc-400 group-hover:text-white transition-colors uppercase">{order.id.slice(0, 8)}</span>
                       </td>
-                      <td className="px-8 py-5">
+                      <td className="px-8 py-6">
                         <div className="flex flex-col">
-                          <span className="text-[13px] font-bold uppercase tracking-wide">{order.email}</span>
-                          <span className="text-[11px] text-gray-400 truncate max-w-[150px]">{format(new Date(order.created_at), 'MMM dd, HH:mm')}</span>
+                          <span className="text-[12px] font-bold uppercase tracking-wide text-white">{order.email}</span>
+                          <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mt-1 opacity-70">{format(new Date(order.created_at), 'MMM dd, HH:mm')}</span>
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-[12px] text-gray-500 italic max-w-xs truncate">
-                        {itemCount} {itemCount === 1 ? 'Item' : 'Items'}: {productsPreview}
+                      <td className="px-8 py-6 text-[10px] text-zinc-500 uppercase tracking-widest max-w-xs truncate italic">
+                        {itemCount} {itemCount === 1 ? 'Unit' : 'Units'}: {productsPreview}
                       </td>
-                      <td className="px-8 py-5 text-[13px] font-bold">
+                      <td className="px-8 py-6 text-[13px] font-bold text-white tracking-tighter">
                         ${Number(order.total_amount).toLocaleString()}
                       </td>
-                      <td className="px-8 py-5">
-                        <div className="flex flex-col gap-1.5">
-                          <span className={`px-3 py-1 text-[9px] font-bold uppercase tracking-widest w-fit ${statusInfo.bg} ${statusInfo.text}`}>
+                      <td className="px-8 py-6">
+                        <div className="flex flex-col gap-2">
+                          <span className={`px-4 py-1.5 text-[8px] font-bold uppercase tracking-[0.2em] rounded-full border w-fit ${
+                            order.status === 'delivered' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5' :
+                            order.status === 'shipped' ? 'border-blue-500/30 text-blue-400 bg-blue-500/5' :
+                            order.status === 'paid' || order.status === 'processing' ? 'border-[#D5A754]/30 text-[#D5A754] bg-[#D5A754]/5' :
+                            'border-zinc-500/30 text-zinc-400 bg-zinc-500/5'
+                          }`}>
                             {order.status}
                           </span>
                           {order.is_guest && (
-                            <span className="px-2 py-0.5 text-[8px] font-black uppercase tracking-tighter bg-gray-900 text-white w-fit">
+                            <span className="px-3 py-1 text-[8px] font-black uppercase tracking-tighter bg-zinc-800 text-zinc-400 border border-zinc-700 w-fit rounded-sm">
                               Guest Account
                             </span>
                           )}
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-right">
-                        <button className="p-2 border border-gray-100 hover:border-[#1A1A1D] transition-all">
+                      <td className="px-8 py-6 text-right">
+                        <button className="p-2.5 border border-[#2A2A2D] hover:border-white hover:text-white text-zinc-500 transition-all rounded-sm bg-[#0A0A0A]">
                           <Eye className="w-4 h-4" />
                         </button>
                       </td>

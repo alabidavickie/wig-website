@@ -39,36 +39,36 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 text-white pb-20">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Products</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage your luxury hair inventory and variants.</p>
+          <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Inventory Vault</h1>
+          <p className="text-zinc-500 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">Manage your luxury hair collection and variants.</p>
         </div>
         <Link 
           href="/admin/products/new" 
-          className="bg-[#1A1A1D] text-white px-6 py-3 text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all flex items-center gap-2 w-fit"
+          className="bg-white text-black px-8 py-4 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#D5A754] transition-all flex items-center gap-3 w-fit shadow-2xl group"
         >
-          <Plus className="w-4 h-4" /> Add Product
+          <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform" /> Add New Unit
         </Link>
       </div>
 
       {/* Filters & Search */}
-      <div className="bg-white p-4 border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4 items-center">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+      <div className="bg-[#141414] p-4 border border-[#2A2A2D] shadow-sm flex flex-col md:flex-row gap-4 items-center rounded-sm">
+        <div className="relative flex-1 w-full group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-[#D5A754] transition-colors" />
           <input 
             type="text" 
-            placeholder="Search products..." 
-            className="w-full pl-10 pr-4 py-2 text-sm border-gray-100 focus:border-[#1A1A1D] focus:ring-0 transition-colors bg-gray-50/50"
+            placeholder="Search the vault..." 
+            className="w-full pl-12 pr-4 py-3 text-[12px] font-bold uppercase tracking-widest border-[#2A2A2D] focus:border-[#D5A754] focus:ring-0 transition-colors bg-[#0A0A0A] placeholder:text-zinc-700 outline-none"
           />
         </div>
         <div className="flex gap-2 w-full md:w-auto">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 text-sm font-medium hover:bg-gray-50 transition-all bg-white whitespace-nowrap">
-            <Filter className="w-4 h-4" /> Filter
+          <button className="flex items-center gap-2 px-6 py-3 border border-[#2A2A2D] text-[10px] font-bold uppercase tracking-widest hover:border-[#D5A754] transition-all bg-[#0A0A0A] text-zinc-400 hover:text-white whitespace-nowrap">
+            <Filter className="w-4 h-4 text-[#D5A754]" /> Refine
           </button>
-          <select className="px-4 py-2 border border-gray-100 text-sm font-medium hover:bg-gray-50 transition-all bg-white outline-none">
-            <option>All Categories</option>
+          <select className="px-6 py-3 border border-[#2A2A2D] text-[10px] font-bold uppercase tracking-widest hover:border-[#D5A754] transition-all bg-[#0A0A0A] text-zinc-400 hover:text-white outline-none cursor-pointer appearance-none min-w-[160px]">
+            <option>All Collections</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.name}</option>
             ))}
@@ -77,75 +77,77 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-[#141414] border border-[#2A2A2D] shadow-sm overflow-hidden rounded-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-gray-50 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                <th className="px-8 py-5">Product</th>
-                <th className="px-8 py-5">Category</th>
-                <th className="px-8 py-5">Base Price</th>
-                <th className="px-8 py-5">Created At</th>
-                <th className="px-8 py-5">Actions</th>
+              <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500 border-b border-[#2A2A2D]">
+                <th className="px-8 py-6">Unit Description</th>
+                <th className="px-8 py-6">Collection</th>
+                <th className="px-8 py-6">Valuation</th>
+                <th className="px-8 py-6">Archived On</th>
+                <th className="px-8 py-6 text-right">Operations</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#2A2A2D]">
               {loading ? (
                 <tr>
                   <td colSpan={5} className="px-8 py-20 text-center">
-                    <div className="flex flex-col items-center gap-2 text-gray-400">
-                      <Loader2 className="w-6 h-6 animate-spin" />
-                      <p className="text-sm font-medium uppercase tracking-widest">Loading products...</p>
+                    <div className="flex flex-col items-center gap-4 text-zinc-500">
+                      <Loader2 className="w-8 h-8 animate-spin text-[#D5A754]" />
+                      <p className="text-[10px] font-bold uppercase tracking-[0.4em]">Decrypting Vault Data...</p>
                     </div>
                   </td>
                 </tr>
               ) : products.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-8 py-20 text-center">
-                    <div className="flex flex-col items-center gap-2 text-gray-400">
-                      <Package className="w-10 h-10 stroke-1" />
-                      <p className="text-sm font-medium uppercase tracking-widest">No products found</p>
-                      <Link href="/admin/products/new" className="text-xs text-blue-600 hover:underline mt-2">Create your first product</Link>
+                    <div className="flex flex-col items-center gap-4 text-zinc-600">
+                      <Package className="w-12 h-12 stroke-[0.5]" />
+                      <p className="text-[10px] font-bold uppercase tracking-[0.4em]">Vault is currently vacant</p>
+                      <Link href="/admin/products/new" className="text-[10px] text-[#D5A754] font-bold uppercase tracking-widest hover:underline mt-4">Initialize First Unit</Link>
                     </div>
                   </td>
                 </tr>
               ) : (
                 products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50/50 transition-colors group">
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-16 bg-[#FAF9F6] border border-gray-100 flex-shrink-0 overflow-hidden relative">
+                  <tr key={product.id} className="hover:bg-[#2A2A2D]/20 transition-colors group">
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-6">
+                        <div className="w-14 h-18 bg-[#0A0A0A] border border-[#2A2A2D] flex-shrink-0 overflow-hidden relative group-hover:border-[#D5A754] transition-colors rounded-sm">
                           <Image 
                             src={product.image || "/hero_luxury_wig_1773402385371.png"} 
                             alt={product.name} 
                             fill
-                            className="object-cover" 
+                            className="object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
                           />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[13px] font-bold uppercase tracking-wide truncate max-w-[200px]">{product.name}</span>
-                          <span className="text-[11px] text-gray-400 font-mono tracking-tighter truncate max-w-[200px]">{product.id}</span>
+                          <span className="text-[12px] font-bold uppercase tracking-wide group-hover:text-white transition-colors text-zinc-300">{product.name}</span>
+                          <span className="text-[9px] text-zinc-600 font-mono tracking-tighter truncate max-w-[150px] mt-1 uppercase">ID: {product.id.slice(0, 12)}...</span>
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-5 text-[13px] font-medium text-gray-600 uppercase tracking-widest">
-                      {product.category}
+                    <td className="px-8 py-6">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-[#2A2A2D]/50 px-3 py-1 rounded-full border border-[#3F3F46]/30">
+                        {product.category}
+                      </span>
                     </td>
-                    <td className="px-8 py-5 text-[13px] font-bold">
+                    <td className="px-8 py-6 text-[13px] font-bold text-white tracking-tighter">
                       ${Number(product.base_price).toLocaleString()}
                     </td>
-                    <td className="px-8 py-5 text-[12px] text-gray-400">
-                      {product.created_at ? format(new Date(product.created_at), 'MMM dd, yyyy') : 'N/A'}
+                    <td className="px-8 py-6 text-[11px] font-bold text-zinc-500 uppercase tracking-widest">
+                      {product.created_at ? format(new Date(product.created_at), 'MMM dd, yyyy') : '—'}
                     </td>
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Link href={`/admin/products/${product.id}`} className="p-2 border border-gray-100 hover:bg-white hover:border-[#1A1A1D] transition-all">
+                    <td className="px-8 py-6 text-right">
+                      <div className="flex items-center gap-3 justify-end">
+                        <Link href={`/admin/products/${product.id}`} className="p-2.5 border border-[#2A2A2D] hover:bg-white hover:text-black hover:border-white transition-all text-zinc-500">
                           <Edit className="w-4 h-4" />
                         </Link>
                         <button 
                           onClick={() => handleDelete(product.id, product.name)}
                           disabled={deletingId === product.id}
-                          className="p-2 border border-gray-100 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-all disabled:opacity-50"
+                          className="p-2.5 border border-[#2A2A2D] hover:bg-red-500/10 hover:border-red-500/50 hover:text-red-400 transition-all disabled:opacity-50 text-zinc-500"
                         >
                           {deletingId === product.id ? (
                             <Loader2 className="w-4 h-4 animate-spin" />

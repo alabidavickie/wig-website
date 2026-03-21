@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LayoutDashboard, ShoppingBag, User, Heart, Settings, LogOut, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const routes = [
   { label: "Studio Hub", icon: LayoutDashboard, href: "/dashboard" },
@@ -15,12 +16,19 @@ const routes = [
 
 export const Sidebar = () => {
   const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <div className="space-y-12 py-10 flex flex-col h-full bg-[#0A0A0A] text-white border-r border-[#2A2A2D] font-sans">
       <div className="px-8 flex-1">
         <Link href="/" className="flex items-center mb-16 gap-3 group">
-          <img src="/images/logo.jpg" alt="Silk Haus Logo" className="w-16 h-auto object-contain transition-transform group-hover:scale-105" />
+          <img src="/images/logo_main.png" alt="Silk Haus Logo" className="w-16 h-auto object-contain transition-transform group-hover:scale-105" />
         </Link>
         
         {/* Navigation Links */}

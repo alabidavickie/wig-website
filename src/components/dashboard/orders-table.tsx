@@ -25,7 +25,8 @@ export const OrdersTable = ({ orders = [] }: { orders: any[] }) => {
           </thead>
           <tbody className="divide-y divide-[#2A2A2D] bg-[#141414]">
             {orders.map((order) => {
-              const dateStr = new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+              const dateObj = new Date(order.created_at);
+              const dateStr = isNaN(dateObj.getTime()) ? "Awaiting Data" : dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
               
               let badgeStyle = "border-zinc-700 text-zinc-500 bg-[#1A1A1D]";
               if (order.status.toLowerCase() === "delivered") badgeStyle = "border-[#D5A754]/30 text-[#D5A754] bg-[#D5A754]/5";
@@ -44,7 +45,10 @@ export const OrdersTable = ({ orders = [] }: { orders: any[] }) => {
                         {order.status}
                      </span>
                   </td>
-                  <td className="py-4 px-6 text-[13px] font-bold text-[#D5A754] text-right">{order.currency === 'NGN' ? '₦' : '£'}{Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td className="py-4 px-6 text-[13px] font-bold text-[#D5A754] text-right">
+                    {order.currency === 'NGN' ? '₦' : '£'}
+                    {isNaN(Number(order.total_amount)) ? '0.00' : Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </td>
                 </tr>
               );
             })}
@@ -55,7 +59,8 @@ export const OrdersTable = ({ orders = [] }: { orders: any[] }) => {
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         {orders.map((order) => {
-          const dateStr = new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          const dateObj = new Date(order.created_at);
+          const dateStr = isNaN(dateObj.getTime()) ? "Awaiting Data" : dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
           let badgeStyle = "border-zinc-700 text-zinc-500 bg-[#1A1A1D]";
           if (order.status.toLowerCase() === "delivered") badgeStyle = "border-[#D5A754]/30 text-[#D5A754] bg-[#D5A754]/5";
 
@@ -81,7 +86,10 @@ export const OrdersTable = ({ orders = [] }: { orders: any[] }) => {
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-1">Total</p>
-                  <p className="text-[15px] font-bold text-[#D5A754]">{order.currency === 'NGN' ? '₦' : '£'}{Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                  <p className="text-[15px] font-bold text-[#D5A754]">
+                    {order.currency === 'NGN' ? '₦' : '£'}
+                    {isNaN(Number(order.total_amount)) ? '0.00' : Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </p>
                 </div>
               </div>
 

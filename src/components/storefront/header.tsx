@@ -37,7 +37,7 @@ export const Header = () => {
       </div>
 
       {/* Main Header */}
-      <header className="fixed w-full top-[29px] sm:top-[31px] lg:top-[35px] left-0 z-40 px-4 sm:px-6 md:px-12 py-2 sm:py-2.5 lg:py-3.5 transition-all duration-500 border-b border-[#1A1A1D]/5 bg-white/70 backdrop-blur-md" suppressHydrationWarning>
+      <header className="fixed w-full top-[29px] sm:top-[31px] lg:top-[35px] left-0 z-40 px-4 sm:px-6 md:px-12 py-2 sm:py-2.5 lg:py-3.5 transition-all duration-500 border-b border-[#2A2A2D]/50 bg-[#0A0A0A]/90 backdrop-blur-xl text-white" suppressHydrationWarning>
         <div className="max-w-[1600px] mx-auto grid grid-cols-3 items-center" suppressHydrationWarning>
           
           {/* Left: Mobile Menu Trigger + Search (mobile) or Desktop Nav (desktop) */}
@@ -47,26 +47,26 @@ export const Header = () => {
               onClick={() => setIsMobileMenuOpen(true)}
               suppressHydrationWarning
             >
-              <Menu className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px] text-[#1A1A1D]" strokeWidth={1.2} />
+              <Menu className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px] text-white" strokeWidth={1.2} />
             </button>
             <button className="hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2" suppressHydrationWarning>
-              <Search className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] text-[#1A1A1D]" strokeWidth={1.2} />
+              <Search className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] text-white" strokeWidth={1.2} />
             </button>
           </div>
 
           {/* Desktop Left: Navigation */}
-          <nav className="hidden lg:flex items-center gap-10 text-[10px] xl:text-[11px] font-semibold tracking-[0.25em] text-[#1A1A1D]/60 uppercase" suppressHydrationWarning>
-            <Link href="/" className="hover:text-black transition-all duration-300 relative group cursor-pointer">
+          <nav className="hidden lg:flex items-center gap-10 text-[10px] xl:text-[11px] font-semibold tracking-[0.25em] text-zinc-400 uppercase" suppressHydrationWarning>
+            <Link href="/" className="hover:text-white transition-all duration-300 relative group cursor-pointer">
               HOME
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D5A754] transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/shop" className="hover:text-black transition-all duration-300 relative group cursor-pointer">
+            <Link href="/shop" className="hover:text-white transition-all duration-300 relative group cursor-pointer">
               SHOP
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D5A754] transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/about" className="hover:text-black transition-all duration-300 relative group cursor-pointer">
+            <Link href="/about" className="hover:text-white transition-all duration-300 relative group cursor-pointer">
               ABOUT
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D5A754] transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </nav>
 
@@ -74,7 +74,7 @@ export const Header = () => {
           <div className="flex justify-center" suppressHydrationWarning>
             <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity">
               <Image 
-                src="/images/logo_premium_v2.png" 
+                src="/images/logo_main.png" 
                 alt="SILK HAUS" 
                 width={150}
                 height={75}
@@ -87,18 +87,18 @@ export const Header = () => {
           {/* Right: Icons */}
           <div className="flex items-center justify-end gap-1 sm:gap-2 md:gap-5" suppressHydrationWarning>
             <button className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2 items-center" suppressHydrationWarning>
-              <Search className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+              <Search className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-white" strokeWidth={1.2} />
             </button>
             <Link href="/login" className="hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2" suppressHydrationWarning>
-              <User className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+              <User className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-white" strokeWidth={1.2} />
             </Link>
             <Link href="/dashboard/wishlist" className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2" suppressHydrationWarning>
-              <Heart className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+              <Heart className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-white" strokeWidth={1.2} />
             </Link>
             <Link href="/cart" className="hover:opacity-60 transition-opacity relative cursor-pointer flex items-center p-1.5 sm:p-2" suppressHydrationWarning>
-              <ShoppingBag className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#1A1A1D]" strokeWidth={1.2} />
+              <ShoppingBag className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-white" strokeWidth={1.2} />
               {itemCount > 0 && (
-                <span className="absolute top-0.5 sm:top-1 right-0.5 sm:right-1 bg-[#1A1A1D] text-white text-[7px] sm:text-[8px] w-[12px] h-[12px] sm:w-[13px] sm:h-[13px] flex items-center justify-center rounded-full font-medium">
+                <span className="absolute top-0.5 sm:top-1 right-0.5 sm:right-1 bg-[#D5A754] text-black text-[7px] sm:text-[8px] w-[12px] h-[12px] sm:w-[13px] sm:h-[13px] flex items-center justify-center rounded-full font-bold">
                   {itemCount}
                 </span>
               )}
@@ -109,11 +109,11 @@ export const Header = () => {
 
       {/* Mobile Fullscreen Menu */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 bg-white z-[100] flex flex-col p-6 sm:p-8 animate-in slide-in-from-left duration-500 overflow-y-auto" suppressHydrationWarning>
+        <div className="fixed inset-0 bg-[#0A0A0A] z-[100] flex flex-col p-6 sm:p-8 animate-in slide-in-from-left duration-500 overflow-y-auto text-white" suppressHydrationWarning>
           <div className="flex justify-between items-center mb-12 sm:mb-16" suppressHydrationWarning>
-            <span className="inline-block bg-[#C5A880] rounded-lg px-3 sm:px-4 py-1.5 sm:py-2">
+            <span className="inline-block bg-[#141414] border border-[#2A2A2D] rounded-lg px-3 sm:px-4 py-1.5 sm:py-2">
               <Image 
-                src="/images/logo2.png" 
+                src="/images/logo_main.png" 
                 alt="SILK HAUS" 
                 width={80}
                 height={40}
@@ -121,7 +121,7 @@ export const Header = () => {
               />
             </span>
             <button onClick={() => setIsMobileMenuOpen(false)} className="cursor-pointer p-2" suppressHydrationWarning>
-              <X className="w-5 h-5 sm:w-6 sm:h-6 text-[#1A1A1D]" />
+              <X className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </button>
           </div>
           
@@ -129,30 +129,30 @@ export const Header = () => {
           <Link 
             href="/shop" 
             onClick={() => setIsMobileMenuOpen(false)} 
-            className="block w-full text-center bg-[#C5A880] text-white py-4 text-[11px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-[#D5A754] transition-all duration-300 shadow-lg mb-8 sm:mb-10"
+            className="block w-full text-center bg-[#D5A754] text-black py-4 text-[11px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-[#E6B964] transition-all duration-300 shadow-2xl mb-8 sm:mb-10"
           >
             Shop Now
           </Link>
 
-          <nav className="flex flex-col gap-6 sm:gap-8 text-[13px] sm:text-[12px] font-bold tracking-[0.2em] text-[#1A1A1D]/90" suppressHydrationWarning>
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">HOME</Link>
-            <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">SHOP</Link>
-            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">ABOUT</Link>
-            <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">FAQ</Link>
-            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 transition-all duration-300 cursor-pointer py-1">CONTACT</Link>
+          <nav className="flex flex-col gap-6 sm:gap-8 text-[13px] sm:text-[12px] font-bold tracking-[0.2em] text-white/90" suppressHydrationWarning>
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 hover:text-[#D5A754] transition-all duration-300 cursor-pointer py-1">HOME</Link>
+            <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 hover:text-[#D5A754] transition-all duration-300 cursor-pointer py-1">SHOP</Link>
+            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 hover:text-[#D5A754] transition-all duration-300 cursor-pointer py-1">ABOUT</Link>
+            <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 hover:text-[#D5A754] transition-all duration-300 cursor-pointer py-1">FAQ</Link>
+            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:pl-4 hover:text-[#D5A754] transition-all duration-300 cursor-pointer py-1">CONTACT</Link>
           </nav>
 
-          <div className="mt-auto border-t border-[#1A1A1D]/10 pt-8 sm:pt-12 space-y-5 sm:space-y-6" suppressHydrationWarning>
-             <Link href="/cart" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#1A1A1D]/70 cursor-pointer hover:text-black transition-colors py-1">
+          <div className="mt-auto border-t border-[#2A2A2D] pt-8 sm:pt-12 space-y-5 sm:space-y-6" suppressHydrationWarning>
+             <Link href="/cart" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-zinc-400 cursor-pointer hover:text-white transition-colors py-1">
                 <ShoppingBag className="w-4 h-4" /> Shopping Bag
                 {itemCount > 0 && (
-                  <span className="ml-auto bg-[#1A1A1D] text-white text-[9px] px-2 py-0.5 rounded-full font-medium">{itemCount}</span>
+                  <span className="ml-auto bg-[#D5A754] text-black px-2 py-0.5 rounded-full font-bold">{itemCount}</span>
                 )}
              </Link>
-             <Link href="/dashboard/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#1A1A1D]/70 cursor-pointer hover:text-black transition-colors py-1">
+             <Link href="/dashboard/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-zinc-400 cursor-pointer hover:text-white transition-colors py-1">
                 <Heart className="w-4 h-4" /> Wishlist
              </Link>
-             <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[#1A1A1D]/70 cursor-pointer hover:text-black transition-colors py-1">
+             <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-zinc-400 cursor-pointer hover:text-white transition-colors py-1">
                 <User className="w-4 h-4" /> My Account
              </Link>
           </div>

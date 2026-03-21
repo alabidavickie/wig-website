@@ -14,6 +14,7 @@ export function Price({ amount, className = "", showSymbol = true }: PriceProps)
   const { geo, getExchangeRate, initialize } = useGeoStore();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     initialize();
   }, [initialize]);

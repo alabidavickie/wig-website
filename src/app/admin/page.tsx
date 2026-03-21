@@ -79,14 +79,14 @@ export default async function AdminDashboardPage() {
   const recentOrders = allOrders.slice(0, 5);
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-10 animate-in fade-in duration-500 pb-20 text-white">
       {/* Header */}
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Executive Overview</h1>
-          <p className="text-gray-500 text-sm mt-1 uppercase tracking-widest text-[10px] font-bold">Silk Haus Performance Monitor</p>
+          <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-[0.1em]">Executive Overview</h1>
+          <p className="text-zinc-500 text-sm mt-1 uppercase tracking-widest text-[10px] font-bold">Silk Haus Performance Monitor</p>
         </div>
-        <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-white px-4 py-2 border border-gray-100 shadow-sm">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 bg-[#141414] px-4 py-2 border border-[#2A2A2D] shadow-sm">
            System Status: <span className="text-emerald-500">Live</span>
         </div>
       </div>
@@ -94,18 +94,18 @@ export default async function AdminDashboardPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
-          <div key={stat.label} className="bg-white p-6 border border-gray-100 shadow-sm transition-all hover:border-[#C5A880]/30 group">
+          <div key={stat.label} className="bg-[#141414] p-6 border border-[#2A2A2D] shadow-sm transition-all hover:border-[#D5A754]/30 group rounded-sm">
             <div className="flex justify-between items-start mb-4">
-              <div className={`${stat.bg} ${stat.color} p-3 rounded-sm group-hover:scale-110 transition-transform`}>
+              <div className={`bg-[#2A2A2D] ${stat.color} p-3 rounded-sm group-hover:scale-110 transition-transform border border-[#3F3F46]`}>
                 <stat.icon className="w-5 h-5" />
               </div>
-              <div className={`flex items-center gap-1 text-[11px] font-bold ${stat.trend === 'up' ? 'text-green-600' : 'text-red-500'}`}>
+              <div className={`flex items-center gap-1 text-[11px] font-bold ${stat.trend === 'up' ? 'text-emerald-500' : 'text-red-400'}`}>
                 {stat.change}
                 {stat.trend === 'up' ? <ArrowUpRight className="w-3 h-3" strokeWidth={3} /> : <ArrowDownRight className="w-3 h-3" strokeWidth={3} />}
               </div>
             </div>
-            <h3 className="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">{stat.label}</h3>
-            <p className="text-2xl font-bold tracking-tighter">{stat.value}</p>
+            <h3 className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">{stat.label}</h3>
+            <p className="text-2xl font-bold tracking-tighter text-white">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -146,54 +146,54 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Recently Added Products (Real Data) */}
-        <div className="bg-white p-8 border border-gray-100 shadow-sm flex flex-col">
+        <div className="bg-[#141414] p-8 border border-[#2A2A2D] shadow-sm flex flex-col rounded-sm text-white">
           <div className="flex justify-between items-center mb-10">
-            <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#C5A880] pl-4">Inventory Snap</h3>
-            <Link href="/admin/products" className="text-[10px] font-bold uppercase tracking-widest text-[#C5A880] hover:underline flex items-center gap-1 group">
+            <h3 className="text-[11px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4">Inventory Snap</h3>
+            <Link href="/admin/products" className="text-[10px] font-bold uppercase tracking-widest text-[#D5A754] hover:underline flex items-center gap-1 group">
                MANAGE <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
           <div className="space-y-8 flex-1">
               {products.slice(0, 5).map((product) => (
                 <div key={product.id} className="flex gap-5 items-center group cursor-pointer">
-                  <div className="w-14 h-18 bg-[#FAF9F6] border border-gray-100 flex-shrink-0 group-hover:border-[#C5A880] transition-colors overflow-hidden relative">
+                  <div className="w-14 h-18 bg-[#0A0A0A] border border-[#2A2A2D] flex-shrink-0 group-hover:border-[#D5A754] transition-colors overflow-hidden relative rounded-sm">
                     <Image 
                       src={product.image || "/hero_luxury_wig_1773402385371.png"} 
                       alt={product.name}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-bold uppercase tracking-widest truncate group-hover:text-[#C5A880] transition-colors">{product.name}</p>
-                    <p className="text-[10px] text-gray-400 uppercase italic mt-1 tracking-tighter">{product.category}</p>
+                    <p className="text-[11px] font-bold uppercase tracking-widest truncate group-hover:text-[#D5A754] transition-colors">{product.name}</p>
+                    <p className="text-[10px] text-zinc-500 uppercase italic mt-1 tracking-tighter">{product.category}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[12px] font-bold tracking-tighter">${product.base_price}</p>
+                    <p className="text-[12px] font-bold tracking-tighter text-white">${product.base_price}</p>
                     <p className="text-[9px] text-emerald-500 font-bold uppercase tracking-widest mt-0.5 italic">In Stock</p>
                   </div>
                 </div>
               ))}
           </div>
-          <Link href="/admin/products" className="block w-full text-center mt-10 py-4 bg-[#1A1A1D] text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-black hover:tracking-[0.3em] transition-all">
+          <Link href="/admin/products" className="block w-full text-center mt-10 py-4 bg-white text-black text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#D5A754] hover:tracking-[0.3em] transition-all rounded-sm">
             Audit Full Inventory
           </Link>
         </div>
       </div>
 
       {/* Recent Orders Table — Now from real DB data */}
-      <div className="bg-white border border-gray-100 shadow-sm overflow-hidden">
-        <div className="p-8 border-b border-gray-100 flex justify-between items-center">
+      <div className="bg-[#141414] border border-[#2A2A2D] shadow-sm overflow-hidden rounded-sm">
+        <div className="p-8 border-b border-[#2A2A2D] flex justify-between items-center bg-[#0A0A0A]/30">
           <div className="flex items-center gap-3">
-            <Clock className="w-4 h-4 text-[#C5A880]" />
-            <h3 className="text-[12px] font-bold uppercase tracking-widest">Recent Fulfillment Queue</h3>
+            <Clock className="w-4 h-4 text-[#D5A754]" />
+            <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754]">Recent Fulfillment Queue</h3>
           </div>
-          <Link href="/admin/orders" className="text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:underline">View All Orders</Link>
+          <Link href="/admin/orders" className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">View All Orders</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-gray-50/50 text-[9px] font-bold uppercase tracking-[0.3em] text-gray-400">
+              <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500 border-b border-[#2A2A2D]">
                 <th className="px-8 py-6">Identifier</th>
                 <th className="px-8 py-6">Customer</th>
                 <th className="px-8 py-6">Items</th>
@@ -202,10 +202,10 @@ export default async function AdminDashboardPage() {
                 <th className="px-8 py-6">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#2A2A2D]">
               {recentOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-8 py-20 text-center text-gray-400 uppercase tracking-widest text-xs font-bold">
+                  <td colSpan={6} className="px-8 py-20 text-center text-zinc-600 uppercase tracking-widest text-[10px] font-bold">
                     No orders yet. Orders will appear here in real-time.
                   </td>
                 </tr>
@@ -214,41 +214,41 @@ export default async function AdminDashboardPage() {
                   const itemCount = order.order_items?.reduce((acc: number, item: any) => acc + item.quantity, 0) || 0;
                   const productsPreview = order.order_items?.map((item: any) => item.product_name).join(", ") || "—";
                   return (
-                    <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
-                      <td className="px-8 py-6 text-[12px] font-bold tracking-tighter font-mono">
+                    <tr key={order.id} className="hover:bg-[#2A2A2D]/20 transition-colors group">
+                      <td className="px-8 py-6 text-[12px] font-bold tracking-tighter font-mono text-zinc-400 group-hover:text-white transition-colors">
                         {order.id.slice(0, 8)}...
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex flex-col">
-                          <span className="text-[12px] uppercase tracking-wide font-bold">{order.email}</span>
-                          <span className="text-[10px] text-gray-400">
+                          <span className="text-[12px] uppercase tracking-wide font-bold text-white">{order.email}</span>
+                          <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mt-1">
                             {format(new Date(order.created_at), "MMM dd, HH:mm")}
                           </span>
                         </div>
                       </td>
-                      <td className="px-8 py-6 text-[11px] text-gray-400 uppercase tracking-widest max-w-[200px] truncate">
-                        {itemCount} {itemCount === 1 ? "item" : "items"}: {productsPreview}
+                      <td className="px-8 py-6 text-[10px] text-zinc-500 uppercase tracking-widest max-w-[200px] truncate">
+                        {itemCount} {itemCount === 1 ? "item" : "items"}: <span className="text-zinc-400 italic">{productsPreview}</span>
                       </td>
-                      <td className="px-8 py-6 text-[12px] font-bold tracking-tighter">
+                      <td className="px-8 py-6 text-[13px] font-bold text-white tracking-tighter">
                         {order.currency === "NGN" ? "₦" : order.currency === "GBP" ? "£" : "$"}
                         {Number(order.total_amount).toLocaleString()}
                       </td>
                       <td className="px-8 py-6">
-                        <span className={`px-3 py-1 text-[9px] font-bold uppercase tracking-widest ${
+                        <span className={`px-3 py-1 text-[8px] font-bold uppercase tracking-widest border ${
                           order.payment_provider === "stripe"
-                            ? "bg-indigo-50 text-indigo-600"
-                            : "bg-teal-50 text-teal-600"
+                            ? "border-indigo-500/30 text-indigo-400 bg-indigo-500/5"
+                            : "border-teal-500/30 text-teal-400 bg-teal-500/5"
                         }`}>
                           {order.payment_provider}
                         </span>
                       </td>
                       <td className="px-8 py-6">
-                        <span className={`px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-full ${
-                          order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
-                          order.status === 'shipped' ? 'bg-blue-50 text-blue-600' :
-                          order.status === 'paid' || order.status === 'processing' ? 'bg-amber-50 text-amber-600' :
-                          order.status === 'pending' ? 'bg-gray-100 text-gray-500' :
-                          'bg-red-50 text-red-500'
+                        <span className={`px-4 py-1.5 text-[8px] font-bold uppercase tracking-[0.2em] rounded-full border ${
+                          order.status === 'delivered' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5' :
+                          order.status === 'shipped' ? 'border-blue-500/30 text-blue-400 bg-blue-500/5' :
+                          order.status === 'paid' || order.status === 'processing' ? 'border-[#D5A754]/30 text-[#D5A754] bg-[#D5A754]/5' :
+                          order.status === 'pending' ? 'border-zinc-500/30 text-zinc-500 bg-zinc-500/5' :
+                          'border-red-500/30 text-red-400 bg-red-500/5'
                         }`}>
                           {order.status}
                         </span>

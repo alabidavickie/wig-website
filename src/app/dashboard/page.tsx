@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Scissors, ChevronRight, Crown, Star, Calendar } from "lucide-react";
 import { type OrderWithItems } from "@/lib/actions/orders";
 import DashboardLoading from "./loading";
@@ -9,6 +10,8 @@ import DashboardLoading from "./loading";
 export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -18,11 +21,24 @@ export default function DashboardPage() {
       try {
         const { createClient } = await import("@/lib/supabase/client");
         const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user: authUser } } = await supabase.auth.getUser();
         
-        if (user) {
+        if (authUser) {
+          setUser(authUser);
+          
+          // Check for admin role
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", authUser.id)
+            .single();
+          
+          if (profile?.role === "admin") {
+            setIsAdmin(true);
+          }
+
           const { getOrdersByUserId } = await import("@/lib/actions/orders");
-          const data = await getOrdersByUserId(user.id);
+          const data = await getOrdersByUserId(authUser.id);
           if (data && Array.isArray(data)) {
             setOrders(data);
           }
@@ -35,20 +51,24 @@ export default function DashboardPage() {
     };
 
     loadData();
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    return () => {
-      observer.disconnect();
-    };
   }, []);
+
+  useEffect(() => {
+    if (mounted && !isLoading) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [mounted, isLoading]);
 
   if (!mounted || isLoading) return <DashboardLoading />;
 
@@ -57,6 +77,10 @@ export default function DashboardPage() {
   const totalSpent = orders.reduce((acc, order) => acc + Number(order.total_amount), 0);
   const points = Math.floor(totalSpent * 10);
   const purchasedItems = orders.flatMap(order => order.order_items || []).slice(0, 3);
+
+  // Dynamic Tier
+  const tier = totalSpent > 5000 ? "Diamond Member" : totalSpent > 1000 ? "Gold Member" : "Silk Patron";
+  const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || "Patron";
 
   return (
     <div className="w-full max-w-7xl text-white bg-[#0A0A0A] mx-auto space-y-24 pb-20 font-sans p-8 md:p-12 min-h-screen">
@@ -76,12 +100,21 @@ export default function DashboardPage() {
             Silk Haus <br /> Hub
           </h1>
           <p className="text-zinc-400 text-[16px] leading-relaxed max-w-xl font-sans">
-            Welcome back, Elena. Your status as a <span className="text-[#D5A754] font-bold">Diamond Member</span> grants you priority maintenance and bespoke styling privileges.
+            Welcome back, {firstName}. Your status as a <span className="text-[#D5A754] font-bold">{tier}</span> grants you priority maintenance and bespoke styling privileges.
           </p>
         </div>
-        <Button className="bg-[#D5A754] hover:bg-[#E6B964] text-black px-10 h-16 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] transition-all shrink-0">
-          Silk Haus Benefits
-        </Button>
+        <div className="flex flex-col gap-4">
+          {isAdmin && (
+            <Link href="/admin">
+              <Button variant="outline" className="border-[#D5A754]/50 text-[#D5A754] hover:bg-[#D5A754] hover:text-black px-10 h-16 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] transition-all shrink-0 w-full">
+                Admin Console
+              </Button>
+            </Link>
+          )}
+          <Button className="bg-[#D5A754] hover:bg-[#E6B964] text-black px-10 h-16 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] transition-all shrink-0">
+            Silk Haus Benefits
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -118,10 +151,10 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-end gap-5">
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#D5A754] mb-1">OCTOBER</span>
-              <span className="text-6xl font-serif italic text-white leading-none">24</span>
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#D5A754] mb-1">{orders.length > 0 ? 'OCTOBER' : 'SCHEDULE'}</span>
+              <span className="text-6xl font-serif italic text-white leading-none">{orders.length > 0 ? '24' : '—'}</span>
             </div>
-            <span className="text-zinc-500 text-[10px] font-bold pb-2 max-w-[120px] leading-tight flex-1 uppercase tracking-widest">Silk Haus Revival</span>
+            <span className="text-zinc-500 text-[10px] font-bold pb-2 max-w-[120px] leading-tight flex-1 uppercase tracking-widest">{orders.length > 0 ? 'Silk Haus Revival' : 'No Active Plan'}</span>
           </div>
         </div>
       </div>

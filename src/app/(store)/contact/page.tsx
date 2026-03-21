@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Mail, Phone, MapPin, Clock, Send, Instagram, MessageCircle } from "lucide-react";
 
 export default function ContactPage() {
@@ -143,9 +144,9 @@ export default function ContactPage() {
               <p className="text-[13px] text-[#1A1A1D]/60 leading-relaxed">
                 Thank you for reaching out! A member of our Silk Haus team will respond within 24 hours. In the meantime, explore our curated collection.
               </p>
-              <a href="/shop" className="inline-block bg-[#1A1A1D] text-white px-10 py-4 rounded-full text-[12px] font-bold uppercase tracking-widest hover:scale-105 transition-all">
+              <Link href="/shop" className="inline-block bg-[#1A1A1D] text-white px-10 py-4 rounded-full text-[12px] font-bold uppercase tracking-widest hover:scale-105 transition-all">
                 Browse The Collection
-              </a>
+              </Link>
             </div>
           ) : (
             <div className="bg-[#FAF9F6] border border-gray-100 p-8 md:p-12">

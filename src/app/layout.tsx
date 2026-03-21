@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { Toaster } from "sonner";
+import { CookieBanner } from "@/components/shared/cookie-banner";
 import "./globals.css";
 
 const inter = Inter({
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         {children}
         <Toaster position="bottom-right" richColors closeButton />
+        <CookieBanner />
       </body>
     </html>
   );

@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-import { MOCK_PRODUCTS } from "@/lib/mock-data";
+
 
 // ─────────────────────────────────────────────
 // TYPES
@@ -100,50 +100,27 @@ export async function getProducts(): Promise<Product[]> {
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      // Fallback to mock data
-      return MOCK_PRODUCTS.map(p => ({
-        id: p.id,
-        name: p.name,
-        slug: p.slug,
-        base_price: p.base_price,
-        category: p.category,
-        image: p.image,
-        created_at: new Date().toISOString(),
-        is_featured: false
-      })) as Product[];
+      return [] as Product[];
     }
 
     return (data as unknown as Product[]).map(p => ({
       ...p,
-      category: p.categories?.name || "Uncategorized",
+      category: (p as any).categories?.name || "Uncategorized",
       image:
-        p.product_images?.find((img) => img.is_main)?.image_url ||
-        p.product_images?.[0]?.image_url ||
+        (p as any).product_images?.find((img: any) => img.is_main)?.image_url ||
+        (p as any).product_images?.[0]?.image_url ||
         "/hero_luxury_wig_1773402385371.png",
       created_at: (p as any).created_at || new Date().toISOString(),
       is_featured: (p as any).is_featured || false
     }));
   } catch {
-    return MOCK_PRODUCTS.map(p => ({
-      id: p.id,
-      name: p.name,
-      slug: p.slug,
-      base_price: p.base_price,
-      category: p.category,
-      image: p.image,
-      created_at: new Date().toISOString(),
-      is_featured: false
-    })) as Product[];
+    return [] as Product[];
   }
 }
 
 export async function getProductById(id: string) {
   if (!id) return null;
 
-  // First check mock data for mock IDs
-  if (id.startsWith("mock-")) {
-    return MOCK_PRODUCTS.find(p => p.id === id) || null;
-  }
 
   try {
     const supabase = await createClient();
