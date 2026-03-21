@@ -79,7 +79,7 @@ export default function AboutPage() {
       </section>
 
       {/* Team */}
-      <section className="bg-[#FAF9F6] py-24">
+      <section className="bg-[#FAF9F6] py-24 text-[#1A1A1D]">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 mb-4">The People</p>
           <h2 className="font-serif text-5xl md:text-6xl uppercase tracking-tighter italic mb-16">Meet The Team</h2>
@@ -91,7 +91,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-[14px] font-bold uppercase tracking-widest mb-1">{person.name}</h3>
                 <p className="text-[11px] text-[#D5A754] font-bold uppercase tracking-widest mb-4">{person.title}</p>
-                <p className="text-[13px] text-zinc-300 leading-relaxed">{person.bio}</p>
+                <p className="text-[13px] text-[#1A1A1D]/70 leading-relaxed">{person.bio}</p>
               </div>
             ))}
           </div>

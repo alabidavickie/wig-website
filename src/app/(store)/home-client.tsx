@@ -273,14 +273,14 @@ export default function HomeClient({ products }: { products: any[] }) {
                 </div>
 
                 {/* Review Text */}
-                <p className="text-[13px] md:text-[14px] leading-[1.8] md:leading-[1.9] text-white/70 mb-6 md:mb-8 font-light">
+                <p className="text-[13px] md:text-[14px] leading-[1.8] md:leading-[1.9] text-[#1A1A1D]/70 mb-6 md:mb-8 font-light">
                   &ldquo;{review.text}&rdquo;
                 </p>
               </div>
 
               {/* Reviewer Info */}
               <div className="border-t border-gray-100 pt-4 md:pt-6">
-                <p className="text-[12px] md:text-[13px] font-bold uppercase tracking-widest text-white">{review.name}</p>
+                <p className="text-[12px] md:text-[13px] font-bold uppercase tracking-widest text-[#1A1A1D]">{review.name}</p>
                 <p className="text-[10px] md:text-[11px] text-[#C5A880] font-medium uppercase tracking-widest mt-1">{review.location}</p>
               </div>
             </div>
