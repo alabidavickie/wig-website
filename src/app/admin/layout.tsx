@@ -48,7 +48,7 @@ export default function AdminLayout({
             key={item.label}
             href={item.href}
             onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-3 px-4 py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500 hover:text-[#D5A754] hover:bg-[#2A2A2D]/30 transition-all group rounded-sm"
+            className="flex items-center gap-3 px-4 py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400 hover:text-[#D5A754] hover:bg-[#2A2A2D]/30 transition-all group rounded-sm"
           >
             <item.icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
             {item.label}
@@ -102,7 +102,7 @@ export default function AdminLayout({
           </div>
           
           <div className="flex items-center gap-3 md:gap-6">
-            <button className="relative text-zinc-500 hover:text-white transition-colors hidden sm:block">
+            <button className="relative text-zinc-400 hover:text-white transition-colors hidden sm:block">
               <Bell className="w-5 h-5" />
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#D5A754] rounded-full border-2 border-[#141414]"></span>
             </button>

@@ -26,7 +26,7 @@ export default async function OrdersPage() {
       <div className="flex justify-between items-end mb-6 border-b border-gray-200 pb-6">
         <div>
           <h2 className="text-3xl font-serif text-white tracking-widest uppercase mb-2">Order History</h2>
-          <p className="text-zinc-500 text-sm">Track shipments and review your Silk Haus acquisitions.</p>
+          <p className="text-zinc-400 text-sm">Track shipments and review your Silk Haus acquisitions.</p>
         </div>
         <Button variant="outline" className="border-[#2A2A2D] bg-transparent text-white hover:bg-[#141414] text-xs h-10 px-6 rounded-none font-medium uppercase tracking-widest transition-colors">
           Help Center
@@ -51,7 +51,7 @@ export default async function OrdersPage() {
                 </div>
               </div>
               <div className="text-left md:text-right">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-1">Estimated Arrival</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-1">Estimated Arrival</p>
                 <p className="text-[14px] font-bold text-white uppercase tracking-widest">
                   {activeOrder.status === 'shipped' ? 'In 2-3 Days' : 'Processing...'}
                 </p>

@@ -26,11 +26,11 @@ export default function PaymentPolicyPage() {
 
       {/* Header */}
       <div className="max-w-[900px] mx-auto px-6 md:px-12 py-20">
-        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#1A1A1D]/40 mb-6">Policies</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 mb-6">Policies</p>
         <h1 className="font-serif text-6xl md:text-8xl uppercase tracking-tighter italic leading-none mb-6">
           Payment<br />Policy
         </h1>
-        <p className="text-[16px] text-[#1A1A1D]/60 leading-relaxed max-w-xl">
+        <p className="text-[16px] text-zinc-300 leading-relaxed max-w-xl">
           Everything you need to know about our payment methods and processing.
         </p>
       </div>

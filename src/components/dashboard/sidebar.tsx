@@ -43,10 +43,10 @@ export const Sidebar = () => {
                   "flex items-center px-5 py-4 text-[11px] font-bold transition-all uppercase tracking-[0.2em] rounded-sm",
                   isActive 
                     ? "text-[#D5A754] bg-[#1A1A1D] border-l-2 border-[#D5A754]" 
-                    : "text-zinc-500 hover:text-white hover:bg-[#141414]"
+                    : "text-zinc-400 hover:text-white hover:bg-[#141414]"
                 )}
               >
-                <route.icon className={cn("h-4 w-4 mr-4 transition-all", isActive ? "text-[#D5A754] scale-110" : "text-zinc-600")} />
+                <route.icon className={cn("h-4 w-4 mr-4 transition-all", isActive ? "text-[#D5A754] scale-110" : "text-zinc-400")} />
                 {route.label}
               </Link>
             );
@@ -68,7 +68,7 @@ export const Sidebar = () => {
           </div>
         </div>
         
-        <button className="flex items-center justify-center w-full px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all text-zinc-600 hover:text-white hover:bg-[#1A1A1D] rounded-sm border border-transparent hover:border-[#2A2A2D]">
+        <button className="flex items-center justify-center w-full px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all text-zinc-400 hover:text-white hover:bg-[#1A1A1D] rounded-sm border border-transparent hover:border-[#2A2A2D]">
           <LogOut className="h-4 w-4 mr-4" />
           Secure Logout
         </button>

@@ -30,12 +30,12 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center py-12 px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/login" className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-[#1A1A1D]/40 font-bold mb-8 hover:text-black transition-colors">
+        <Link href="/login" className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-8 hover:text-black transition-colors">
           <ArrowLeft className="w-3 h-3" /> Back to Login
         </Link>
         <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-[#1A1A1D] mb-8 text-center w-full">SILK HAUS</h1>
         <h2 className="text-[14px] uppercase tracking-widest font-bold text-[#1A1A1D]">Forgot Password</h2>
-        <p className="mt-2 text-[12px] text-[#1A1A1D]/60 uppercase tracking-widest">
+        <p className="mt-2 text-[12px] text-zinc-300 uppercase tracking-widest">
           Enter your email and we'll send you a recovery link
         </p>
       </div>
@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
             )}
 
             <div className="space-y-2">
-              <Label className="text-[10px] uppercase tracking-widest text-[#1A1A1D]/40 font-bold" htmlFor="email">Email Address</Label>
+              <Label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold" htmlFor="email">Email Address</Label>
               <Input
                 id="email"
                 name="email"

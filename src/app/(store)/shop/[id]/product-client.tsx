@@ -56,7 +56,7 @@ export default function ProductClient({ product }: { product: any }) {
 
       <div className="max-w-[1600px] mx-auto py-8 sm:py-12 px-4 sm:px-6 md:px-12">
         <div className="mb-8 sm:mb-12 reveal">
-          <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D]/40">
+          <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
             <Link href="/" className="hover:text-black transition-colors">Home</Link>
             <span>/</span>
             <Link href="/shop" className="hover:text-black transition-colors">Shop</Link>
@@ -84,7 +84,7 @@ export default function ProductClient({ product }: { product: any }) {
           <div className="lg:sticky lg:top-[160px] h-fit space-y-8 md:space-y-12 reveal" suppressHydrationWarning>
             <div className="space-y-4 md:space-y-6" suppressHydrationWarning>
               <div className="space-y-2">
-                <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40">{product.category}</h3>
+                <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-zinc-400">{product.category}</h3>
                 <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase tracking-tighter leading-tight italic">
                   {product.name}
                 </h1>
@@ -100,10 +100,10 @@ export default function ProductClient({ product }: { product: any }) {
               </p>
               
               <div className="flex flex-wrap gap-4 md:gap-8" suppressHydrationWarning>
-                <div className="flex items-center gap-2 text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/60 whitespace-nowrap">
+                <div className="flex items-center gap-2 text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-zinc-300 whitespace-nowrap">
                   <Truck className="w-4 h-4" /> Complimentary Shipping
                 </div>
-                <div className="flex items-center gap-2 text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/60 whitespace-nowrap">
+                <div className="flex items-center gap-2 text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-zinc-300 whitespace-nowrap">
                   <ShieldCheck className="w-4 h-4" /> Lifetime Warranty
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default function ProductClient({ product }: { product: any }) {
             <div className="space-y-10">
               {product.variants.length > 0 && (
                 <div className="space-y-4">
-                  <label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Select Options</label>
+                  <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Select Options</label>
                   <div className="flex flex-wrap gap-3">
                     {product.variants.map((v: any) => (
                       <button
@@ -121,7 +121,7 @@ export default function ProductClient({ product }: { product: any }) {
                         className={`min-w-[100px] px-6 py-4 text-[11px] font-bold border transition-all rounded-full uppercase tracking-widest cursor-pointer ${
                           selectedVariant?.id === v.id 
                           ? 'border-black bg-black text-white shadow-lg' 
-                          : 'border-gray-100 hover:border-black text-[#1A1A1D]/60'
+                          : 'border-gray-100 hover:border-black text-zinc-300'
                         }`}
                       >
                         {v.name}
@@ -156,7 +156,7 @@ export default function ProductClient({ product }: { product: any }) {
                  </div>
                  <div>
                    <h4 className="text-[12px] font-bold uppercase tracking-widest mb-1">Authenticity Guaranteed</h4>
-                   <p className="text-[11px] text-[#1A1A1D]/50 uppercase font-bold tracking-widest">Silk Haus Certificate Included</p>
+                   <p className="text-[11px] text-zinc-400 uppercase font-bold tracking-widest">Silk Haus Certificate Included</p>
                  </div>
               </div>
             </div>

@@ -39,10 +39,10 @@ function LoginForm() {
               <img src="/images/logo_main.png" alt="Silk Haus Logo" className="w-16 h-auto mx-auto object-contain" />
            </div>
           <h1 className="font-serif text-4xl tracking-[0.3em] uppercase text-white mb-2 leading-none">SILK HAUS</h1>
-          <p className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] mb-12">Elite Studio Hub</p>
+          <p className="text-[10px] text-zinc-400 uppercase tracking-[0.5em] mb-12">Elite Studio Hub</p>
         </Link>
         <h2 className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#D5A754] mb-2">Welcome Back</h2>
-        <p className="text-[11px] text-zinc-500 uppercase tracking-widest">
+        <p className="text-[11px] text-zinc-400 uppercase tracking-widest">
           Authenticate to access your private studio
         </p>
       </div>
@@ -60,7 +60,7 @@ function LoginForm() {
             )}
 
             <div className="space-y-3">
-              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold ml-1" htmlFor="email">Email Address</Label>
+              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="email">Email Address</Label>
               <Input
                 id="email"
                 name="email"
@@ -74,7 +74,7 @@ function LoginForm() {
 
             <div className="space-y-3">
               <div className="flex justify-between items-center px-1">
-                <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold" htmlFor="password">Password</Label>
+                <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold" htmlFor="password">Password</Label>
                 <Link href="/forgot-password" className="text-[9px] uppercase tracking-[0.2em] text-[#D5A754]/60 hover:text-[#D5A754] font-bold transition-colors">Recover</Link>
               </div>
               <Input
@@ -109,12 +109,12 @@ function LoginForm() {
           <div className="mt-12 pt-10 border-t border-[#2A2A2D] text-center space-y-6">
             <Link
               href={redirectTo}
-              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-zinc-500 hover:text-white transition-colors group"
+              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-zinc-400 hover:text-white transition-colors group"
             >
               Continue as Guest <ArrowRight className="w-3 h-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
             </Link>
             
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest">
+            <p className="text-[10px] text-zinc-400 uppercase tracking-widest">
               New to SILK HAUS?{" "}
               <Link href={`/signup${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`} className="font-bold text-[#D5A754] hover:text-[#E6B964] transition-colors underline underline-offset-4">
                 Create Access
@@ -134,7 +134,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-500 animate-pulse">Initializing Studio...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-400 animate-pulse">Initializing Studio...</p></div>}>
       <LoginForm />
     </Suspense>
   );

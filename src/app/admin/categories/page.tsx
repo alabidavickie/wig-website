@@ -56,7 +56,7 @@ export default function AdminCategoriesPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Categories</h1>
-          <p className="text-gray-500 text-sm mt-1">Organize your products into luxury collections.</p>
+          <p className="text-gray-400 text-sm mt-1">Organize your products into luxury collections.</p>
         </div>
         <button 
           onClick={() => setIsAdding(!isAdding)}

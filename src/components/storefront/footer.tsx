@@ -29,7 +29,7 @@ export const Footer = () => {
                 Subscribe
               </button>
             </div>
-            <p className="text-[10px] text-white/30 mt-3 uppercase tracking-widest">No spam. Unsubscribe anytime.</p>
+            <p className="text-[10px] text-zinc-400 mt-3 uppercase tracking-widest">No spam. Unsubscribe anytime.</p>
           </div>
         </div>
 
@@ -107,7 +107,7 @@ export const Footer = () => {
           <div className="flex items-center gap-4" suppressHydrationWarning>
             <h2 className="font-serif text-2xl tracking-widest uppercase">SILK HAUS</h2>
             <span className="text-white/20 hidden md:inline">|</span>
-            <p className="text-[11px] text-white/30 uppercase tracking-widest hidden md:block">Premium Wigs</p>
+            <p className="text-[11px] text-zinc-400 uppercase tracking-widest hidden md:block">Premium Wigs</p>
           </div>
 
           <div className="flex items-center gap-5" suppressHydrationWarning>
@@ -122,7 +122,7 @@ export const Footer = () => {
             </a>
           </div>
 
-          <p className="text-[11px] text-white/30 uppercase tracking-widest" suppressHydrationWarning>
+          <p className="text-[11px] text-zinc-400 uppercase tracking-widest" suppressHydrationWarning>
             &copy; {new Date().getFullYear()} Silk Haus. All Rights Reserved.
           </p>
         </div>

@@ -25,7 +25,7 @@ export default function ResetPasswordPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-[#1A1A1D] mb-8 text-center w-full">SILK HAUS</h1>
         <h2 className="text-[14px] uppercase tracking-widest font-bold text-[#1A1A1D]">Reset Password</h2>
-        <p className="mt-2 text-[12px] text-[#1A1A1D]/60 uppercase tracking-widest">
+        <p className="mt-2 text-[12px] text-zinc-300 uppercase tracking-widest">
           Enter your new password below
         </p>
       </div>
@@ -40,7 +40,7 @@ export default function ResetPasswordPage() {
             )}
 
             <div className="space-y-2">
-              <Label className="text-[10px] uppercase tracking-widest text-[#1A1A1D]/40 font-bold" htmlFor="password">New Password</Label>
+              <Label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold" htmlFor="password">New Password</Label>
               <Input
                 id="password"
                 name="password"

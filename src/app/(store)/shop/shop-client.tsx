@@ -101,7 +101,7 @@ export default function ShopClient({ product }: { product: any }) {
       </Link>
       <div className="flex flex-col text-center px-4">
         <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D] mb-1">{product.name}</h3>
-        <p className="text-[#1A1A1D]/40 text-[11px] uppercase tracking-widest font-bold mb-4">{product.category} • SILK HAUS</p>
+        <p className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold mb-4">{product.category} • SILK HAUS</p>
         <div className="text-[16px] font-serif italic text-[#1A1A1D]">
           <Price amount={product.base_price} />
         </div>

@@ -12,7 +12,7 @@ export default async function AdminOrdersPage() {
       case 'shipped': return { bg: 'bg-purple-50', text: 'text-purple-600' };
       case 'delivered': return { bg: 'bg-emerald-50', text: 'text-emerald-600' };
       case 'pending': return { bg: 'bg-amber-50', text: 'text-amber-600' };
-      default: return { bg: 'bg-gray-50', text: 'text-gray-600' };
+      default: return { bg: 'bg-gray-50', text: 'text-gray-400' };
     }
   };
   return (
@@ -20,7 +20,7 @@ export default async function AdminOrdersPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Fulfillment Center</h1>
-          <p className="text-zinc-500 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">Review and fulfill luxury hair orders from your clients.</p>
+          <p className="text-zinc-400 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">Review and fulfill luxury hair orders from your clients.</p>
         </div>
         <div className="flex items-center gap-4">
            <div className="flex -space-x-2">
@@ -30,7 +30,7 @@ export default async function AdminOrdersPage() {
                </div>
              ))}
            </div>
-           <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">+12 active shoppers</span>
+           <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">+12 active shoppers</span>
         </div>
       </div>
 
@@ -47,7 +47,7 @@ export default async function AdminOrdersPage() {
               <stat.icon className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">{stat.label}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">{stat.label}</p>
               <p className="text-2xl font-bold tracking-tighter">{stat.value}</p>
             </div>
           </div>
@@ -58,7 +58,7 @@ export default async function AdminOrdersPage() {
       <div className="bg-[#141414] border border-[#2A2A2D] shadow-sm rounded-sm">
         <div className="p-6 border-b border-[#2A2A2D] flex flex-col sm:flex-row gap-6 justify-between items-center bg-[#0A0A0A]/30">
           <div className="relative w-full sm:w-96 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-[#D5A754] transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 group-focus-within:text-[#D5A754] transition-colors" />
             <input 
               type="text" 
               placeholder="Search by ID or Customer..." 
@@ -73,7 +73,7 @@ export default async function AdminOrdersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500 border-b border-[#2A2A2D]">
+              <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-400 border-b border-[#2A2A2D]">
                 <th className="px-8 py-6">Order Hex</th>
                 <th className="px-8 py-6">Client Identity</th>
                 <th className="px-8 py-6">Manifest</th>
@@ -85,7 +85,7 @@ export default async function AdminOrdersPage() {
             <tbody className="divide-y divide-[#2A2A2D]">
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-8 py-24 text-center text-zinc-600 uppercase tracking-widest text-[10px] font-bold">
+                  <td colSpan={6} className="px-8 py-24 text-center text-zinc-400 uppercase tracking-widest text-[10px] font-bold">
                     No active orders in the fulfillment queue.
                   </td>
                 </tr>
@@ -103,10 +103,10 @@ export default async function AdminOrdersPage() {
                       <td className="px-8 py-6">
                         <div className="flex flex-col">
                           <span className="text-[12px] font-bold uppercase tracking-wide text-white">{order.email}</span>
-                          <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mt-1 opacity-70">{format(new Date(order.created_at), 'MMM dd, HH:mm')}</span>
+                          <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mt-1 opacity-70">{format(new Date(order.created_at), 'MMM dd, HH:mm')}</span>
                         </div>
                       </td>
-                      <td className="px-8 py-6 text-[10px] text-zinc-500 uppercase tracking-widest max-w-xs truncate italic">
+                      <td className="px-8 py-6 text-[10px] text-zinc-400 uppercase tracking-widest max-w-xs truncate italic">
                         {itemCount} {itemCount === 1 ? 'Unit' : 'Units'}: {productsPreview}
                       </td>
                       <td className="px-8 py-6 text-[13px] font-bold text-white tracking-tighter">
@@ -130,7 +130,7 @@ export default async function AdminOrdersPage() {
                         </div>
                       </td>
                       <td className="px-8 py-6 text-right">
-                        <button className="p-2.5 border border-[#2A2A2D] hover:border-white hover:text-white text-zinc-500 transition-all rounded-sm bg-[#0A0A0A]">
+                        <button className="p-2.5 border border-[#2A2A2D] hover:border-white hover:text-white text-zinc-400 transition-all rounded-sm bg-[#0A0A0A]">
                           <Eye className="w-4 h-4" />
                         </button>
                       </td>

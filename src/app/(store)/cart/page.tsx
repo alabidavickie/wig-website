@@ -53,7 +53,7 @@ export default function CartPage() {
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12" suppressHydrationWarning>
         <header className="mb-8 sm:mb-12 md:mb-16 reveal">
-          <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-500 mb-2 sm:mb-4">Your Selection</h3>
+          <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-400 mb-2 sm:mb-4">Your Selection</h3>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif uppercase tracking-tighter italic leading-none text-white">Shopping <br /> Bag</h1>
         </header>
 
@@ -81,14 +81,14 @@ export default function CartPage() {
                         <div className="space-y-2">
                           <h3 className="text-[14px] font-bold uppercase tracking-[0.2em] text-white">{item.name}</h3>
                           {item.variant && (
-                            <p className="text-[11px] text-zinc-500 font-bold uppercase tracking-widest">
+                            <p className="text-[11px] text-zinc-400 font-bold uppercase tracking-widest">
                               {item.variant.length} • {item.variant.color}
                             </p>
                           )}
                         </div>
                         <button 
                           onClick={() => removeItem(item.id, variantKey)}
-                          className="w-10 h-10 flex items-center justify-center bg-[#2A2A2D] text-zinc-500 hover:bg-[#D5A754] hover:text-black transition-all rounded-full cursor-pointer"
+                          className="w-10 h-10 flex items-center justify-center bg-[#2A2A2D] text-zinc-400 hover:bg-[#D5A754] hover:text-black transition-all rounded-full cursor-pointer"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -130,13 +130,13 @@ export default function CartPage() {
                 
                 <div className="space-y-6">
                   <div className="flex justify-between text-[13px]">
-                    <span className="text-zinc-500 font-bold uppercase tracking-widest">Subtotal</span>
+                    <span className="text-zinc-400 font-bold uppercase tracking-widest">Subtotal</span>
                     <span className="font-bold text-white">
                       <Price amount={totalPrice} />
                     </span>
                   </div>
                   <div className="flex justify-between text-[13px]">
-                    <span className="text-zinc-500 font-bold uppercase tracking-widest">Silk Haus Delivery</span>
+                    <span className="text-zinc-400 font-bold uppercase tracking-widest">Silk Haus Delivery</span>
                     <span className="font-bold text-[#D5A754] uppercase tracking-widest italic">Free</span>
                   </div>
                 </div>
@@ -164,7 +164,7 @@ export default function CartPage() {
                     )}
                   </Button>
                   
-                  <p className="text-[10px] text-zinc-600 text-center uppercase tracking-[0.2em] font-bold leading-relaxed px-4">
+                  <p className="text-[10px] text-zinc-400 text-center uppercase tracking-[0.2em] font-bold leading-relaxed px-4">
                     Sign-in required • 256-bit SSL secured • Stripe verified
                   </p>
                 </div>

@@ -43,10 +43,10 @@ function SignupForm() {
               <Crown className="w-8 h-8 text-[#D5A754]" />
            </div>
           <h1 className="font-serif text-4xl tracking-[0.3em] uppercase text-white mb-2 leading-none">SILK HAUS</h1>
-          <p className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] mb-12">Elite Studio Registry</p>
+          <p className="text-[10px] text-zinc-400 uppercase tracking-[0.5em] mb-12">Elite Studio Registry</p>
         </Link>
         <h2 className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#D5A754] mb-2">Create Your Account</h2>
-        <p className="text-[11px] text-zinc-500 uppercase tracking-widest max-w-sm mx-auto leading-loose">
+        <p className="text-[11px] text-zinc-400 uppercase tracking-widest max-w-sm mx-auto leading-loose">
           {redirectTo === "/checkout" 
             ? "Secure your identity to finalize your acquisition" 
             : "Request your membership access to the Follien Atelier"}
@@ -74,7 +74,7 @@ function SignupForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-3">
-                <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold ml-1" htmlFor="firstName">First Name</Label>
+                <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="firstName">First Name</Label>
                 <Input
                   id="firstName"
                   name="firstName"
@@ -85,7 +85,7 @@ function SignupForm() {
                 />
               </div>
               <div className="space-y-3">
-                <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold ml-1" htmlFor="lastName">Last Name</Label>
+                <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="lastName">Last Name</Label>
                 <Input
                   id="lastName"
                   name="lastName"
@@ -98,7 +98,7 @@ function SignupForm() {
             </div>
 
             <div className="space-y-3">
-              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold ml-1" htmlFor="email">Email Address</Label>
+              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="email">Email Address</Label>
               <Input
                 id="email"
                 name="email"
@@ -111,7 +111,7 @@ function SignupForm() {
             </div>
 
             <div className="space-y-3">
-              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold ml-1" htmlFor="password">Security Password</Label>
+              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="password">Security Password</Label>
               <Input
                 id="password"
                 name="password"
@@ -146,12 +146,12 @@ function SignupForm() {
           <div className="mt-12 pt-10 border-t border-[#2A2A2D] text-center space-y-6">
             <Link
               href={redirectTo === "/checkout" ? "/checkout" : "/shop"}
-              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-zinc-500 hover:text-white transition-colors group"
+              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-zinc-400 hover:text-white transition-colors group"
             >
               Continue as Guest <ArrowRight className="w-3 h-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest">
+            <p className="text-[10px] text-zinc-400 uppercase tracking-widest">
               Already have access?{" "}
               <Link href={`/login${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`} className="font-bold text-[#D5A754] hover:text-[#E6B964] transition-colors underline underline-offset-4">
                 Sign In to Your Account
@@ -171,7 +171,7 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-500 animate-pulse">Initializing Studio Registry...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-400 animate-pulse">Initializing Studio Registry...</p></div>}>
       <SignupForm />
     </Suspense>
   );

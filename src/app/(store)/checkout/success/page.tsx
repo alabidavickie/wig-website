@@ -92,7 +92,7 @@ function SuccessContent() {
           <h1 className="font-serif text-4xl md:text-5xl uppercase tracking-tighter italic leading-none">
             Verifying<br />Payment
           </h1>
-          <p className="text-[14px] text-[#1A1A1D]/60 tracking-wide leading-relaxed">
+          <p className="text-[14px] text-zinc-300 tracking-wide leading-relaxed">
             Securely confirming your payment with{" "}
             <span className="font-bold text-[#1A1A1D] uppercase tracking-widest">{provider}</span>...
           </p>
@@ -110,7 +110,7 @@ function SuccessContent() {
           <h1 className="font-serif text-4xl md:text-5xl uppercase tracking-tighter italic leading-none">
             Payment<br />Unverified
           </h1>
-          <p className="text-[14px] text-[#1A1A1D]/60 tracking-wide leading-relaxed max-w-sm mx-auto">
+          <p className="text-[14px] text-zinc-300 tracking-wide leading-relaxed max-w-sm mx-auto">
             We could not verify your payment at this time. If you believe this is an error, please contact our support team.
           </p>
           {result?.error && (
@@ -151,7 +151,7 @@ function SuccessContent() {
         </h1>
 
         <div className="space-y-4">
-          <p className="text-[14px] text-[#1A1A1D]/60 tracking-wide leading-relaxed">
+          <p className="text-[14px] text-zinc-300 tracking-wide leading-relaxed">
             Your luxury acquisition has been verified and confirmed via{" "}
             <span className="font-bold text-[#1A1A1D] uppercase tracking-widest">{result.provider}</span>.
           </p>
@@ -164,12 +164,12 @@ function SuccessContent() {
           )}
 
           {reference && (
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D]/40">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
               Ref: {reference}
             </p>
           )}
           {sessionId && (
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D]/40">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
               Session: {sessionId.slice(0, 20)}...
             </p>
           )}
@@ -183,12 +183,12 @@ function SuccessContent() {
 
         {/* Countdown redirect */}
         <div className="bg-[#FAF9F6] border border-gray-100 rounded-2xl px-8 py-6 space-y-3 mt-4">
-          <p className="text-[11px] text-[#1A1A1D]/50 uppercase tracking-widest font-bold">
+          <p className="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">
             Redirecting to your dashboard in
           </p>
           <div className="flex items-center justify-center gap-2">
             <span className="text-4xl font-serif italic font-bold text-[#1A1A1D]">{countdown}</span>
-            <span className="text-[11px] text-[#1A1A1D]/40 uppercase tracking-widest font-bold">seconds</span>
+            <span className="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">seconds</span>
           </div>
           <div className="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
             <div

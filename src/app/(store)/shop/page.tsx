@@ -17,7 +17,7 @@ export default async function ShopPage() {
 
       {/* Page Header */}
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12 md:py-16 reveal">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-500 mb-3">Storefront</h3>
+        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400 mb-3">Storefront</h3>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif text-white uppercase tracking-tighter mb-4 sm:mb-6 italic">The <br /> Collection</h1>
         <p className="text-[13px] sm:text-[15px] text-zinc-400 max-w-xl leading-relaxed">
           Curated with meticulous precision for the modern elite. Discover ethically sourced raw human hair and hand-crafted Silk Haus pieces.
@@ -31,12 +31,12 @@ export default async function ShopPage() {
             <div>
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#1A1A1D]">Refine By</h3>
-                <Filter className="w-4 h-4 text-[#1A1A1D]/40" />
+                <Filter className="w-4 h-4 text-zinc-400" />
               </div>
               
               <div className="space-y-10">
                 <div className="space-y-4">
-                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Construction</h4>
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Construction</h4>
                   <div className="space-y-3" suppressHydrationWarning>
                     {["Lace Front", "Full Lace", "Silk Top", "Glueless", "U-Part"].map((cat) => (
                       <label key={cat} className="flex items-center gap-3 cursor-pointer group">
@@ -49,7 +49,7 @@ export default async function ShopPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Length</h4>
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Length</h4>
                   <div className="grid grid-cols-4 gap-2" suppressHydrationWarning>
                     {["14\"", "18\"", "22\"", "26\""].map((len) => (
                       <button key={len} className="py-2 border border-gray-100 text-[11px] font-bold hover:border-[#1A1A1D] transition-all rounded-lg uppercase cursor-pointer">
@@ -59,7 +59,7 @@ export default async function ShopPage() {
                   </div>
                 </div>
 
-                <div className="p-6 bg-[#FAF9F6] rounded-2xl border border-gray-100 italic text-[12px] text-[#1A1A1D]/60 leading-relaxed">
+                <div className="p-6 bg-[#FAF9F6] rounded-2xl border border-gray-100 italic text-[12px] text-zinc-300 leading-relaxed">
                   "Each piece is uniquely hand-finished by our master stylists. No two wings are identical."
                 </div>
               </div>
@@ -71,10 +71,10 @@ export default async function ShopPage() {
         <main className="flex-1" suppressHydrationWarning>
           {/* Mobile/Tablet sort bar */}
           <div className="flex justify-between items-center mb-8 sm:mb-10 md:mb-12 reveal">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">{products.length} Products Found</span>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">{products.length} Products Found</span>
             <div className="flex items-center gap-2 cursor-pointer group px-3 sm:px-4 py-2 border border-gray-100 rounded-full hover:border-black transition-all">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest group-hover:text-black transition-colors">Sort: Featured</span>
-              <ChevronDown className="w-3 h-3 text-[#1A1A1D]/60 group-hover:text-black transition-colors" />
+              <ChevronDown className="w-3 h-3 text-zinc-300 group-hover:text-black transition-colors" />
             </div>
           </div>
 
@@ -97,7 +97,7 @@ export default async function ShopPage() {
                 <span className="text-[12px] font-bold">01</span>
               </button>
               <button className="w-12 h-12 flex items-center justify-center border border-transparent rounded-full hover:bg-gray-50 transition-all cursor-pointer">
-                <span className="text-[12px] font-bold text-[#1A1A1D]/40">02</span>
+                <span className="text-[12px] font-bold text-zinc-400">02</span>
               </button>
               <button className="w-12 h-12 flex items-center justify-center border border-gray-200 rounded-full hover:bg-black hover:text-white transition-all cursor-pointer">
                 <ChevronRight className="w-5 h-5" />

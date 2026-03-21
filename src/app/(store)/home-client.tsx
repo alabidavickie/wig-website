@@ -134,9 +134,9 @@ export default function HomeClient({ products }: { products: any[] }) {
 
       {/* Intro Text */}
       <section className="py-12 md:py-16 lg:py-20 px-6 text-center max-w-4xl mx-auto">
-        <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-[#1A1A1D]/40 mb-4 md:mb-8">Curated Editorial</h3>
+        <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-400 mb-4 md:mb-8">Curated Editorial</h3>
         <p className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-5xl leading-tight text-[#1A1A1D]">
-          "We don't just sell hair; we provide the ultimate foundation for your <span className="italic text-[#1A1A1D]/60">most confident self</span>."
+          "We don't just sell hair; we provide the ultimate foundation for your <span className="italic text-zinc-300">most confident self</span>."
         </p>
       </section>
 
@@ -171,7 +171,7 @@ export default function HomeClient({ products }: { products: any[] }) {
         <div className="max-w-[1600px] mx-auto" suppressHydrationWarning>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-10 md:mb-16 gap-4">
             <div className="space-y-2 md:space-y-4">
-              <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-[#1A1A1D]/40">Silk Haus Selection</h3>
+              <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-400">Silk Haus Selection</h3>
               <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase tracking-tighter italic">Top <br className="hidden sm:block" /> Favorites</h2>
             </div>
             <Link href="/shop" className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-b border-[#1A1A1D] pb-1 hover:opacity-50 transition-opacity cursor-pointer self-start sm:self-auto">
@@ -219,7 +219,7 @@ export default function HomeClient({ products }: { products: any[] }) {
 
                   <Link href={`/shop/${product.id}`}>
                     <h4 className="text-[11px] sm:text-[12px] md:text-[14px] font-bold uppercase tracking-wider md:tracking-widest text-[#1A1A1D] mb-1 truncate">{product.name}</h4>
-                    <div className="text-[#1A1A1D]/60 text-[12px] md:text-[14px] font-medium">
+                    <div className="text-zinc-300 text-[12px] md:text-[14px] font-medium">
                       <Price amount={product.base_price || product.price} />
                     </div>
                   </Link>
@@ -233,7 +233,7 @@ export default function HomeClient({ products }: { products: any[] }) {
       {/* Customer Testimonials */}
       <section className="px-4 sm:px-6 md:px-12 mb-16 md:mb-24">
         <div className="max-w-[1200px] mx-auto text-center mb-10 md:mb-16">
-          <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-[#1A1A1D]/40 mb-3 md:mb-4">What Our Clients Say</h3>
+          <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-400 mb-3 md:mb-4">What Our Clients Say</h3>
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl uppercase tracking-tighter italic">Loved by <br /> Thousands</h2>
         </div>
 

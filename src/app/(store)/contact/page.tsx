@@ -40,7 +40,7 @@ export default function ContactPage() {
 
       {/* Header */}
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-20">
-        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#1A1A1D]/40 mb-6">Get In Touch</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 mb-6">Get In Touch</p>
         <h1 className="font-serif text-6xl md:text-8xl uppercase tracking-tighter italic leading-none">
           Contact<br />
           <span className="text-[#D5A754]">Silk Haus</span>
@@ -64,7 +64,7 @@ export default function ContactPage() {
                   <span className="text-[#D5A754] text-lg mt-0.5">{item.icon}</span>
                   <div>
                     <h3 className="text-[13px] font-bold uppercase tracking-widest mb-2">{item.title}</h3>
-                    <p className="text-[13px] text-[#1A1A1D]/60 leading-relaxed">{item.body}</p>
+                    <p className="text-[13px] text-zinc-300 leading-relaxed">{item.body}</p>
                   </div>
                 </div>
               ))}
@@ -80,7 +80,7 @@ export default function ContactPage() {
                   <Mail className="w-4 h-4 group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Email (24hr Response)</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Email (24hr Response)</p>
                   <p className="text-[14px] font-bold">follienn@gmail.com</p>
                 </div>
               </a>
@@ -89,7 +89,7 @@ export default function ContactPage() {
                   <MessageCircle className="w-4 h-4 group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">WhatsApp Concierge</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">WhatsApp Concierge</p>
                   <p className="text-[14px] font-bold">+234 800 000 0000</p>
                 </div>
               </a>
@@ -98,7 +98,7 @@ export default function ContactPage() {
                   <Instagram className="w-4 h-4 group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Instagram</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Instagram</p>
                   <p className="text-[14px] font-bold">@follienn_hair</p>
                 </div>
               </a>
@@ -107,7 +107,7 @@ export default function ContactPage() {
                   <svg className="w-4 h-4 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.46V13.2a8.16 8.16 0 005.58 2.18v-3.45a4.85 4.85 0 01-2.82-.94 4.83 4.83 0 01-1.18-1.07v-.04V6.69h3z"/></svg>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">TikTok</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">TikTok</p>
                   <p className="text-[14px] font-bold">@follienn_hair</p>
                 </div>
               </a>
@@ -116,7 +116,7 @@ export default function ContactPage() {
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Business Hours</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Business Hours</p>
                   <p className="text-[14px] font-bold">Mon – Sat: 9AM – 7PM WAT</p>
                 </div>
               </div>
@@ -125,7 +125,7 @@ export default function ContactPage() {
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Showroom</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Showroom</p>
                   <p className="text-[14px] font-bold">By Appointment — Lagos, Nigeria</p>
                 </div>
               </div>
@@ -141,7 +141,7 @@ export default function ContactPage() {
                 <span className="text-emerald-600 text-2xl">✓</span>
               </div>
               <h3 className="font-serif text-3xl uppercase tracking-tight italic">Message Received</h3>
-              <p className="text-[13px] text-[#1A1A1D]/60 leading-relaxed">
+              <p className="text-[13px] text-zinc-300 leading-relaxed">
                 Thank you for reaching out! A member of our Silk Haus team will respond within 24 hours. In the meantime, explore our curated collection.
               </p>
               <Link href="/shop" className="inline-block bg-[#1A1A1D] text-white px-10 py-4 rounded-full text-[12px] font-bold uppercase tracking-widest hover:scale-105 transition-all">
@@ -151,24 +151,24 @@ export default function ContactPage() {
           ) : (
             <div className="bg-[#FAF9F6] border border-gray-100 p-8 md:p-12">
               <h2 className="text-[14px] font-bold uppercase tracking-widest mb-2">Send A Message</h2>
-              <p className="text-[12px] text-[#1A1A1D]/50 uppercase tracking-widest mb-10">We'll respond within 24 hours</p>
+              <p className="text-[12px] text-zinc-400 uppercase tracking-widest mb-10">We'll respond within 24 hours</p>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">First Name</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">First Name</label>
                     <input type="text" name="firstName" required placeholder="Jane" className="w-full h-12 px-4 border border-gray-200 bg-white text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Last Name</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Last Name</label>
                     <input type="text" name="lastName" required placeholder="Cooper" className="w-full h-12 px-4 border border-gray-200 bg-white text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Email Address</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Email Address</label>
                   <input type="email" name="email" required placeholder="jane@example.com" className="w-full h-12 px-4 border border-gray-200 bg-white text-[13px] outline-none focus:border-[#1A1A1D] transition-colors" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Topic</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Topic</label>
                   <select name="topic" className="w-full h-12 px-4 border border-gray-200 bg-white text-[13px] outline-none focus:border-[#1A1A1D] transition-colors appearance-none" required>
                     <option value="">Select a topic...</option>
                     <option>Product Inquiry</option>
@@ -181,7 +181,7 @@ export default function ContactPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1D]/40">Your Message</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Your Message</label>
                   <textarea
                     name="message"
                     required

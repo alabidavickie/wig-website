@@ -46,7 +46,7 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center font-sans">
         <div className="h-[80px]"></div>
         <div className="text-center py-24 space-y-8">
-          <p className="text-[20px] text-zinc-500 uppercase tracking-widest italic font-serif">Your bag is currently empty</p>
+          <p className="text-[20px] text-zinc-400 uppercase tracking-widest italic font-serif">Your bag is currently empty</p>
           <Link href="/shop" className="inline-block bg-black text-white px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-xl cursor-pointer">
             Explore The Collection
           </Link>
@@ -108,7 +108,7 @@ export default function CheckoutPage() {
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12">
         <div className="mb-8 sm:mb-12">
-          <Link href="/cart" className="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
+          <Link href="/cart" className="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Bag
           </Link>
         </div>
@@ -117,7 +117,7 @@ export default function CheckoutPage() {
           {/* Checkout Form */}
           <div className="space-y-6 sm:space-y-8 md:space-y-10">
             <div>
-              <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-500 mb-2 sm:mb-3">Secure Checkout</h3>
+              <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-400 mb-2 sm:mb-3">Secure Checkout</h3>
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif uppercase tracking-tighter italic leading-none text-white">Your Order</h1>
             </div>
 
@@ -135,24 +135,24 @@ export default function CheckoutPage() {
                   { label: "Last Name", name: "lastName", type: "text", placeholder: "Cooper" },
                 ].map((field) => (
                   <div key={field.name} className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">{field.label}</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{field.label}</label>
                     <input type={field.type} name={field.name} placeholder={field.placeholder} value={formData[field.name as keyof typeof formData]} onChange={handleInputChange} required className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#141414] text-white text-[13px] outline-none focus:border-[#D5A754] transition-colors placeholder:text-zinc-700" />
                   </div>
                 ))}
                 <div className="md:col-span-2 space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Email Address</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Email Address</label>
                   <input type="email" name="email" placeholder="jane@example.com" value={formData.email} onChange={handleInputChange} required className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#141414] text-white text-[13px] outline-none focus:border-[#D5A754] transition-colors placeholder:text-zinc-700" />
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Shipping Address</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Shipping Address</label>
                   <input type="text" name="address" placeholder="123 Luxury Lane" value={formData.address} onChange={handleInputChange} required className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#141414] text-white text-[13px] outline-none focus:border-[#D5A754] transition-colors placeholder:text-zinc-700" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">City</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">City</label>
                   <input type="text" name="city" placeholder="New York" value={formData.city} onChange={handleInputChange} required className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#141414] text-white text-[13px] outline-none focus:border-[#D5A754] transition-colors placeholder:text-zinc-700" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">ZIP / Postal Code</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">ZIP / Postal Code</label>
                   <input type="text" name="zip" placeholder="10001" value={formData.zip} onChange={handleInputChange} className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#141414] text-white text-[13px] outline-none focus:border-[#D5A754] transition-colors placeholder:text-zinc-700" />
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default function CheckoutPage() {
                       <Lock className="w-8 h-8 text-[#011B33] mx-auto" />
                       <div>
                         <p className="text-[13px] font-bold uppercase tracking-widest text-white">Paystack Secure Gateway</p>
-                        <p className="text-[11px] text-zinc-500 mt-1 max-w-sm mx-auto">Pay securely via Bank Transfer, USSD, or Nigerian issued debit cards.</p>
+                        <p className="text-[11px] text-zinc-400 mt-1 max-w-sm mx-auto">Pay securely via Bank Transfer, USSD, or Nigerian issued debit cards.</p>
                       </div>
                       <Button
                         onClick={() => handlePlaceOrder('paystack')}
@@ -186,7 +186,7 @@ export default function CheckoutPage() {
                       <Lock className="w-8 h-8 text-[#635BFF] mx-auto" />
                       <div>
                         <p className="text-[13px] font-bold uppercase tracking-widest text-white">Stripe Verified Check</p>
-                        <p className="text-[11px] text-zinc-500 mt-1 max-w-sm mx-auto">Pay securely with Apple Pay, Google Pay, or any international credit card.</p>
+                        <p className="text-[11px] text-zinc-400 mt-1 max-w-sm mx-auto">Pay securely with Apple Pay, Google Pay, or any international credit card.</p>
                       </div>
                       <Button
                         onClick={() => handlePlaceOrder('stripe')}
@@ -218,7 +218,7 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[11px] font-bold uppercase tracking-widest truncate text-white">{item.name}</p>
-                      <p className="text-[10px] text-zinc-500">Qty: {item.quantity}</p>
+                      <p className="text-[10px] text-zinc-400">Qty: {item.quantity}</p>
                     </div>
                     <span className="text-[12px] font-bold">
                       <Price amount={item.price * item.quantity} />
@@ -229,13 +229,13 @@ export default function CheckoutPage() {
 
               <div className="space-y-3 border-t border-[#2A2A2D] pt-6">
                 <div className="flex justify-between text-[12px]">
-                  <span className="text-zinc-500 uppercase tracking-widest font-bold">Subtotal</span>
+                  <span className="text-zinc-400 uppercase tracking-widest font-bold">Subtotal</span>
                   <span className="font-bold text-white">
                     <Price amount={baseTotalPrice} />
                   </span>
                 </div>
                 <div className="flex justify-between text-[12px]">
-                  <span className="text-zinc-500 uppercase tracking-widest font-bold">Shipping</span>
+                  <span className="text-zinc-400 uppercase tracking-widest font-bold">Shipping</span>
                   <span className="font-bold text-[#D5A754] italic uppercase tracking-widest">Free</span>
                 </div>
                 <div className="flex justify-between text-[16px] font-bold border-t border-[#2A2A2D] pt-4">
@@ -246,7 +246,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <p className="text-[10px] text-zinc-600 text-center uppercase tracking-[0.2em] font-bold mt-8">
+              <p className="text-[10px] text-zinc-400 text-center uppercase tracking-[0.2em] font-bold mt-8">
                 256-bit SSL encrypted • Safe Checkout
               </p>
             </div>

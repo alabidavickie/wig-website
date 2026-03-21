@@ -92,7 +92,7 @@ export default function DashboardPage() {
             <div className="w-10 h-10 bg-[#D5A754]/10 rounded-full flex items-center justify-center">
               <Crown className="w-5 h-5 text-[#D5A754]" />
             </div>
-            <span className="text-zinc-500 text-[10px] font-bold tracking-[0.4em] uppercase">
+            <span className="text-zinc-400 text-[10px] font-bold tracking-[0.4em] uppercase">
               Silk Haus Prestige Access
             </span>
           </div>
@@ -122,31 +122,31 @@ export default function DashboardPage() {
         {/* Card 1 */}
         <div className="bg-[#141414] p-10 flex flex-col justify-between h-56 rounded-sm border border-[#2A2A2D] hover:border-[#D5A754]/30 transition-all group">
           <div className="flex justify-between items-start">
-            <span className="text-zinc-500 text-[10px] font-bold tracking-[0.3em] uppercase">Inventory Owned</span>
+            <span className="text-zinc-400 text-[10px] font-bold tracking-[0.3em] uppercase">Inventory Owned</span>
             <Star className="w-5 h-5 text-[#D5A754] scale-0 group-hover:scale-100 transition-all" />
           </div>
           <div className="flex items-end gap-4">
             <span className="text-6xl font-serif italic text-white leading-none">{itemsOwned}</span>
-            <span className="text-zinc-500 text-[11px] font-bold pb-2 uppercase tracking-widest">Units</span>
+            <span className="text-zinc-400 text-[11px] font-bold pb-2 uppercase tracking-widest">Units</span>
           </div>
         </div>
 
         {/* Card 2 */}
         <div className="bg-[#141414] p-10 flex flex-col justify-between h-56 rounded-sm border border-[#2A2A2D] hover:border-[#D5A754]/30 transition-all group">
           <div className="flex justify-between items-start">
-            <span className="text-zinc-500 text-[10px] font-bold tracking-[0.3em] uppercase">Royalty Points</span>
+            <span className="text-zinc-400 text-[10px] font-bold tracking-[0.3em] uppercase">Royalty Points</span>
             <Crown className="w-5 h-5 text-[#D5A754] scale-0 group-hover:scale-100 transition-all" />
           </div>
           <div className="flex items-end gap-4">
             <span className="text-6xl font-serif italic text-white leading-none">{points > 1000 ? `${(points/1000).toFixed(1)}k` : points}</span>
-            <span className="text-zinc-500 text-[11px] font-bold pb-2 uppercase tracking-widest">{points > 5000 ? 'Diamond Tier' : points > 1000 ? 'Gold Tier' : 'Standard'}</span>
+            <span className="text-zinc-400 text-[11px] font-bold pb-2 uppercase tracking-widest">{points > 5000 ? 'Diamond Tier' : points > 1000 ? 'Gold Tier' : 'Standard'}</span>
           </div>
         </div>
 
         {/* Card 3 */}
         <div className="bg-[#141414] p-10 flex flex-col justify-between h-56 rounded-sm border border-[#2A2A2D] hover:border-[#D5A754]/30 transition-all group">
           <div className="flex justify-between items-start">
-            <span className="text-zinc-500 text-[10px] font-bold tracking-[0.3em] uppercase">Maintenance Due</span>
+            <span className="text-zinc-400 text-[10px] font-bold tracking-[0.3em] uppercase">Maintenance Due</span>
             <Calendar className="w-5 h-5 text-[#D5A754] scale-0 group-hover:scale-100 transition-all" />
           </div>
           <div className="flex items-end gap-5">
@@ -154,7 +154,7 @@ export default function DashboardPage() {
               <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#D5A754] mb-1">{orders.length > 0 ? 'OCTOBER' : 'SCHEDULE'}</span>
               <span className="text-6xl font-serif italic text-white leading-none">{orders.length > 0 ? '24' : '—'}</span>
             </div>
-            <span className="text-zinc-500 text-[10px] font-bold pb-2 max-w-[120px] leading-tight flex-1 uppercase tracking-widest">{orders.length > 0 ? 'Silk Haus Revival' : 'No Active Plan'}</span>
+            <span className="text-zinc-400 text-[10px] font-bold pb-2 max-w-[120px] leading-tight flex-1 uppercase tracking-widest">{orders.length > 0 ? 'Silk Haus Revival' : 'No Active Plan'}</span>
           </div>
         </div>
       </div>
@@ -164,7 +164,7 @@ export default function DashboardPage() {
         {/* Left Side (Spotlight) */}
         <div className="lg:col-span-2 flex flex-col">
            <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-zinc-500">Spotlight Unit</h3>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-zinc-400">Spotlight Unit</h3>
             <div className="flex-1 h-px bg-[#2A2A2D]"></div>
           </div>
           
@@ -199,13 +199,13 @@ export default function DashboardPage() {
           {/* Stylist Access */}
           <div className="flex flex-col">
              <div className="flex items-center gap-4 mb-10">
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-zinc-500">Stylist Link</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-zinc-400">Stylist Link</h3>
               <div className="flex-1 h-px bg-[#2A2A2D]"></div>
             </div>
              <div className="bg-[#141414] p-10 relative overflow-hidden text-white flex-1 flex flex-col justify-center rounded-sm group cursor-pointer border border-[#2A2A2D] transition-all duration-500 hover:border-[#D5A754]/50">
                 <Scissors className="absolute -right-8 top-12 w-48 h-48 text-white/5 transition-transform duration-[1s] group-hover:scale-110 group-hover:-rotate-12" />
                 <h4 className="text-4xl font-serif italic uppercase tracking-tighter mb-4 z-10 leading-none">Private <br/> Consultation</h4>
-                <p className="text-zinc-500 text-[14px] mb-10 z-10 font-sans leading-relaxed">
+                <p className="text-zinc-400 text-[14px] mb-10 z-10 font-sans leading-relaxed">
                   Book an exclusive session with our Master Stylist or @follien.
                 </p>
                 <Button className="w-full bg-white hover:bg-zinc-200 text-black h-16 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] transition-all z-10 shadow-xl">
@@ -217,7 +217,7 @@ export default function DashboardPage() {
           {/* Your Collection */}
           <div className="flex flex-col space-y-10">
              <div className="flex items-center gap-4">
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-zinc-500">Owned Units</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-zinc-400">Owned Units</h3>
               <div className="flex-1 h-px bg-[#2A2A2D]"></div>
             </div>
              <div className="space-y-6">
@@ -228,12 +228,12 @@ export default function DashboardPage() {
                      </div>
                      <div className="flex-1">
                         <h5 className="font-bold text-[13px] text-white uppercase tracking-widest mb-1 truncate max-w-[150px]">{item.product_name}</h5>
-                        <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Qty: {item.quantity}</p>
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Qty: {item.quantity}</p>
                      </div>
-                     <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-[#D5A754] transition-all group-hover:translate-x-1" />
+                     <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-[#D5A754] transition-all group-hover:translate-x-1" />
                   </div>
                 )) : (
-                  <div className="py-10 text-center text-[11px] font-bold uppercase tracking-widest text-zinc-600 border border-dashed border-[#2A2A2D] rounded-sm">
+                  <div className="py-10 text-center text-[11px] font-bold uppercase tracking-widest text-zinc-400 border border-dashed border-[#2A2A2D] rounded-sm">
                      No acquisitions yet
                   </div>
                 )}

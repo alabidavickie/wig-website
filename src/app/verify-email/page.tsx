@@ -30,7 +30,7 @@ function VerifyEmailContent() {
             </p>
            
            <div className="bg-[#141414] p-8 border-l-2 border-[#D5A754] rounded-sm text-left shadow-2xl">
-              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-500 mb-3">Pending Destination</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400 mb-3">Pending Destination</p>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-bold uppercase tracking-[0.2em] text-white">
                   {next === "/checkout" ? "Secure Checkout System" : "Private Client Dashboard"}
@@ -48,13 +48,13 @@ function VerifyEmailContent() {
           </Link>
           <button 
             onClick={() => window.location.reload()}
-            className="border border-[#2A2A2D] text-zinc-500 px-12 py-6 rounded-none text-[11px] font-bold uppercase tracking-[0.3em] hover:border-[#D5A754] hover:text-white transition-all bg-[#0A0A0A]"
+            className="border border-[#2A2A2D] text-zinc-400 px-12 py-6 rounded-none text-[11px] font-bold uppercase tracking-[0.3em] hover:border-[#D5A754] hover:text-white transition-all bg-[#0A0A0A]"
           >
             Re-transmit Link
           </button>
         </div>
 
-        <p className="text-[10px] uppercase tracking-[0.4em] text-zinc-600 pt-12">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-zinc-400 pt-12">
           Monitor your junk repository if the transmission is delayed.
         </p>
       </div>
@@ -64,7 +64,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center font-serif italic text-zinc-500">Securing transmission...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center font-serif italic text-zinc-400">Securing transmission...</div>}>
       <VerifyEmailContent />
     </Suspense>
   );

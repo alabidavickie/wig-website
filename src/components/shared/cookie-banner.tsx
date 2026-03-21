@@ -61,7 +61,7 @@ export function CookieBanner() {
         
         <button 
           onClick={handleReject}
-          className="absolute top-4 right-4 md:hidden text-zinc-500 hover:text-white transition-colors"
+          className="absolute top-4 right-4 md:hidden text-zinc-400 hover:text-white transition-colors"
           aria-label="Close"
         >
           <X className="w-5 h-5" />

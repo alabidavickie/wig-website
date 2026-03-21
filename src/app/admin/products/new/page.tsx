@@ -83,7 +83,7 @@ export default function NewProductPage() {
         </Link>
         <div>
           <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Initialize New Unit</h1>
-          <p className="text-zinc-500 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">Create a new entry in your luxury collection.</p>
+          <p className="text-zinc-400 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">Create a new entry in your luxury collection.</p>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ export default function NewProductPage() {
             <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] border-l-2 border-[#D5A754] pl-4">General Information</h3>
             <div className="space-y-6">
               <div className="space-y-3">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Product Name</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Product Name</label>
                 <input 
                   required
                   value={formData.name}
@@ -106,7 +106,7 @@ export default function NewProductPage() {
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Slug</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Slug</label>
                   <input 
                     required
                     value={formData.slug}
@@ -117,7 +117,7 @@ export default function NewProductPage() {
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Base Price ($)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Base Price ($)</label>
                   <input 
                     required
                     value={formData.base_price}
@@ -129,7 +129,7 @@ export default function NewProductPage() {
                 </div>
               </div>
               <div className="space-y-3">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Description</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Description</label>
                 <textarea 
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -158,7 +158,7 @@ export default function NewProductPage() {
               {formData.variants.map((variant, idx) => (
                 <div key={idx} className="p-6 border border-[#2A2A2D] flex flex-col md:flex-row gap-6 items-end bg-[#0A0A0A]/50 relative rounded-sm group/var">
                   <div className="flex-1 space-y-3">
-                    <label className="text-[9px] font-bold uppercase tracking-wider text-zinc-600">Variant Name</label>
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">Variant Name</label>
                     <input 
                       required
                       value={variant.name}
@@ -172,7 +172,7 @@ export default function NewProductPage() {
                     />
                   </div>
                   <div className="w-32 space-y-3">
-                    <label className="text-[9px] font-bold uppercase tracking-wider text-zinc-600">Stock Count</label>
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">Stock Count</label>
                     <input 
                       type="number" 
                       value={variant.inventory_count}
@@ -188,7 +188,7 @@ export default function NewProductPage() {
                     <button 
                       type="button" 
                       onClick={() => removeVariant(idx)}
-                      className="p-3 border border-transparent text-zinc-600 hover:text-red-400 hover:border-red-500/30 transition-all mb-0.5"
+                      className="p-3 border border-transparent text-zinc-400 hover:text-red-400 hover:border-red-500/30 transition-all mb-0.5"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -205,7 +205,7 @@ export default function NewProductPage() {
             <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] border-l-2 border-[#D5A754] pl-4">Organization</h3>
             <div className="space-y-6">
               <div className="space-y-3">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Collection</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Collection</label>
                 <select 
                   value={formData.category_id}
                   onChange={(e) => setFormData({...formData, category_id: e.target.value})}
@@ -273,7 +273,7 @@ export default function NewProductPage() {
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
               Commence Publication
             </button>
-            <p className="text-[9px] text-center text-zinc-600 uppercase tracking-widest italic font-bold">Changes will reflect immediately in the showroom.</p>
+            <p className="text-[9px] text-center text-zinc-400 uppercase tracking-widest italic font-bold">Changes will reflect immediately in the showroom.</p>
           </div>
         </div>
       </form>

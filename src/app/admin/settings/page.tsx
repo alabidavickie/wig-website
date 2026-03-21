@@ -27,7 +27,7 @@ export default function AdminSettingsPage() {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">System Configuration</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage global parameters for Silk Haus.</p>
+          <p className="text-gray-400 text-sm mt-1">Manage global parameters for Silk Haus.</p>
         </div>
         <button 
           onClick={handleSave}

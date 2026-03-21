@@ -84,7 +84,7 @@ export default async function AdminDashboardPage() {
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white uppercase tracking-[0.1em]">Executive Overview</h1>
-          <p className="text-zinc-500 text-sm mt-1 uppercase tracking-widest text-[10px] font-bold">Silk Haus Performance Monitor</p>
+          <p className="text-zinc-400 text-sm mt-1 uppercase tracking-widest text-[10px] font-bold">Silk Haus Performance Monitor</p>
         </div>
         <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 bg-[#141414] px-4 py-2 border border-[#2A2A2D] shadow-sm">
            System Status: <span className="text-emerald-500">Live</span>
@@ -104,7 +104,7 @@ export default async function AdminDashboardPage() {
                 {stat.trend === 'up' ? <ArrowUpRight className="w-3 h-3" strokeWidth={3} /> : <ArrowDownRight className="w-3 h-3" strokeWidth={3} />}
               </div>
             </div>
-            <h3 className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">{stat.label}</h3>
+            <h3 className="text-zinc-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">{stat.label}</h3>
             <p className="text-2xl font-bold tracking-tighter text-white">{stat.value}</p>
           </div>
         ))}
@@ -166,7 +166,7 @@ export default async function AdminDashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[11px] font-bold uppercase tracking-widest truncate group-hover:text-[#D5A754] transition-colors">{product.name}</p>
-                    <p className="text-[10px] text-zinc-500 uppercase italic mt-1 tracking-tighter">{product.category}</p>
+                    <p className="text-[10px] text-zinc-400 uppercase italic mt-1 tracking-tighter">{product.category}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[12px] font-bold tracking-tighter text-white">${product.base_price}</p>
@@ -193,7 +193,7 @@ export default async function AdminDashboardPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-500 border-b border-[#2A2A2D]">
+              <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-400 border-b border-[#2A2A2D]">
                 <th className="px-8 py-6">Identifier</th>
                 <th className="px-8 py-6">Customer</th>
                 <th className="px-8 py-6">Items</th>
@@ -205,7 +205,7 @@ export default async function AdminDashboardPage() {
             <tbody className="divide-y divide-[#2A2A2D]">
               {recentOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-8 py-20 text-center text-zinc-600 uppercase tracking-widest text-[10px] font-bold">
+                  <td colSpan={6} className="px-8 py-20 text-center text-zinc-400 uppercase tracking-widest text-[10px] font-bold">
                     No orders yet. Orders will appear here in real-time.
                   </td>
                 </tr>
@@ -221,12 +221,12 @@ export default async function AdminDashboardPage() {
                       <td className="px-8 py-6">
                         <div className="flex flex-col">
                           <span className="text-[12px] uppercase tracking-wide font-bold text-white">{order.email}</span>
-                          <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mt-1">
+                          <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mt-1">
                             {format(new Date(order.created_at), "MMM dd, HH:mm")}
                           </span>
                         </div>
                       </td>
-                      <td className="px-8 py-6 text-[10px] text-zinc-500 uppercase tracking-widest max-w-[200px] truncate">
+                      <td className="px-8 py-6 text-[10px] text-zinc-400 uppercase tracking-widest max-w-[200px] truncate">
                         {itemCount} {itemCount === 1 ? "item" : "items"}: <span className="text-zinc-400 italic">{productsPreview}</span>
                       </td>
                       <td className="px-8 py-6 text-[13px] font-bold text-white tracking-tighter">
@@ -247,7 +247,7 @@ export default async function AdminDashboardPage() {
                           order.status === 'delivered' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5' :
                           order.status === 'shipped' ? 'border-blue-500/30 text-blue-400 bg-blue-500/5' :
                           order.status === 'paid' || order.status === 'processing' ? 'border-[#D5A754]/30 text-[#D5A754] bg-[#D5A754]/5' :
-                          order.status === 'pending' ? 'border-zinc-500/30 text-zinc-500 bg-zinc-500/5' :
+                          order.status === 'pending' ? 'border-zinc-500/30 text-zinc-400 bg-zinc-500/5' :
                           'border-red-500/30 text-red-400 bg-red-500/5'
                         }`}>
                           {order.status}

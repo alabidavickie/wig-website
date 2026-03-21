@@ -111,7 +111,7 @@ export default function ProfilePage() {
     <div className="w-full max-w-5xl min-h-screen text-[#1A1A1D] bg-white mx-auto font-sans p-8 md:p-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8 reveal">
         <div>
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#1A1A1D]/40 mb-4">Identity & Legacy</h3>
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400 mb-4">Identity & Legacy</h3>
           <h2 className="text-5xl md:text-7xl font-serif tracking-tighter uppercase italic leading-none">Your <br /> Profile</h2>
         </div>
         <div className="text-[10px] uppercase tracking-[0.4em] text-[#1A1A1D]/30 font-bold mb-4">
@@ -149,7 +149,7 @@ export default function ProfilePage() {
                 <Button className="bg-[#1A1A1D] hover:bg-black text-white font-bold h-12 px-8 rounded-full text-[10px] uppercase tracking-[0.2em] border-none shadow-xl transition-all">
                   Update Identity
                 </Button>
-                <Button variant="outline" className="border-gray-100 bg-transparent hover:border-black text-[#1A1A1D]/40 hover:text-black h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all">
+                <Button variant="outline" className="border-gray-100 bg-transparent hover:border-black text-zinc-400 hover:text-black h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all">
                   Remove
                 </Button>
              </div>
@@ -159,12 +159,12 @@ export default function ProfilePage() {
         {/* Personal Info Form */}
         <section className="reveal">
           <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.6em] text-[#1A1A1D]/40">Core Information</h3>
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.6em] text-zinc-400">Core Information</h3>
             <div className="flex-1 h-px bg-gray-100"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12">
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 ml-4">Given Name</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Given Name</Label>
                 <Input 
                   value={profile?.first_name || ""} 
                   onChange={(e) => updateProfileField("first_name", e.target.value)}
@@ -173,7 +173,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 ml-4">Surname</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Surname</Label>
                 <Input 
                   value={profile?.last_name || ""} 
                   onChange={(e) => updateProfileField("last_name", e.target.value)}
@@ -182,7 +182,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 ml-4">Electronic Mail</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Electronic Mail</Label>
                 <Input 
                   value={user?.email || ""} 
                   readOnly
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 ml-4">Direct Line</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Direct Line</Label>
                 <Input 
                   value={profile?.phone || ""} 
                   onChange={(e) => updateProfileField("phone", e.target.value)}
@@ -206,12 +206,12 @@ export default function ProfilePage() {
         {/* Shipping Form */}
         <section className="reveal">
           <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.6em] text-[#1A1A1D]/40">Silk Haus Delivery</h3>
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.6em] text-zinc-400">Silk Haus Delivery</h3>
             <div className="flex-1 h-px bg-gray-100"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12">
              <div className="space-y-4 col-span-1 md:col-span-2">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 ml-4">Street Address</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Street Address</Label>
                 <Input 
                   value={profile?.address || ""} 
                   onChange={(e) => updateProfileField("address", e.target.value)}
@@ -220,7 +220,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 ml-4">City / Province</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">City / Province</Label>
                 <Input 
                   value={profile?.city || ""} 
                   onChange={(e) => updateProfileField("city", e.target.value)}
@@ -229,7 +229,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 ml-4">Postal Code</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Postal Code</Label>
                 <Input 
                   value={profile?.postal_code || ""} 
                   onChange={(e) => updateProfileField("postal_code", e.target.value)}
@@ -238,7 +238,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-[#1A1A1D]/40 ml-4">Sovereign State</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Sovereign State</Label>
                 <Select 
                   value={profile?.country || "uk"} 
                   onValueChange={(val) => updateProfileField("country", val)}
@@ -266,7 +266,7 @@ export default function ProfilePage() {
              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
              {saved ? "Changes Committed" : "Commit Changes"}
            </Button>
-           <Button variant="outline" className="border-gray-100 bg-transparent hover:border-black text-[#1A1A1D]/40 hover:text-black h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] transition-all">
+           <Button variant="outline" className="border-gray-100 bg-transparent hover:border-black text-zinc-400 hover:text-black h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] transition-all">
              Decline
            </Button>
            {saved && <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 animate-pulse">Identity Synchronized</span>}

@@ -30,7 +30,7 @@ export default function AnalyticsPage() {
     <div className="space-y-10 animate-in fade-in duration-500 pb-20">
       <header>
         <h1 className="text-2xl font-bold tracking-tight">Business Analytics</h1>
-        <p className="text-gray-500 text-sm mt-1">Deep dive into your luxury performance metrics.</p>
+        <p className="text-gray-400 text-sm mt-1">Deep dive into your luxury performance metrics.</p>
       </header>
 
       {/* Overview Metrics */}
@@ -60,7 +60,7 @@ export default function AnalyticsPage() {
             {categoryPerformance.map((c) => (
               <div key={c.name} className="space-y-3">
                 <div className="flex justify-between items-end">
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-gray-500">{c.name}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">{c.name}</span>
                   <span className="text-[12px] font-bold">{c.revenue}</span>
                 </div>
                 <div className="h-1.5 w-full bg-gray-50 rounded-full overflow-hidden">
@@ -86,7 +86,7 @@ export default function AnalyticsPage() {
             ].map(s => (
               <div key={s.label} className="flex items-center gap-6 group">
                 <div className={`w-3 h-3 ${s.color} shrink-0`}></div>
-                <span className="flex-1 text-[11px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-[#1A1A1D] transition-colors">{s.label}</span>
+                <span className="flex-1 text-[11px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-[#1A1A1D] transition-colors">{s.label}</span>
                 <span className="text-[12px] font-bold text-[#1A1A1D]">{s.value}</span>
               </div>
             ))}
@@ -103,7 +103,7 @@ export default function AnalyticsPage() {
          </div>
          <div className="flex-1 space-y-4">
             <h4 className="text-[14px] font-serif font-bold italic tracking-wide uppercase">Elite Patron Profile</h4>
-            <p className="text-[12px] text-gray-500 leading-relaxed uppercase tracking-widest">
+            <p className="text-[12px] text-gray-400 leading-relaxed uppercase tracking-widest">
               Most active purchasers are based in <span className="text-[#1A1A1D] font-bold">Lagos, London, and Atlanta</span>. 
               Top preferred texture is <span className="text-[#1A1A1D] font-bold">Raw Yaki Straight</span>. 
               Peak shopping hour is <span className="text-[#1A1A1D] font-bold">9:00 PM WAT</span>.
