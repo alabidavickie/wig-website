@@ -102,7 +102,7 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1D] font-sans">
+    <div className="min-h-screen bg-background text-white font-sans">
       <div className="h-[120px]"></div>
 
       {/* Header */}
@@ -140,7 +140,7 @@ export default function FAQPage() {
                     </button>
                     {isOpen && (
                       <div className="mt-4 pr-10">
-                        <p className="text-[14px] text-[#1A1A1D]/65 leading-[1.9]">{item.a}</p>
+                        <p className="text-[14px] text-white/65 leading-[1.9]">{item.a}</p>
                       </div>
                     )}
                   </div>

@@ -15,17 +15,17 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1D] font-sans">
+    <div className="min-h-screen bg-background text-white font-sans">
       <div className="h-[120px]"></div>
 
       {/* Hero */}
       <section className="max-w-[1400px] mx-auto px-6 md:px-12 py-20">
         <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 mb-6">Our Story</p>
-        <h1 className="font-serif text-6xl md:text-8xl lg:text-[110px] uppercase tracking-tighter italic leading-none mb-12 text-[#1A1A1D]">
+        <h1 className="font-serif text-6xl md:text-8xl lg:text-[110px] uppercase tracking-tighter italic leading-none mb-12 text-white">
           Bridging<br />Heritage.
         </h1>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-          <p className="text-[17px] leading-[2] text-[#1A1A1D]/70 max-w-xl">
+          <p className="text-[17px] leading-[2] text-white/70 max-w-xl">
             SilkHaus by Follienn is a luxury hair house built between the UK and Nigeria, created to deliver premium-quality hair with unmatched softness and longevity.
             <br /><br />
             We carefully source and curate every collection to meet the highest standards, blending expert craftsmanship with modern elegance. Our hair is designed to feel natural, move effortlessly, and elevate confidence — whether worn daily or for special moments.
@@ -110,7 +110,7 @@ export default function AboutPage() {
           <Link href="/shop" className="inline-block bg-[#1A1A1D] text-white px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-xl">
             Shop The Collection
           </Link>
-          <Link href="/contact" className="inline-block border border-[#1A1A1D] text-[#1A1A1D] px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:bg-[#1A1A1D] hover:text-white transition-all">
+          <Link href="/contact" className="inline-block border border-white/20 text-white px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:bg-[#1A1A1D] hover:text-white transition-all">
             Book a Consultation
           </Link>
         </div>

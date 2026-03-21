@@ -35,7 +35,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1D] font-sans">
+    <div className="min-h-screen bg-background text-white font-sans">
       <div className="h-[120px]"></div>
 
       {/* Header */}
@@ -76,7 +76,7 @@ export default function ContactPage() {
             <h2 className="text-[13px] font-bold uppercase tracking-widest border-b border-gray-100 pb-6 mb-10">Direct Contact</h2>
             <div className="space-y-6">
               <a href="mailto:follienn@gmail.com" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 border border-gray-200 flex items-center justify-center group-hover:bg-[#1A1A1D] group-hover:border-[#1A1A1D] transition-all">
+                <div className="w-12 h-12 border border-gray-200 flex items-center justify-center group-hover:bg-[#1A1A1D] group-hover:border-white/20 transition-all">
                   <Mail className="w-4 h-4 group-hover:text-white transition-colors" />
                 </div>
                 <div>
@@ -103,7 +103,7 @@ export default function ContactPage() {
                 </div>
               </a>
               <a href="https://tiktok.com/@follienn_hair" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 border border-gray-200 flex items-center justify-center group-hover:bg-[#1A1A1D] group-hover:border-[#1A1A1D] transition-all">
+                <div className="w-12 h-12 border border-gray-200 flex items-center justify-center group-hover:bg-[#1A1A1D] group-hover:border-white/20 transition-all">
                   <svg className="w-4 h-4 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.46V13.2a8.16 8.16 0 005.58 2.18v-3.45a4.85 4.85 0 01-2.82-.94 4.83 4.83 0 01-1.18-1.07v-.04V6.69h3z"/></svg>
                 </div>
                 <div>

@@ -52,7 +52,7 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
              <div className="flex items-center justify-between p-8 bg-[#FAF9F6] rounded-[32px] border border-gray-50 shadow-sm transition-all hover:shadow-xl">
                 <div className="space-y-1">
-                   <Label className="text-[12px] font-bold text-[#1A1A1D] uppercase tracking-widest">Interface Appearance</Label>
+                   <Label className="text-[12px] font-bold text-white uppercase tracking-widest">Interface Appearance</Label>
                    <p className="text-[11px] text-zinc-400 font-bold uppercase tracking-widest">Toggle Silk Haus Mode</p>
                 </div>
                 <Switch defaultChecked={false} className="data-[state=checked]:bg-black data-[state=unchecked]:bg-gray-200" />
@@ -60,7 +60,7 @@ export default function SettingsPage() {
 
              <div className="flex items-center justify-between p-8 bg-[#FAF9F6] rounded-[32px] border border-gray-100 shadow-sm transition-all hover:shadow-xl">
                 <div className="space-y-1">
-                   <Label className="text-[12px] font-bold text-[#1A1A1D] uppercase tracking-widest">Silk Haus Updates</Label>
+                   <Label className="text-[12px] font-bold text-white uppercase tracking-widest">Silk Haus Updates</Label>
                    <p className="text-[11px] text-zinc-400 font-bold uppercase tracking-widest">Notifications and Offers</p>
                 </div>
                 <Switch defaultChecked className="data-[state=checked]:bg-black data-[state=unchecked]:bg-gray-200" />
@@ -130,7 +130,7 @@ export default function SettingsPage() {
              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
              {saved ? "Preferences Saved" : "Save Preferences"}
            </Button>
-           <Button variant="outline" className="border-gray-100 bg-transparent hover:border-black text-zinc-400 hover:text-black h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] transition-all">
+           <Button variant="outline" className="border-gray-100 bg-transparent hover:border-white text-zinc-400 hover:text-white h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] transition-all">
              Discard Changes
            </Button>
            {saved && <span className="text-[10px] font-bold uppercase tracking-widest text-[#D5A754] animate-pulse">Vault Updated</span>}

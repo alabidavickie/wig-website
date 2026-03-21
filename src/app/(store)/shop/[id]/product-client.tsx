@@ -57,11 +57,11 @@ export default function ProductClient({ product }: { product: any }) {
       <div className="max-w-[1600px] mx-auto py-8 sm:py-12 px-4 sm:px-6 md:px-12">
         <div className="mb-8 sm:mb-12 reveal">
           <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-            <Link href="/" className="hover:text-black transition-colors">Home</Link>
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
-            <Link href="/shop" className="hover:text-black transition-colors">Shop</Link>
+            <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
             <span>/</span>
-            <span className="text-[#1A1A1D] truncate max-w-[120px] sm:max-w-xs">{product.name}</span>
+            <span className="text-white truncate max-w-[120px] sm:max-w-xs">{product.name}</span>
           </nav>
         </div>
 
@@ -89,13 +89,13 @@ export default function ProductClient({ product }: { product: any }) {
                   {product.name}
                 </h1>
               </div>
-              <div className="text-xl md:text-2xl font-serif text-[#1A1A1D]">
+              <div className="text-xl md:text-2xl font-serif text-white">
                 <Price amount={selectedVariant?.price_override || product.base_price || product.price} />
               </div>
             </div>
 
             <div className="space-y-6" suppressHydrationWarning>
-              <p className="text-[14px] md:text-[15px] leading-relaxed text-[#1A1A1D]/80 max-w-lg">
+              <p className="text-[14px] md:text-[15px] leading-relaxed text-white/80 max-w-lg">
                 {product.description}
               </p>
               
@@ -142,10 +142,10 @@ export default function ProductClient({ product }: { product: any }) {
                 >
                   {isAdded ? 'Piece Added to Bag' : 'Add to Bag'}
                 </Button>
-                <button className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-black transition-all cursor-pointer">
+                <button className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-white transition-all cursor-pointer">
                   <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
-                <button className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-black transition-all cursor-pointer">
+                <button className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-white transition-all cursor-pointer">
                   <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>

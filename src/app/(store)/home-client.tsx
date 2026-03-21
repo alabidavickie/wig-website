@@ -60,7 +60,7 @@ export default function HomeClient({ products }: { products: any[] }) {
   if (!mounted) return null;
 
   return (
-    <div className="bg-background min-h-screen font-sans text-[#1A1A1D]" suppressHydrationWarning>
+    <div className="bg-background min-h-screen font-sans text-white" suppressHydrationWarning>
       {/* Header Spacer */}
       <div className="h-[90px] sm:h-[110px] lg:h-[130px]" suppressHydrationWarning></div>
 
@@ -135,7 +135,7 @@ export default function HomeClient({ products }: { products: any[] }) {
       {/* Intro Text */}
       <section className="py-12 md:py-16 lg:py-20 px-6 text-center max-w-4xl mx-auto">
         <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-400 mb-4 md:mb-8">Curated Editorial</h3>
-        <p className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-5xl leading-tight text-[#1A1A1D]">
+        <p className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-5xl leading-tight text-white">
           "We don't just sell hair; we provide the ultimate foundation for your <span className="italic text-zinc-300">most confident self</span>."
         </p>
       </section>
@@ -174,7 +174,7 @@ export default function HomeClient({ products }: { products: any[] }) {
               <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-400">Silk Haus Selection</h3>
               <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase tracking-tighter italic">Top <br className="hidden sm:block" /> Favorites</h2>
             </div>
-            <Link href="/shop" className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-b border-[#1A1A1D] pb-1 hover:opacity-50 transition-opacity cursor-pointer self-start sm:self-auto">
+            <Link href="/shop" className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-b border-white/20 pb-1 hover:opacity-50 transition-opacity cursor-pointer self-start sm:self-auto">
               View All
             </Link>
           </div>
@@ -200,7 +200,7 @@ export default function HomeClient({ products }: { products: any[] }) {
                     {/* Quick Add Button — always visible on mobile, hover on desktop */}
                     <button 
                       onClick={(e) => handleQuickAdd(e, product)}
-                      className="absolute bottom-3 md:bottom-6 left-3 md:left-6 right-3 md:right-6 bg-white text-[#1A1A1D] py-2.5 md:py-4 text-[9px] md:text-[11px] font-bold uppercase tracking-widest rounded-full md:opacity-0 md:translate-y-4 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-300 shadow-lg flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer"
+                      className="absolute bottom-3 md:bottom-6 left-3 md:left-6 right-3 md:right-6 bg-background text-white py-2.5 md:py-4 text-[9px] md:text-[11px] font-bold uppercase tracking-widest rounded-full md:opacity-0 md:translate-y-4 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-300 shadow-lg flex items-center justify-center gap-1.5 md:gap-2 cursor-pointer"
                     >
                       <Plus className="w-3 h-3 md:w-4 md:h-4" /> Quick Add
                     </button>
@@ -218,7 +218,7 @@ export default function HomeClient({ products }: { products: any[] }) {
                   </button>
 
                   <Link href={`/shop/${product.id}`}>
-                    <h4 className="text-[11px] sm:text-[12px] md:text-[14px] font-bold uppercase tracking-wider md:tracking-widest text-[#1A1A1D] mb-1 truncate">{product.name}</h4>
+                    <h4 className="text-[11px] sm:text-[12px] md:text-[14px] font-bold uppercase tracking-wider md:tracking-widest text-white mb-1 truncate">{product.name}</h4>
                     <div className="text-zinc-300 text-[12px] md:text-[14px] font-medium">
                       <Price amount={product.base_price || product.price} />
                     </div>
@@ -273,14 +273,14 @@ export default function HomeClient({ products }: { products: any[] }) {
                 </div>
 
                 {/* Review Text */}
-                <p className="text-[13px] md:text-[14px] leading-[1.8] md:leading-[1.9] text-[#1A1A1D]/70 mb-6 md:mb-8 font-light">
+                <p className="text-[13px] md:text-[14px] leading-[1.8] md:leading-[1.9] text-white/70 mb-6 md:mb-8 font-light">
                   &ldquo;{review.text}&rdquo;
                 </p>
               </div>
 
               {/* Reviewer Info */}
               <div className="border-t border-gray-100 pt-4 md:pt-6">
-                <p className="text-[12px] md:text-[13px] font-bold uppercase tracking-widest text-[#1A1A1D]">{review.name}</p>
+                <p className="text-[12px] md:text-[13px] font-bold uppercase tracking-widest text-white">{review.name}</p>
                 <p className="text-[10px] md:text-[11px] text-[#C5A880] font-medium uppercase tracking-widest mt-1">{review.location}</p>
               </div>
             </div>
@@ -300,7 +300,7 @@ export default function HomeClient({ products }: { products: any[] }) {
           />
           <div className="absolute inset-0 bg-black/20 md:bg-black/10 flex flex-col items-center justify-center text-center p-6 sm:p-8 md:p-12">
             <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-7xl text-white uppercase tracking-tighter mb-4 sm:mb-6 md:mb-8 italic">The Silk Haus <br /> Standard</h2>
-            <Link href="/about" className="bg-white text-[#1A1A1D] px-8 md:px-10 py-3.5 md:py-4 text-[11px] md:text-[13px] font-bold uppercase tracking-widest rounded-full hover:bg-[#1A1A1D] hover:text-white transition-all cursor-pointer">
+            <Link href="/about" className="bg-background text-white px-8 md:px-10 py-3.5 md:py-4 text-[11px] md:text-[13px] font-bold uppercase tracking-widest rounded-full hover:bg-[#1A1A1D] hover:text-white transition-all cursor-pointer">
               Learn More
             </Link>
           </div>

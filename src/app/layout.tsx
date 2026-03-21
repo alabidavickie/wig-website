@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${inter.variable} ${playfair.variable} antialiased font-sans bg-white text-[#1A1A1D]`}
+        className={`${inter.variable} ${playfair.variable} antialiased font-sans bg-background text-white`}
       >
         {children}
         <Toaster position="bottom-right" richColors closeButton />

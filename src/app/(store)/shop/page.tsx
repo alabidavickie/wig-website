@@ -30,7 +30,7 @@ export default async function ShopPage() {
           <div className="sticky top-[140px] space-y-12" suppressHydrationWarning>
             <div>
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#1A1A1D]">Refine By</h3>
+                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white">Refine By</h3>
                 <Filter className="w-4 h-4 text-zinc-400" />
               </div>
               
@@ -40,9 +40,9 @@ export default async function ShopPage() {
                   <div className="space-y-3" suppressHydrationWarning>
                     {["Lace Front", "Full Lace", "Silk Top", "Glueless", "U-Part"].map((cat) => (
                       <label key={cat} className="flex items-center gap-3 cursor-pointer group">
-                        <div className="w-4 h-4 border border-gray-200 flex items-center justify-center transition-all rounded-full group-hover:border-[#1A1A1D]">
+                        <div className="w-4 h-4 border border-gray-200 flex items-center justify-center transition-all rounded-full group-hover:border-white/20">
                         </div>
-                        <span className="text-[13px] text-[#1A1A1D]/80 group-hover:text-black transition-colors">{cat}</span>
+                        <span className="text-[13px] text-white/80 group-hover:text-white transition-colors">{cat}</span>
                       </label>
                     ))}
                   </div>
@@ -52,7 +52,7 @@ export default async function ShopPage() {
                   <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Length</h4>
                   <div className="grid grid-cols-4 gap-2" suppressHydrationWarning>
                     {["14\"", "18\"", "22\"", "26\""].map((len) => (
-                      <button key={len} className="py-2 border border-gray-100 text-[11px] font-bold hover:border-[#1A1A1D] transition-all rounded-lg uppercase cursor-pointer">
+                      <button key={len} className="py-2 border border-gray-100 text-[11px] font-bold hover:border-white/20 transition-all rounded-lg uppercase cursor-pointer">
                         {len}
                       </button>
                     ))}
@@ -72,9 +72,9 @@ export default async function ShopPage() {
           {/* Mobile/Tablet sort bar */}
           <div className="flex justify-between items-center mb-8 sm:mb-10 md:mb-12 reveal">
             <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">{products.length} Products Found</span>
-            <div className="flex items-center gap-2 cursor-pointer group px-3 sm:px-4 py-2 border border-gray-100 rounded-full hover:border-black transition-all">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest group-hover:text-black transition-colors">Sort: Featured</span>
-              <ChevronDown className="w-3 h-3 text-zinc-300 group-hover:text-black transition-colors" />
+            <div className="flex items-center gap-2 cursor-pointer group px-3 sm:px-4 py-2 border border-gray-100 rounded-full hover:border-white transition-all">
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest group-hover:text-white transition-colors">Sort: Featured</span>
+              <ChevronDown className="w-3 h-3 text-zinc-300 group-hover:text-white transition-colors" />
             </div>
           </div>
 

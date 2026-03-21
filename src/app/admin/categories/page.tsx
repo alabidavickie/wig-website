@@ -81,7 +81,7 @@ export default function AdminCategoriesPage() {
                     setNewCategory({ ...newCategory, name, slug });
                   }}
                   type="text" 
-                  className="w-full h-12 px-4 border border-gray-100 focus:border-[#1A1A1D] outline-none transition-all"
+                  className="w-full h-12 px-4 border border-gray-100 focus:border-white/20 outline-none transition-all"
                   placeholder="e.g. Lace Frontals"
                 />
               </div>
@@ -92,7 +92,7 @@ export default function AdminCategoriesPage() {
                   value={newCategory.slug}
                   onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
                   type="text" 
-                  className="w-full h-12 px-4 border border-gray-100 focus:border-[#1A1A1D] outline-none transition-all bg-gray-50"
+                  className="w-full h-12 px-4 border border-gray-100 focus:border-white/20 outline-none transition-all bg-gray-50"
                   placeholder="lace-frontals"
                 />
               </div>
@@ -102,7 +102,7 @@ export default function AdminCategoriesPage() {
               <textarea 
                 value={newCategory.description}
                 onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-                className="w-full p-4 border border-gray-100 focus:border-[#1A1A1D] outline-none transition-all resize-none"
+                className="w-full p-4 border border-gray-100 focus:border-white/20 outline-none transition-all resize-none"
                 placeholder="Brief description for SEO and UI..."
               />
             </div>
@@ -147,7 +147,7 @@ export default function AdminCategoriesPage() {
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gray-50 flex items-center justify-center border border-gray-100">
-                        <Tag className="w-4 h-4 text-[#1A1A1D]" />
+                        <Tag className="w-4 h-4 text-white" />
                       </div>
                       <span className="text-[13px] font-bold uppercase">{cat.name}</span>
                     </div>

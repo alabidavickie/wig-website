@@ -64,7 +64,7 @@ export default function AdminSettingsPage() {
            {selectedTab === "general" && (
              <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500">
                 <section className="space-y-6">
-                   <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#C5A880] pl-4 text-[#1A1A1D]">Public Master Identity</h3>
+                   <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#C5A880] pl-4 text-white">Public Master Identity</h3>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-2">
                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Official Contact Email</label>
@@ -78,7 +78,7 @@ export default function AdminSettingsPage() {
                 </section>
 
                 <section className="space-y-6">
-                   <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#C5A880] pl-4 text-[#1A1A1D]">Social Architecture</h3>
+                   <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#C5A880] pl-4 text-white">Social Architecture</h3>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-2">
                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Instagram Handle</label>

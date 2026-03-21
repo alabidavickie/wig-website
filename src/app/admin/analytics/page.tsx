@@ -55,7 +55,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Category Performance */}
         <div className="bg-white p-8 border border-gray-100 shadow-sm">
-          <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#1A1A1D] pl-4 mb-8 text-[#1A1A1D]">Category Revenue Share</h3>
+          <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-white/20 pl-4 mb-8 text-white">Category Revenue Share</h3>
           <div className="space-y-8">
             {categoryPerformance.map((c) => (
               <div key={c.name} className="space-y-3">
@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
 
         {/* Traffic Sources Mockup */}
         <div className="bg-white p-8 border border-gray-100 shadow-sm flex flex-col">
-          <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#1A1A1D] pl-4 mb-10 text-[#1A1A1D]">Acquisition Channels</h3>
+          <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-white/20 pl-4 mb-10 text-white">Acquisition Channels</h3>
           <div className="flex-1 flex flex-col justify-center space-y-6">
             {[
               { label: "Social Media (IG/TikTok)", value: "58%", color: "bg-[#C5A880]" },
@@ -86,8 +86,8 @@ export default function AnalyticsPage() {
             ].map(s => (
               <div key={s.label} className="flex items-center gap-6 group">
                 <div className={`w-3 h-3 ${s.color} shrink-0`}></div>
-                <span className="flex-1 text-[11px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-[#1A1A1D] transition-colors">{s.label}</span>
-                <span className="text-[12px] font-bold text-[#1A1A1D]">{s.value}</span>
+                <span className="flex-1 text-[11px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">{s.label}</span>
+                <span className="text-[12px] font-bold text-white">{s.value}</span>
               </div>
             ))}
           </div>
@@ -104,9 +104,9 @@ export default function AnalyticsPage() {
          <div className="flex-1 space-y-4">
             <h4 className="text-[14px] font-serif font-bold italic tracking-wide uppercase">Elite Patron Profile</h4>
             <p className="text-[12px] text-gray-400 leading-relaxed uppercase tracking-widest">
-              Most active purchasers are based in <span className="text-[#1A1A1D] font-bold">Lagos, London, and Atlanta</span>. 
-              Top preferred texture is <span className="text-[#1A1A1D] font-bold">Raw Yaki Straight</span>. 
-              Peak shopping hour is <span className="text-[#1A1A1D] font-bold">9:00 PM WAT</span>.
+              Most active purchasers are based in <span className="text-white font-bold">Lagos, London, and Atlanta</span>. 
+              Top preferred texture is <span className="text-white font-bold">Raw Yaki Straight</span>. 
+              Peak shopping hour is <span className="text-white font-bold">9:00 PM WAT</span>.
             </p>
          </div>
          <button className="bg-[#1A1A1D] text-white px-8 py-4 text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-all">

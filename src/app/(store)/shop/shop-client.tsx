@@ -86,7 +86,7 @@ export default function ShopClient({ product }: { product: any }) {
           >
             <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${mounted && isInWishlist(product.id) ? 'fill-current' : ''}`} />
           </button>
-          <button className="w-10 h-10 sm:w-11 sm:h-11 bg-white text-[#1A1A1D] flex items-center justify-center hover:bg-black hover:text-white transition-all rounded-full shadow-lg cursor-pointer">
+          <button className="w-10 h-10 sm:w-11 sm:h-11 bg-background text-white flex items-center justify-center hover:bg-black hover:text-white transition-all rounded-full shadow-lg cursor-pointer">
             <Search className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
@@ -94,15 +94,15 @@ export default function ShopClient({ product }: { product: any }) {
         {/* Quick Add Pill — always visible on mobile, hover on desktop */}
         <button 
           onClick={handleQuickAdd}
-          className="absolute bottom-3 sm:bottom-6 left-3 sm:left-6 right-3 sm:right-6 bg-white text-[#1A1A1D] py-2.5 sm:py-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest rounded-full md:opacity-0 md:translate-y-6 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-300 shadow-xl cursor-pointer"
+          className="absolute bottom-3 sm:bottom-6 left-3 sm:left-6 right-3 sm:right-6 bg-background text-white py-2.5 sm:py-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest rounded-full md:opacity-0 md:translate-y-6 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-300 shadow-xl cursor-pointer"
         >
           Quick Add to Bag
         </button>
       </Link>
       <div className="flex flex-col text-center px-4">
-        <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D] mb-1">{product.name}</h3>
+        <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-white mb-1">{product.name}</h3>
         <p className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold mb-4">{product.category} • SILK HAUS</p>
-        <div className="text-[16px] font-serif italic text-[#1A1A1D]">
+        <div className="text-[16px] font-serif italic text-white">
           <Price amount={product.base_price} />
         </div>
       </div>

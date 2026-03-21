@@ -53,14 +53,14 @@ export default function WishlistPage() {
   if (!mounted) return null;
 
   return (
-    <div className="w-full max-w-7xl text-[#1A1A1D] bg-background mx-auto font-sans p-8 md:p-12 min-h-screen">
+    <div className="w-full max-w-7xl text-white bg-background mx-auto font-sans p-8 md:p-12 min-h-screen">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8 reveal">
         <div>
           <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400 mb-4">Saved Masterpieces</h3>
           <h1 className="text-5xl md:text-7xl font-serif tracking-tighter uppercase italic leading-none">Your <br /> Wishlist</h1>
         </div>
         <div className="flex gap-4">
-          <Button variant="outline" className="border-gray-200 bg-transparent text-zinc-300 hover:text-black hover:border-black rounded-full px-8 h-14 gap-3 text-[11px] font-bold uppercase tracking-widest transition-all">
+          <Button variant="outline" className="border-gray-200 bg-transparent text-zinc-300 hover:text-white hover:border-white rounded-full px-8 h-14 gap-3 text-[11px] font-bold uppercase tracking-widest transition-all">
              <SlidersHorizontal className="w-4 h-4" />
              Refine
           </Button>
@@ -79,7 +79,7 @@ export default function WishlistPage() {
 
       {items.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-40 space-y-8 reveal">
-           <Heart className="w-12 h-12 text-[#1A1A1D]/10" />
+           <Heart className="w-12 h-12 text-white/10" />
            <p className="text-[12px] font-bold uppercase tracking-[0.3em] text-zinc-400">Your wishlist is empty</p>
            <Link href="/shop" className="inline-flex items-center justify-center rounded-full px-8 h-12 border border-gray-200 text-[11px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all">
               Browse Collection
@@ -108,16 +108,16 @@ export default function WishlistPage() {
 
                     <button 
                       onClick={() => handleAddToCart(item)}
-                      className="absolute bottom-8 left-8 right-8 bg-white text-[#1A1A1D] py-5 text-[11px] font-bold uppercase tracking-widest rounded-full opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 shadow-2xl flex items-center justify-center gap-2"
+                      className="absolute bottom-8 left-8 right-8 bg-background text-white py-5 text-[11px] font-bold uppercase tracking-widest rounded-full opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 shadow-2xl flex items-center justify-center gap-2"
                     >
                        <Plus className="w-4 h-4" /> Add to Bag
                     </button>
                  </div>
                  
                  <div className="pt-8 px-4 text-center">
-                    <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A1A1D] mb-1">{item.name}</h3>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#1A1A1D]/30 mb-4">{item.category}</p>
-                    <div className="text-[20px] font-serif italic text-[#1A1A1D]">
+                    <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-white mb-1">{item.name}</h3>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 mb-4">{item.category}</p>
+                    <div className="text-[20px] font-serif italic text-white">
                       <Price amount={item.price} />
                     </div>
                  </div>

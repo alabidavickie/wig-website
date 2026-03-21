@@ -95,7 +95,7 @@ export default function ProfilePage() {
 
   if (loading) return (
     <div className="w-full h-screen flex items-center justify-center bg-white">
-      <Loader2 className="w-8 h-8 animate-spin text-[#1A1A1D]" />
+      <Loader2 className="w-8 h-8 animate-spin text-white" />
     </div>
   );
 
@@ -114,7 +114,7 @@ export default function ProfilePage() {
           <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400 mb-4">Identity & Legacy</h3>
           <h2 className="text-5xl md:text-7xl font-serif tracking-tighter uppercase italic leading-none">Your <br /> Profile</h2>
         </div>
-        <div className="text-[10px] uppercase tracking-[0.4em] text-[#1A1A1D]/30 font-bold mb-4">
+        <div className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold mb-4">
           Patron Since {patronDate}
         </div>
       </header>
@@ -138,18 +138,18 @@ export default function ProfilePage() {
           </div>
           <div className="flex flex-col flex-1">
              <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-[14px] font-bold text-[#1A1A1D] uppercase tracking-[0.2em]">{displayName}</h3>
+                <h3 className="text-[14px] font-bold text-white uppercase tracking-[0.2em]">{displayName}</h3>
                 <div className="bg-[#D5A754]/10 px-3 py-1 rounded-full flex items-center gap-2">
                    <Sparkles className="w-3 h-3 text-[#D5A754]" />
                    <span className="text-[9px] font-bold text-[#D5A754] uppercase tracking-widest">Silk Haus Verified</span>
                 </div>
              </div>
-             <p className="text-[11px] font-bold text-[#1A1A1D]/30 uppercase tracking-widest mb-6">Master Piece Collector & Silk Haus Patron</p>
+             <p className="text-[11px] font-bold text-white/30 uppercase tracking-widest mb-6">Master Piece Collector & Silk Haus Patron</p>
              <div className="flex gap-4">
                 <Button className="bg-[#1A1A1D] hover:bg-black text-white font-bold h-12 px-8 rounded-full text-[10px] uppercase tracking-[0.2em] border-none shadow-xl transition-all">
                   Update Identity
                 </Button>
-                <Button variant="outline" className="border-gray-100 bg-transparent hover:border-black text-zinc-400 hover:text-black h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all">
+                <Button variant="outline" className="border-gray-100 bg-transparent hover:border-white text-zinc-400 hover:text-white h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all">
                   Remove
                 </Button>
              </div>
@@ -266,7 +266,7 @@ export default function ProfilePage() {
              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
              {saved ? "Changes Committed" : "Commit Changes"}
            </Button>
-           <Button variant="outline" className="border-gray-100 bg-transparent hover:border-black text-zinc-400 hover:text-black h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] transition-all">
+           <Button variant="outline" className="border-gray-100 bg-transparent hover:border-white text-zinc-400 hover:text-white h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] transition-all">
              Decline
            </Button>
            {saved && <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 animate-pulse">Identity Synchronized</span>}

@@ -37,7 +37,7 @@ export default function ShippingPolicyPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1D] font-sans">
+    <div className="min-h-screen bg-background text-white font-sans">
       <div className="h-[120px]"></div>
 
       {/* Header */}
@@ -59,7 +59,7 @@ export default function ShippingPolicyPage() {
               {policy.title}
             </h2>
             {policy.content && (
-              <p className="text-[15px] text-[#1A1A1D]/70 leading-relaxed">
+              <p className="text-[15px] text-white/70 leading-relaxed">
                 {policy.content}
               </p>
             )}
@@ -68,7 +68,7 @@ export default function ShippingPolicyPage() {
                 {policy.items.map((item, idx) => (
                   <li key={idx} className="flex gap-4 items-start">
                     <span className="text-[#D5A754] font-bold">✦</span>
-                    <span className="text-[15px] text-[#1A1A1D]/70 leading-relaxed">{item}</span>
+                    <span className="text-[15px] text-white/70 leading-relaxed">{item}</span>
                   </li>
                 ))}
               </ul>

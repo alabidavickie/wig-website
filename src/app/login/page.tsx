@@ -95,7 +95,7 @@ function LoginForm() {
             >
               {pending ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-black/20 border-t-black animate-spin rounded-full"></div>
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-black animate-spin rounded-full"></div>
                   Authenticating
                 </>
               ) : (
