@@ -6,6 +6,7 @@ import { ArrowLeft, Plus, Trash2, Image as ImageIcon, Check, Loader2 } from "luc
 import Link from "next/link";
 import { createProduct, getCategories } from "@/lib/actions/products";
 import { useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function NewProductPage() {
     variants: [{ name: "Standard", sku: "", inventory_count: 5, price_override: null, attributes: {} }],
     images: [{ url: "" }]
   });
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const fetchCats = async () => {
@@ -75,6 +77,36 @@ export default function NewProductPage() {
     setFormData({ ...formData, images: newImages });
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const supabase = createClient();
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `product-images/${fileName}`;
+
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from('products')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('products')
+        .getPublicUrl(filePath);
+
+      updateImage(index, publicUrl);
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      alert('Error uploading image: ' + error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto text-white pb-20">
       <div className="flex items-center gap-4">
@@ -117,7 +149,7 @@ export default function NewProductPage() {
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Base Price ($)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Base Price (£)</label>
                   <input 
                     required
                     value={formData.base_price}
@@ -244,14 +276,26 @@ export default function NewProductPage() {
             <div className="space-y-6">
               {formData.images.map((img, idx) => (
                 <div key={idx} className="space-y-4">
-                  <div className="relative group">
-                    <input 
-                      required
-                      value={img.url}
-                      onChange={(e) => updateImage(idx, e.target.value)}
-                      placeholder="Insert URL..." 
-                      className="w-full h-12 px-4 border border-[#2A2A2D] text-[12px] bg-[#0A0A0A] focus:border-[#D5A754] outline-none transition-colors"
-                    />
+                  <div className="relative group space-y-3">
+                    <div className="flex gap-2">
+                      <input 
+                        required
+                        value={img.url}
+                        onChange={(e) => updateImage(idx, e.target.value)}
+                        placeholder="Insert URL or Upload..." 
+                        className="flex-1 h-12 px-4 border border-[#2A2A2D] text-[12px] bg-[#0A0A0A] focus:border-[#D5A754] outline-none transition-colors"
+                      />
+                      <label className="cursor-pointer bg-[#2A2A2D] hover:bg-[#D5A754] text-white px-4 flex items-center justify-center transition-all">
+                        <ImageIcon className="w-4 h-4" />
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          className="hidden" 
+                          onChange={(e) => handleFileUpload(e, idx)}
+                          disabled={uploading}
+                        />
+                      </label>
+                    </div>
                   </div>
                   {img.url && (
                     <div className="aspect-[3/4] border border-[#2A2A2D] bg-[#0A0A0A] relative overflow-hidden group/img rounded-sm">

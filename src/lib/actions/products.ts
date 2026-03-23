@@ -188,6 +188,58 @@ export async function createProduct(formData: CreateProductInput) {
   return product;
 }
 
+export async function updateProduct(id: string, formData: Partial<CreateProductInput>) {
+  const supabase = await createClient();
+
+  const { error: productError } = await supabase
+    .from("products")
+    .update({
+      name: formData.name,
+      slug: formData.slug,
+      description: formData.description,
+      base_price: formData.base_price,
+      category_id: formData.category_id,
+      is_featured: formData.is_featured,
+    })
+    .eq("id", id);
+
+  if (productError) throw new Error(productError.message);
+
+  if (formData.variants) {
+    // Delete existing variants and re-insert (simpler for now)
+    await supabase.from("product_variants").delete().eq("product_id", id);
+    const { error: variantError } = await supabase.from("product_variants").insert(
+      formData.variants.map((v) => ({
+        product_id: id,
+        name: v.name,
+        sku: v.sku,
+        inventory_count: v.inventory_count,
+        price_override: v.price_override,
+        attributes: v.attributes,
+      }))
+    );
+    if (variantError) throw new Error(variantError.message);
+  }
+
+  if (formData.images) {
+    // Delete existing images and re-insert
+    await supabase.from("product_images").delete().eq("product_id", id);
+    const { error: imageError } = await supabase.from("product_images").insert(
+      formData.images.map((img, idx) => ({
+        product_id: id,
+        image_url: img.url,
+        is_main: idx === 0,
+        display_order: idx,
+      }))
+    );
+    if (imageError) throw new Error(imageError.message);
+  }
+
+  revalidatePath("/shop");
+  revalidatePath("/admin/products");
+  revalidatePath(`/shop/${formData.slug || id}`);
+}
+
 export async function deleteProduct(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("products").delete().eq("id", id);

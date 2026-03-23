@@ -134,14 +134,14 @@ export default function AdminProductsPage() {
                       </span>
                     </td>
                     <td className="px-8 py-6 text-[13px] font-bold text-white tracking-tighter">
-                      ${Number(product.base_price).toLocaleString()}
+                      £{Number(product.base_price).toLocaleString()}
                     </td>
                     <td className="px-8 py-6 text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
                       {product.created_at ? format(new Date(product.created_at), 'MMM dd, yyyy') : '—'}
                     </td>
                     <td className="px-8 py-6 text-right">
                       <div className="flex items-center gap-3 justify-end">
-                        <Link href={`/admin/products/${product.id}`} className="p-2.5 border border-[#2A2A2D] hover:bg-white hover:text-black hover:border-white transition-all text-zinc-400">
+                        <Link href={`/admin/products/edit/${product.id}`} className="p-2.5 border border-[#2A2A2D] hover:bg-white hover:text-black hover:border-white transition-all text-zinc-400">
                           <Edit className="w-4 h-4" />
                         </Link>
                         <button 

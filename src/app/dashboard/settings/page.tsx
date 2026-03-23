@@ -79,19 +79,6 @@ export default function SettingsPage() {
                    </SelectContent>
                 </Select>
              </div>
-             
-             <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Preferred Language</Label>
-                <Select defaultValue="en">
-                   <SelectTrigger className="bg-[#FAF9F6] border-gray-100 rounded-full h-16 px-8 text-[12px] font-bold uppercase tracking-widest focus:ring-black transition-all shadow-sm">
-                      <SelectValue />
-                   </SelectTrigger>
-                   <SelectContent className="bg-white border-gray-100 text-[#1A1A1D] rounded-[24px] shadow-2xl">
-                      <SelectItem value="en" className="rounded-xl">English (US)</SelectItem>
-                      <SelectItem value="fr" className="rounded-xl">French (FR)</SelectItem>
-                   </SelectContent>
-                </Select>
-             </div>
           </div>
         </section>
 

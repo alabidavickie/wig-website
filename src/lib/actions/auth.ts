@@ -43,8 +43,18 @@ export async function login(formData: FormData) {
     return { error: { message: error.message === "Invalid login credentials" ? "Identity unrecognized or incorrect credentials." : error.message } };
   }
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", (await supabase.auth.getUser()).data.user?.id)
+    .single();
+
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  if (profile?.role === 'admin') {
+    redirect("/admin");
+  } else {
+    redirect("/dashboard");
+  }
 }
 
 export async function loginAndRedirect(formData: FormData, redirectTo?: string) {
@@ -68,8 +78,18 @@ export async function loginAndRedirect(formData: FormData, redirectTo?: string) 
     return { error: { message: error.message } };
   }
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", (await supabase.auth.getUser()).data.user?.id)
+    .single();
+
   revalidatePath("/", "layout");
-  redirect(redirectTo || "/dashboard");
+  if (profile?.role === 'admin') {
+    redirect("/admin");
+  } else {
+    redirect(redirectTo || "/dashboard");
+  }
 }
 
 export async function signup(formData: FormData) {
@@ -84,6 +104,17 @@ export async function signup(formData: FormData) {
 
   if (!validatedFields.success) {
     return { error: validatedFields.error.flatten().fieldErrors };
+  }
+
+  // Check if profile already exists to prevent duplication
+  const { data: existingProfile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("email", email)
+    .single();
+
+  if (existingProfile) {
+    return { error: { message: "Identity already registered. Please sign in or use a different record." } };
   }
 
   const { data, error } = await supabase.auth.signUp({
