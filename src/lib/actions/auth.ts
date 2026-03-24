@@ -4,6 +4,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { sendWelcomeEmail } from "@/lib/emails";
 
 const authSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -131,6 +132,9 @@ export async function signup(formData: FormData) {
   if (error) {
     return { error: { message: error.message } };
   }
+
+  // Send a high-end customized welcome/instructions email via Resend
+  await sendWelcomeEmail(email, firstName);
 
   // If email confirmation is enabled, session will be null
   if (!data.session) {

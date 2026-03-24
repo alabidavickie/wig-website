@@ -9,11 +9,11 @@ export default async function AdminOrdersPage() {
   // Helper to get status styles
   const getStatusInfo = (status: string) => {
     switch (status?.toLowerCase()) {
-      case 'processing': return { bg: 'bg-blue-50', text: 'text-blue-600' };
-      case 'shipped': return { bg: 'bg-purple-50', text: 'text-purple-600' };
-      case 'delivered': return { bg: 'bg-emerald-50', text: 'text-emerald-600' };
-      case 'pending': return { bg: 'bg-amber-50', text: 'text-amber-600' };
-      default: return { bg: 'bg-gray-50', text: 'text-gray-400' };
+      case 'processing': return { bg: 'bg-blue-500/5', text: 'text-blue-400' };
+      case 'shipped': return { bg: 'bg-indigo-500/5', text: 'text-indigo-400' };
+      case 'delivered': return { bg: 'bg-emerald-500/5', text: 'text-emerald-400' };
+      case 'pending': return { bg: 'bg-amber-500/5', text: 'text-amber-400' };
+      default: return { bg: 'bg-zinc-500/5', text: 'text-zinc-400' };
     }
   };
   return (

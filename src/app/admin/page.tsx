@@ -39,12 +39,12 @@ export default async function AdminDashboardPage() {
   const stats = [
     { 
       label: "Total Revenue", 
-      value: `$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
+      value: `£${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
       change: `${totalOrders} orders`, 
       trend: "up" as const, 
       icon: DollarSign,
-      color: "text-[#C5A880]",
-      bg: "bg-[#FAF9F6]"
+      color: "text-[#D5A754]",
+      bg: "bg-[#2A2A2D]"
     },
     { 
       label: "Total Orders", 
@@ -52,8 +52,8 @@ export default async function AdminDashboardPage() {
       change: `${pendingCount} pending`, 
       trend: "up" as const, 
       icon: ShoppingBag,
-      color: "text-blue-600",
-      bg: "bg-blue-50"
+      color: "text-blue-400",
+      bg: "bg-blue-400/5"
     },
     { 
       label: "Active Customers", 
@@ -61,8 +61,8 @@ export default async function AdminDashboardPage() {
       change: `${deliveredCount} fulfilled`, 
       trend: "up" as const, 
       icon: Users,
-      color: "text-purple-600",
-      bg: "bg-purple-50"
+      color: "text-indigo-400",
+      bg: "bg-indigo-400/5"
     },
     { 
       label: "Inventory Items", 
@@ -70,8 +70,8 @@ export default async function AdminDashboardPage() {
       change: `${categories.length} Collections`, 
       trend: "up" as const, 
       icon: Package,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50"
+      color: "text-emerald-400",
+      bg: "bg-emerald-400/5"
     },
   ];
 
@@ -113,34 +113,34 @@ export default async function AdminDashboardPage() {
       {/* Charts / Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8">
         {/* Sales Chart Mockup */}
-        <div className="bg-white p-8 border border-gray-100 shadow-sm min-h-[450px] flex flex-col">
+        <div className="bg-[#141414] p-8 border border-[#2A2A2D] shadow-sm min-h-[450px] flex flex-col rounded-sm">
           <div className="flex justify-between items-center mb-10">
-            <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#C5A880] pl-4">Revenue Trajectory</h3>
+            <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4">Revenue Trajectory</h3>
             <div className="flex gap-2">
               {['W', 'M', 'Y'].map((t) => (
-                <button key={t} className={`w-10 h-10 text-[10px] font-bold border transition-all ${t === 'M' ? 'bg-[#1A1A1D] text-white border-[#1A1A1D]' : 'text-gray-400 border-gray-100 hover:border-gray-300'}`}>
+                <button key={t} className={`w-10 h-10 text-[10px] font-bold border transition-all ${t === 'M' ? 'bg-white text-black border-white' : 'text-zinc-500 border-[#2A2A2D] hover:border-[#D5A754]'}`}>
                   {t}
                 </button>
               ))}
             </div>
           </div>
           
-          <div className="flex-1 flex items-end gap-3 px-2 pb-2 border-b border-l border-gray-50">
+          <div className="flex-1 flex items-end gap-3 px-2 pb-2 border-b border-l border-[#2A2A2D]">
              {[35, 60, 40, 85, 50, 70, 45, 80, 95, 55, 75, 65].map((h, i) => (
                <div 
                  key={i} 
                  style={{ height: `${h}%` }} 
-                 className={`flex-1 transition-all duration-700 ease-out ${i === 8 ? 'bg-[#C5A880]' : 'bg-gray-100'} hover:bg-[#1A1A1D] relative group`}
+                 className={`flex-1 transition-all duration-700 ease-out ${i === 8 ? 'bg-[#D5A754]' : 'bg-[#1A1A1D]'} hover:bg-white relative group`}
                >
-                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] py-1.5 px-2.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase tracking-tighter whitespace-nowrap z-10 shadow-xl">
-                   ${h * 125}.00
+                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white text-black text-[9px] py-1.5 px-2.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase tracking-tighter whitespace-nowrap z-10 shadow-2xl font-bold">
+                   £{h * 125}.00
                  </div>
                </div>
              ))}
           </div>
           <div className="flex justify-between mt-6 px-2">
              {['JAN', 'MAR', 'MAY', 'JUL', 'SEP', 'NOV'].map(m => (
-               <span key={m} className="text-[9px] font-bold text-gray-300 uppercase tracking-[0.2em]">{m}</span>
+               <span key={m} className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em]">{m}</span>
              ))}
           </div>
         </div>
