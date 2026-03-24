@@ -11,6 +11,7 @@
   "dependencies": {
     "@base-ui/react": "^1.3.0",
     "@paystack/inline-js": "^2.22.8",
+    "@react-email/components": "^1.0.10",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.99.1",
     "class-variance-authority": "^0.7.1",
@@ -21,6 +22,8 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-email": "^5.2.10",
+    "resend": "^6.9.4",
     "shadcn": "^4.0.5",
     "sonner": "^2.0.7",
     "stripe": "^20.4.1",

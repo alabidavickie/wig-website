@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, ShoppingBag, User, Heart, Settings, LogOut, Crown } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, User, Heart, Settings, LogOut, Crown, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ const routes = [
   { label: "My Orders", icon: ShoppingBag, href: "/dashboard/orders" },
   { label: "My Profile", icon: User, href: "/dashboard/profile" },
   { label: "Wishlist", icon: Heart, href: "/dashboard/wishlist" },
+  { label: "Notifications", icon: Bell, href: "/dashboard/notifications" },
   { label: "Settings", icon: Settings, href: "/dashboard/settings" },
 ];
 

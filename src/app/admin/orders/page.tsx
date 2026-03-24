@@ -1,6 +1,7 @@
 import { Package, Truck, CheckCircle, Clock, Search, Filter, MoreVertical, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { getAllOrders } from "@/lib/actions/orders";
+import { OrderStatusSelector } from "@/components/admin/order-status-selector";
 
 export default async function AdminOrdersPage() {
   const orders = await getAllOrders();
@@ -114,14 +115,7 @@ export default async function AdminOrdersPage() {
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex flex-col gap-2">
-                          <span className={`px-4 py-1.5 text-[8px] font-bold uppercase tracking-[0.2em] rounded-full border w-fit ${
-                            order.status === 'delivered' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5' :
-                            order.status === 'shipped' ? 'border-blue-500/30 text-blue-400 bg-blue-500/5' :
-                            order.status === 'paid' || order.status === 'processing' ? 'border-[#D5A754]/30 text-[#D5A754] bg-[#D5A754]/5' :
-                            'border-zinc-500/30 text-zinc-400 bg-zinc-500/5'
-                          }`}>
-                            {order.status}
-                          </span>
+                          <OrderStatusSelector orderId={order.id} currentStatus={order.status} />
                           {order.is_guest && (
                             <span className="px-3 py-1 text-[8px] font-black uppercase tracking-tighter bg-zinc-800 text-zinc-400 border border-zinc-700 w-fit rounded-sm">
                               Guest Account

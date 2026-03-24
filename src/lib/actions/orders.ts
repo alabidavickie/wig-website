@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { sendOrderStatusUpdate, sendAdminPaymentReceived } from "@/lib/emails";
 
 export type OrderStatus = "pending" | "paid" | "processing" | "shipped" | "delivered" | "cancelled";
 
@@ -126,14 +127,52 @@ export async function updateOrderStatus(reference: string, provider: string, sta
     .select()
     .single();
 
-  if (error) {
+  if (error || !data) {
     console.error("Error updating order status:", error);
     return null;
+  }
+
+  // If a payment was successful, alert the admin via email
+  if (status === "paid" || status === "processing") {
+    await sendAdminPaymentReceived(data.email, data.id, data.total_amount, data.currency);
   }
 
   revalidatePath("/dashboard/orders");
   revalidatePath("/admin");
   return data;
+}
+
+/**
+ * Updates an order's status (used by admin dashboard).
+ */
+export async function adminUpdateOrderStatus(orderId: string, status: OrderStatus) {
+  const supabase = await createClient();
+
+  // Protect route
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") throw new Error("Unauthorized access");
+
+  const { data: order, error } = await supabase
+    .from("orders")
+    .update({ status })
+    .eq("id", orderId)
+    .select()
+    .single();
+
+  if (error || !order) {
+    console.error(error);
+    throw new Error("Failed to update order status");
+  }
+
+  // Send an automated order status update email to the customer
+  await sendOrderStatusUpdate(order.email, order.shipping_info?.firstName || "Customer", order.id, status);
+
+  revalidatePath("/dashboard/orders");
+  revalidatePath("/admin/orders");
+  return order;
 }
 
 /**
