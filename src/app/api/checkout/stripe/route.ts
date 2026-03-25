@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { z } from "zod";
-import { createOrder } from "@/lib/actions/orders";
-import { OrderInput } from "@/lib/actions/orders";
+import { createOrder, OrderInput } from "@/lib/actions/orders";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: Request) {
   try {
@@ -20,6 +20,7 @@ export async function POST(req: Request) {
     });
 
     const supabase = await (await import("@/lib/supabase/server")).createClient();
+    const adminClient = createAdminClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     const body = await req.json();
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
     let dbProducts: any[] = [];
 
     if (realIds.length > 0) {
-      const { data, error } = await supabase
+      const { data, error } = await adminClient
         .from("products")
         .select()
         .in("id", realIds);
@@ -90,6 +91,20 @@ export async function POST(req: Request) {
         quantity: item.quantity,
       };
     });
+
+    // Add Shipping Fee: £15
+    const SHIPPING_AMOUNT_GBP = 15;
+    line_items.push({
+      price_data: {
+        currency: "gbp",
+        product_data: {
+          name: "Global Shipping & Handling",
+          description: "Insured express delivery",
+        },
+        unit_amount: Math.round(SHIPPING_AMOUNT_GBP * 100),
+      },
+      quantity: 1,
+    } as any);
 
     // Validate total > 0
     const total_amount = line_items.reduce((acc: number, li: any) => acc + (li.price_data.unit_amount / 100) * li.quantity, 0);
@@ -124,7 +139,10 @@ export async function POST(req: Request) {
     const orderInput: OrderInput = {
       user_id: user?.id || undefined, 
       email: user?.email || shippingDetails?.email || "unknown@example.com",
-      shipping_info: shippingDetails || {},
+      shipping_info: {
+        ...shippingDetails,
+        shippingFee: SHIPPING_AMOUNT_GBP
+      },
       total_amount,
       currency: "GBP",
       payment_provider: "stripe",

@@ -2,20 +2,75 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, User, Heart, Search, Menu, X } from 'lucide-react';
+import { ShoppingBag, User, Heart, Search, Menu, X, LogOut, LayoutDashboard, UserCircle, Settings, ShoppingCart, ShieldCheck } from 'lucide-react';
 import { useCartStore } from '@/lib/store/useCartStore';
 import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const supabase = createClient();
+  const router = useRouter();
+
   const itemCount = useCartStore((state) => 
     mounted ? state.items.reduce((total, item) => total + item.quantity, 0) : 0
   );
 
   useEffect(() => {
     setMounted(true);
+    
+    // Fetch initial user
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, full_name')
+          .eq('id', user.id)
+          .single();
+        setProfile(profile);
+      }
+    };
+
+    fetchUser();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user || null);
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, full_name')
+          .eq('id', session.user.id)
+          .single();
+        setProfile(profile);
+      } else {
+        setProfile(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+    router.refresh();
+  };
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -89,9 +144,80 @@ export const Header = () => {
             <button className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2 items-center" suppressHydrationWarning>
               <Search className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-white" strokeWidth={1.2} />
             </button>
-            <Link href="/login" className="hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2" suppressHydrationWarning>
-              <User className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-white" strokeWidth={1.2} />
-            </Link>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <button className="hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2 outline-none">
+                      <User className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-[#D5A754]" strokeWidth={1.5} />
+                    </button>
+                  }
+                />
+                <DropdownMenuContent align="end" className="w-56 bg-[#141414] border-[#2A2A2D] text-white rounded-xl p-2 shadow-2xl backdrop-blur-xl">
+                  <DropdownMenuLabel className="px-3 py-2">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Welcome Back</p>
+                    <p className="text-[12px] font-bold text-white truncate">{profile?.full_name || user.email}</p>
+                    {profile?.role === 'admin' && (
+                      <span className="inline-block mt-1 px-1.5 py-0.5 bg-[#D5A754]/10 text-[#D5A754] text-[8px] font-bold uppercase tracking-widest rounded">Admin Access</span>
+                    )}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-[#2A2A2D]" />
+                  <DropdownMenuItem
+                    render={
+                      <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-[#2A2A2D] rounded-lg transition-colors cursor-pointer group">
+                        <LayoutDashboard className="w-4 h-4 text-zinc-400 group-hover:text-[#D5A754]" /> Studio Hub
+                      </Link>
+                    }
+                  />
+                  <DropdownMenuItem
+                    render={
+                      <Link href="/dashboard/orders" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-[#2A2A2D] rounded-lg transition-colors cursor-pointer group">
+                        <ShoppingCart className="w-4 h-4 text-zinc-400 group-hover:text-[#D5A754]" /> My Orders
+                      </Link>
+                    }
+                  />
+                  <DropdownMenuItem
+                    render={
+                      <Link href="/dashboard/profile" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-[#2A2A2D] rounded-lg transition-colors cursor-pointer group">
+                        <UserCircle className="w-4 h-4 text-zinc-400 group-hover:text-[#D5A754]" /> My Profile
+                      </Link>
+                    }
+                  />
+                  <DropdownMenuItem
+                    render={
+                      <Link href="/dashboard/settings" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-[#2A2A2D] rounded-lg transition-colors cursor-pointer group">
+                        <Settings className="w-4 h-4 text-zinc-400 group-hover:text-[#D5A754]" /> Settings
+                      </Link>
+                    }
+                  />
+                  
+                  {profile?.role === 'admin' && (
+                    <>
+                      <DropdownMenuSeparator className="bg-[#2A2A2D]" />
+                      <DropdownMenuItem
+                        render={
+                          <Link href="/admin" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-[#D5A754]/10 text-[#D5A754] rounded-lg transition-colors cursor-pointer group">
+                            <ShieldCheck className="w-4 h-4" /> Admin Panel
+                          </Link>
+                        }
+                      />
+                    </>
+                  )}
+
+                  <DropdownMenuSeparator className="bg-[#2A2A2D]" />
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest text-red-400 hover:bg-red-400/10 hover:text-red-400 rounded-lg transition-colors cursor-pointer group"
+                  >
+                    <LogOut className="w-4 h-4" /> Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/login" className="hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2">
+                <User className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-white" strokeWidth={1.2} />
+              </Link>
+            )}
             <Link href="/dashboard/wishlist" className="hidden sm:flex hover:opacity-60 transition-opacity cursor-pointer p-1.5 sm:p-2" suppressHydrationWarning>
               <Heart className="w-[16px] h-[16px] md:w-[17px] md:h-[17px] text-white" strokeWidth={1.2} />
             </Link>

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { sendOrderStatusUpdate, sendAdminPaymentReceived } from "@/lib/emails";
 
@@ -15,6 +16,8 @@ export interface OrderInput {
     address: string;
     city: string;
     zip: string;
+    shippingFee?: number;
+    exchangeRate?: number;
   };
   total_amount: number;
   currency: string;
@@ -52,6 +55,8 @@ export interface OrderWithItems {
     address: string;
     city: string;
     zip: string;
+    shippingFee?: number;
+    exchangeRate?: number;
   };
   total_amount: number;
   currency: string;
@@ -66,10 +71,10 @@ export interface OrderWithItems {
  * Creates a new pending order and its items in Supabase.
  */
 export async function createOrder(input: OrderInput) {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
 
   // 1. Insert Order
-  const { data: order, error: orderError } = await supabase
+  const { data: order, error: orderError } = await adminClient
     .from("orders")
     .insert([{
       user_id: input.user_id || null,
@@ -101,17 +106,34 @@ export async function createOrder(input: OrderInput) {
     attributes: item.attributes
   }));
 
-  const { error: itemsError } = await supabase
+  const { error: itemsError } = await adminClient
     .from("order_items")
     .insert(orderItems);
 
   if (itemsError) {
     console.error("Error creating order items:", itemsError);
-    // Ideally, we'd delete the order here to rollback, but for simplicity we throw an error
     throw new Error("Failed to create order items");
   }
 
   return order;
+}
+
+/**
+ * Creates a notification for a user.
+ */
+export async function createNotification(userId: string, title: string, message: string, link?: string) {
+  const adminClient = createAdminClient();
+  const { error } = await adminClient
+    .from("notifications")
+    .insert([{
+      user_id: userId,
+      title,
+      message,
+      link,
+      is_read: false
+    }]);
+    
+  if (error) console.error("Error creating notification:", error);
 }
 
 /**
@@ -132,9 +154,18 @@ export async function updateOrderStatus(reference: string, provider: string, sta
     return null;
   }
 
-  // If a payment was successful, alert the admin via email
+  // If a payment was successful, alert the admin via email and notify the user
   if (status === "paid" || status === "processing") {
     await sendAdminPaymentReceived(data.email, data.id, data.total_amount, data.currency);
+    
+    if (data.user_id) {
+      await createNotification(
+        data.user_id,
+        "Payment Received",
+        `Your order #SH-${data.id.slice(0,8)} has been confirmed and is being processed.`,
+        "/dashboard/orders"
+      );
+    }
   }
 
   revalidatePath("/dashboard/orders");
@@ -147,6 +178,7 @@ export async function updateOrderStatus(reference: string, provider: string, sta
  */
 export async function adminUpdateOrderStatus(orderId: string, status: OrderStatus) {
   const supabase = await createClient();
+  const adminClient = createAdminClient();
 
   // Protect route
   const { data: { user } } = await supabase.auth.getUser();
@@ -155,7 +187,7 @@ export async function adminUpdateOrderStatus(orderId: string, status: OrderStatu
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   if (profile?.role !== "admin") throw new Error("Unauthorized access");
 
-  const { data: order, error } = await supabase
+  const { data: order, error } = await adminClient
     .from("orders")
     .update({ status })
     .eq("id", orderId)
@@ -180,6 +212,7 @@ export async function adminUpdateOrderStatus(orderId: string, status: OrderStatu
  */
 export async function getAllOrders() {
   const supabase = await createClient();
+  const adminClient = createAdminClient();
   
   // SECURE: Check if current user is an admin
   const { data: { user } } = await supabase.auth.getUser();
@@ -196,7 +229,7 @@ export async function getAllOrders() {
     return [];
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await adminClient
     .from("orders")
     .select(`
       *,

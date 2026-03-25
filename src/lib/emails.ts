@@ -1,3 +1,8 @@
+import { Resend } from 'resend';
+import OrderStatusEmail from "@/components/emails/order-status-email";
+import AdminPaymentEmail from "@/components/emails/admin-payment-email";
+import VerificationEmail from "@/components/emails/verification-email";
+
 // Initialize Resend lazily to avoid build-time errors if API key is missing
 let resendInstance: Resend | null = null;
 

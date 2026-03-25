@@ -1,7 +1,9 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
+import { createNotification } from "@/lib/actions/orders";
 
 
 
@@ -79,7 +81,7 @@ export async function getCategories() {
 }
 
 export async function createCategory(formData: { name: string; slug: string; description?: string }) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("categories")
     .insert([formData])
@@ -141,7 +143,7 @@ export async function getProductById(id: string) {
 }
 
 export async function createProduct(formData: CreateProductInput) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: product, error: productError } = await supabase
     .from("products")
@@ -185,11 +187,29 @@ export async function createProduct(formData: CreateProductInput) {
 
   revalidatePath("/shop");
   revalidatePath("/admin/products");
+
+  // Notify all users about the new arrival
+  try {
+    const { data: profiles } = await supabase.from("profiles").select("id");
+    if (profiles) {
+      for (const profile of profiles) {
+        await createNotification(
+          profile.id,
+          "New Arrival",
+          `A new luxury piece "${product.name}" has just been added to the Elite Studio.`,
+          `/shop/${product.slug}`
+        );
+      }
+    }
+  } catch (notifyError) {
+    console.warn("Failed to notify users about new product:", notifyError);
+  }
+
   return product;
 }
 
 export async function updateProduct(id: string, formData: Partial<CreateProductInput>) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { error: productError } = await supabase
     .from("products")
@@ -241,7 +261,7 @@ export async function updateProduct(id: string, formData: Partial<CreateProductI
 }
 
 export async function deleteProduct(id: string) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { error } = await supabase.from("products").delete().eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath("/shop");
@@ -249,7 +269,7 @@ export async function deleteProduct(id: string) {
 }
 
 export async function deleteCategory(id: string) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { error } = await supabase.from("categories").delete().eq("id", id);
   if (error) throw new Error(`Failed to delete category: ${error.message}`);
   revalidatePath("/admin/categories");

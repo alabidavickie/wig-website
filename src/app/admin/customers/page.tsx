@@ -1,20 +1,37 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { Users, Search, Mail, ShoppingBag, DollarSign, Calendar, ChevronRight, UserCheck, UserX } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function AdminCustomersPage() {
   const supabase = await createClient();
+  const adminClient = createAdminClient();
 
-  // Fetch all non-admin profiles
-  const { data: profiles } = await supabase
+  // SECURE: Check if current user is an admin
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") {
+    redirect("/dashboard");
+  }
+
+  // Fetch all non-admin profiles using adminClient to bypass RLS
+  const { data: profiles } = await adminClient
     .from("profiles")
     .select("*")
     .neq("role", "admin")
     .order("created_at", { ascending: false });
 
-  // Fetch all orders for stats
-  const { data: allOrders } = await supabase
+  // Fetch all orders for stats using adminClient
+  const { data: allOrders } = await adminClient
     .from("orders")
     .select("id, email, total_amount, currency, status, created_at");
 

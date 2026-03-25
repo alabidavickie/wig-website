@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createOrder } from "@/lib/actions/orders";
-import { OrderInput } from "@/lib/actions/orders";
+import { createOrder, OrderInput } from "@/lib/actions/orders";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: Request) {
   try {
@@ -15,6 +15,7 @@ export async function POST(req: Request) {
     }
 
     const supabase = await (await import("@/lib/supabase/server")).createClient();
+    const adminClient = createAdminClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     const body = await req.json();
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
     let dbProducts: any[] = [];
 
     if (realIds.length > 0) {
-      const { data, error } = await supabase
+      const { data, error } = await adminClient
         .from("products")
         .select()
         .in("id", realIds);
@@ -66,19 +67,38 @@ export async function POST(req: Request) {
       }
     }
 
-    // Calculate total amount — use DB price if available, otherwise fallback to client price
-    const total_amount = items.reduce((acc: number, item: any) => {
+    // Calculate total amount in GBP (base)
+    const base_total = items.reduce((acc: number, item: any) => {
       const dbProduct = dbProducts.find((p: any) => p.id === item.id);
       const unitPrice = dbProduct ? dbProduct.base_price : (item.price || 0);
       return acc + (unitPrice * item.quantity);
     }, 0);
 
-    if (total_amount <= 0) {
+    if (base_total <= 0) {
       return NextResponse.json(
         { message: "Order total must be greater than zero." },
         { status: 400 }
       );
     }
+
+    // 1. FETCH LATEST EXCHANGE RATE (GBP -> NGN)
+    let rate = 1500; // Fallback
+    try {
+      const rateRes = await fetch("https://open.er-api.com/v6/latest/GBP", { next: { revalidate: 3600 } });
+      const rateData = await rateRes.json();
+      if (rateData?.rates?.NGN) {
+        rate = rateData.rates.NGN;
+      }
+    } catch (e) {
+      console.warn("[PAYSTACK_API] Rate fetch failed, using fallback:", e);
+    }
+
+    // 2. APPLY SHIPPING (Fixed fee: £15 or converted NGN)
+    const SHIPPING_GBP = 15;
+    const shipping_ngn = Math.round(SHIPPING_GBP * rate);
+    
+    // 3. CONVERT TOTAL TO NGN
+    const total_ngn = Math.round(base_total * rate) + shipping_ngn;
 
     const email = user?.email || shippingDetails?.email || "unknown@example.com";
     
@@ -89,8 +109,12 @@ export async function POST(req: Request) {
     const orderInput: OrderInput = {
       user_id: user?.id || undefined,
       email,
-      shipping_info: shippingDetails || {},
-      total_amount,
+      shipping_info: {
+        ...shippingDetails,
+        shippingFee: shipping_ngn,
+        exchangeRate: rate
+      },
+      total_amount: total_ngn,
       currency: "NGN",
       payment_provider: "paystack",
       payment_reference: reference, 
@@ -117,7 +141,7 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         email: email,
-        amount: Math.round(total_amount * 100), // Convert to kobo (client already sends NGN amount)
+        amount: total_ngn * 100, // Paystack expects kobo (value * 100)
         reference: reference,
         callback_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout/success?reference=${reference}&provider=paystack`,
         metadata: {

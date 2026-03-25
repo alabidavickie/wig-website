@@ -52,7 +52,7 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
              <div className="flex items-center justify-between p-8 bg-[#FAF9F6] rounded-[32px] border border-gray-50 shadow-sm transition-all hover:shadow-xl">
                 <div className="space-y-1">
-                   <Label className="text-[12px] font-bold text-white uppercase tracking-widest">Interface Appearance</Label>
+                   <Label className="text-[12px] font-bold text-[#1A1A1D] uppercase tracking-widest">Interface Appearance</Label>
                    <p className="text-[11px] text-zinc-400 font-bold uppercase tracking-widest">Toggle Silk Haus Mode</p>
                 </div>
                 <Switch defaultChecked={false} className="data-[state=checked]:bg-black data-[state=unchecked]:bg-gray-200" />
@@ -60,24 +60,10 @@ export default function SettingsPage() {
 
              <div className="flex items-center justify-between p-8 bg-[#FAF9F6] rounded-[32px] border border-gray-100 shadow-sm transition-all hover:shadow-xl">
                 <div className="space-y-1">
-                   <Label className="text-[12px] font-bold text-white uppercase tracking-widest">Silk Haus Updates</Label>
+                   <Label className="text-[12px] font-bold text-[#1A1A1D] uppercase tracking-widest">Silk Haus Updates</Label>
                    <p className="text-[11px] text-zinc-400 font-bold uppercase tracking-widest">Notifications and Offers</p>
                 </div>
                 <Switch defaultChecked className="data-[state=checked]:bg-black data-[state=unchecked]:bg-gray-200" />
-             </div>
-             
-             <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Currency Selection</Label>
-                <Select defaultValue="usd">
-                   <SelectTrigger className="bg-[#FAF9F6] border-gray-100 rounded-full h-16 px-8 text-[12px] font-bold uppercase tracking-widest focus:ring-black transition-all shadow-sm">
-                      <SelectValue />
-                   </SelectTrigger>
-                   <SelectContent className="bg-white border-gray-100 text-[#1A1A1D] rounded-[24px] shadow-2xl">
-                      <SelectItem value="usd" className="rounded-xl">USD - US Dollar</SelectItem>
-                      <SelectItem value="eur" className="rounded-xl">EUR - Euro</SelectItem>
-                      <SelectItem value="gbp" className="rounded-xl">GBP - British Pound</SelectItem>
-                   </SelectContent>
-                </Select>
              </div>
           </div>
         </section>
