@@ -19,10 +19,6 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
   const fetchNotifications = async () => {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -38,6 +34,10 @@ export default function NotificationsPage() {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   const markAsRead = async (id: string) => {
     const supabase = createClient();
