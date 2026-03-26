@@ -36,14 +36,18 @@ export default async function ShopPage() {
               
               <div className="space-y-10">
                 <div className="space-y-4">
-                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Construction</h4>
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Category</h4>
                   <div className="space-y-3" suppressHydrationWarning>
-                    {["Lace Front", "Full Lace", "Silk Top", "Glueless", "U-Part"].map((cat) => (
-                      <label key={cat} className="flex items-center gap-3 cursor-pointer group">
+                    {[
+                      { label: "All", href: "/shop" },
+                      { label: "Closure", href: "/shop?category=Closure" },
+                      { label: "Frontals", href: "/shop?category=Frontals" },
+                    ].map((cat) => (
+                      <Link key={cat.label} href={cat.href} className="flex items-center gap-3 cursor-pointer group">
                         <div className="w-4 h-4 border border-gray-200 flex items-center justify-center transition-all rounded-full group-hover:border-white/20">
                         </div>
-                        <span className="text-[13px] text-white/80 group-hover:text-white transition-colors">{cat}</span>
-                      </label>
+                        <span className="text-[13px] text-white/80 group-hover:text-white transition-colors">{cat.label}</span>
+                      </Link>
                     ))}
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import { Package, Truck, CheckCircle, Clock, Search, Filter, MoreVertical, Eye }
 import { format } from "date-fns";
 import { getAllOrders } from "@/lib/actions/orders";
 import { OrderStatusSelector } from "@/components/admin/order-status-selector";
+import Link from "next/link";
 
 export default async function AdminOrdersPage() {
   const orders = await getAllOrders();
@@ -20,7 +21,7 @@ export default async function AdminOrdersPage() {
     <div className="space-y-8 animate-in fade-in duration-500 text-white pb-20">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Fulfillment Center</h1>
+          <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Orders</h1>
           <p className="text-zinc-400 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">Review and fulfill luxury hair orders from your clients.</p>
         </div>
         <div className="flex items-center gap-4">
@@ -75,12 +76,12 @@ export default async function AdminOrdersPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-400 border-b border-[#2A2A2D]">
-                <th className="px-8 py-6">Order Hex</th>
-                <th className="px-8 py-6">Client Identity</th>
-                <th className="px-8 py-6">Manifest</th>
-                <th className="px-8 py-6">Valuation</th>
-                <th className="px-8 py-6">Fulfillment</th>
-                <th className="px-8 py-6 text-right">Operations</th>
+                <th className="px-8 py-6">Order ID</th>
+                <th className="px-8 py-6">Customer</th>
+                <th className="px-8 py-6">Items</th>
+                <th className="px-8 py-6">Total</th>
+                <th className="px-8 py-6">Status</th>
+                <th className="px-8 py-6 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#2A2A2D]">
@@ -124,9 +125,9 @@ export default async function AdminOrdersPage() {
                         </div>
                       </td>
                       <td className="px-8 py-6 text-right">
-                        <button className="p-2.5 border border-[#2A2A2D] hover:border-white hover:text-white text-zinc-400 transition-all rounded-sm bg-[#0A0A0A]">
+                        <Link href={`/admin/orders/${order.id}`} className="p-2.5 border border-[#2A2A2D] hover:border-white hover:text-white text-zinc-400 transition-all rounded-sm bg-[#0A0A0A] inline-block">
                           <Eye className="w-4 h-4" />
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   );

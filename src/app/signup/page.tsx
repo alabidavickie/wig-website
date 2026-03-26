@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSearchParams } from "next/navigation";
-import { Crown, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 
 function SignupForm() {
   const [pending, setPending] = useState(false);
@@ -20,7 +20,6 @@ function SignupForm() {
     setPending(true);
     setError(null);
     setSuccess(null);
-    // Add redirect hint to form
     formData.append("redirectTo", redirectTo);
     const result = await signup(formData);
     if (result?.error) {
@@ -29,7 +28,7 @@ function SignupForm() {
       } else if (typeof result.error === "object" && "message" in result.error) {
         setError((result.error as { message: string }).message);
       } else {
-        setError("Could not complete registration");
+        setError("Could not create your account. Please try again.");
       }
     }
     setPending(false);
@@ -39,17 +38,16 @@ function SignupForm() {
     <div className="min-h-screen bg-[#0A0A0A] flex flex-col justify-center py-16 px-6 lg:px-8 font-sans transition-colors duration-700">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/" className="inline-block group">
-           <div className="w-16 h-16 bg-[#D5A754]/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-[#D5A754]/20 group-hover:scale-110 transition-transform">
-              <Crown className="w-8 h-8 text-[#D5A754]" />
+           <div className="mb-8 group-hover:scale-105 transition-transform">
+              <img src="/images/logo_main.png" alt="Silk Haus Logo" className="w-16 h-auto mx-auto object-contain" />
            </div>
           <h1 className="font-serif text-4xl tracking-[0.3em] uppercase text-white mb-2 leading-none">SILK HAUS</h1>
-          <p className="text-[10px] text-zinc-400 uppercase tracking-[0.5em] mb-12">Elite Studio Registry</p>
         </Link>
-        <h2 className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#D5A754] mb-2">Create Your Account</h2>
+        <h2 className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#D5A754] mb-2 mt-8">Create Your Account</h2>
         <p className="text-[11px] text-zinc-400 uppercase tracking-widest max-w-sm mx-auto leading-loose">
           {redirectTo === "/checkout" 
-            ? "Secure your identity to finalize your acquisition" 
-            : "Request your membership access to the Follien Atelier"}
+            ? "Create an account to complete your order" 
+            : "Join Silk Haus to start shopping"}
         </p>
       </div>
 
@@ -81,7 +79,7 @@ function SignupForm() {
                   type="text"
                   required
                   className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
-                  placeholder="GIVEN NAME"
+                  placeholder="First name"
                 />
               </div>
               <div className="space-y-3">
@@ -92,7 +90,7 @@ function SignupForm() {
                   type="text"
                   required
                   className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
-                  placeholder="SURNAME"
+                  placeholder="Last name"
                 />
               </div>
             </div>
@@ -106,12 +104,12 @@ function SignupForm() {
                 autoComplete="email"
                 required
                 className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
-                placeholder="EMAIL@ELITE.COM"
+                placeholder="your@email.com"
               />
             </div>
 
             <div className="space-y-3">
-              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="password">Security Password</Label>
+              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
@@ -119,7 +117,7 @@ function SignupForm() {
                 autoComplete="new-password"
                 required
                 className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
-                placeholder="MINIMUM 6 CHARACTERS"
+                placeholder="Minimum 6 characters"
               />
             </div>
 
@@ -132,11 +130,11 @@ function SignupForm() {
                 {pending ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/20 border-t-black animate-spin rounded-full"></div>
-                    Securing Profile
+                    Creating account...
                   </>
                 ) : (
                   <>
-                    Register Your Identity <ArrowRight className="w-4 h-4" />
+                    Create Account <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </Button>
@@ -152,9 +150,9 @@ function SignupForm() {
             </Link>
 
             <p className="text-[10px] text-zinc-400 uppercase tracking-widest">
-              Already have access?{" "}
+              Already have an account?{" "}
               <Link href={`/login${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`} className="font-bold text-[#D5A754] hover:text-[#E6B964] transition-colors underline underline-offset-4">
-                Sign In to Your Account
+                Sign In
               </Link>
             </p>
           </div>
@@ -162,7 +160,7 @@ function SignupForm() {
         
         <div className="mt-8 flex items-center justify-center gap-4 text-zinc-700">
            <ShieldCheck className="w-4 h-4" />
-           <span className="text-[9px] uppercase tracking-[0.4em]">Elite Profile Encryption Protocol Active</span>
+           <span className="text-[9px] uppercase tracking-[0.4em]">Secure & encrypted</span>
         </div>
       </div>
     </div>
@@ -171,7 +169,7 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-400 animate-pulse">Initializing Studio Registry...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-400 animate-pulse">Loading...</p></div>}>
       <SignupForm />
     </Suspense>
   );

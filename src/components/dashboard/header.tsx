@@ -11,7 +11,7 @@ export const Header = () => {
       <div className="flex items-center gap-x-4">
         <div className="hidden flex-col items-end sm:flex text-sm">
           <span className="font-bold text-white uppercase tracking-widest text-[11px]">Elena Vane</span>
-          <span className="text-[9px] text-[#D5A754] font-bold uppercase tracking-widest">Diamond Elite</span>
+          <span className="text-[9px] text-[#D5A754] font-bold uppercase tracking-widest">Member</span>
         </div>
         <div className="relative">
           <Avatar className="h-9 w-9 border border-[#2A2A2D]">

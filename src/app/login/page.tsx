@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSearchParams } from "next/navigation";
-import { Crown, ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 
 function LoginForm() {
   const [pending, setPending] = useState(false);
@@ -25,7 +25,7 @@ function LoginForm() {
       } else if ((result.error as any).message) {
         setError((result.error as any).message);
       } else {
-        setError("Invalid login credentials");
+        setError("Incorrect email or password. Please try again.");
       }
       setPending(false);
     }
@@ -39,11 +39,10 @@ function LoginForm() {
               <img src="/images/logo_main.png" alt="Silk Haus Logo" className="w-16 h-auto mx-auto object-contain" />
            </div>
           <h1 className="font-serif text-4xl tracking-[0.3em] uppercase text-white mb-2 leading-none">SILK HAUS</h1>
-          <p className="text-[10px] text-zinc-400 uppercase tracking-[0.5em] mb-12">Elite Studio Hub</p>
         </Link>
-        <h2 className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#D5A754] mb-2">Welcome Back</h2>
+        <h2 className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#D5A754] mb-2 mt-8">Welcome Back</h2>
         <p className="text-[11px] text-zinc-400 uppercase tracking-widest">
-          Authenticate to access your private studio
+          Sign in to your account
         </p>
       </div>
 
@@ -68,14 +67,14 @@ function LoginForm() {
                 autoComplete="email"
                 required
                 className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
-                placeholder="EMAIL@ELITE.COM"
+                placeholder="your@email.com"
               />
             </div>
 
             <div className="space-y-3">
               <div className="flex justify-between items-center px-1">
                 <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold" htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-[9px] uppercase tracking-[0.2em] text-[#D5A754]/60 hover:text-[#D5A754] font-bold transition-colors">Recover</Link>
+                <Link href="/forgot-password" className="text-[9px] uppercase tracking-[0.2em] text-[#D5A754]/60 hover:text-[#D5A754] font-bold transition-colors">Forgot Password?</Link>
               </div>
               <Input
                 id="password"
@@ -96,11 +95,11 @@ function LoginForm() {
               {pending ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/20 border-t-black animate-spin rounded-full"></div>
-                  Authenticating
+                  Signing in...
                 </>
               ) : (
                 <>
-                  Enter Studio <ArrowRight className="w-4 h-4" />
+                  Sign In <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </Button>
@@ -115,9 +114,9 @@ function LoginForm() {
             </Link>
             
             <p className="text-[10px] text-zinc-400 uppercase tracking-widest">
-              New to SILK HAUS?{" "}
+              Don&apos;t have an account?{" "}
               <Link href={`/signup${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`} className="font-bold text-[#D5A754] hover:text-[#E6B964] transition-colors underline underline-offset-4">
-                Create Access
+                Create Account
               </Link>
             </p>
           </div>
@@ -125,7 +124,7 @@ function LoginForm() {
         
         <div className="mt-8 flex items-center justify-center gap-4 text-zinc-700">
            <ShieldCheck className="w-4 h-4" />
-           <span className="text-[9px] uppercase tracking-[0.4em]">End-to-End Cryptographic Security</span>
+           <span className="text-[9px] uppercase tracking-[0.4em]">Secure & encrypted</span>
         </div>
       </div>
     </div>
@@ -134,7 +133,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-400 animate-pulse">Initializing Studio...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-400 animate-pulse">Loading...</p></div>}>
       <LoginForm />
     </Suspense>
   );

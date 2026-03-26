@@ -66,15 +66,10 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
+  // ─── ROUTE PROTECTION ───────────────────────────────────
   const pathname = request.nextUrl.pathname
 
-  // ─── ROUTE PROTECTION ───────────────────────────────────
-  // Only /dashboard and /admin require authentication.
-  // /checkout is open to guests so they can complete orders.
-  const isStrictlyProtected = pathname.startsWith('/dashboard') || 
-                               pathname.startsWith('/admin')
-
-  if (isStrictlyProtected && !user) {
+  if (pathname.startsWith('/dashboard') && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     url.searchParams.set('redirect', pathname)
@@ -82,15 +77,29 @@ export async function updateSession(request: NextRequest) {
   }
 
   // ─── ADMIN ROLE CHECK ───────────────────────────────────
-  if (pathname.startsWith('/admin') && user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', request.url))
+  if (pathname.startsWith('/admin')) {
+    if (pathname === '/admin/login') {
+      if (user) {
+        // Check if already an admin, redirect to dashboard if they are, otherwise redirect to home
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+        if (profile?.role === 'admin') {
+          return NextResponse.redirect(new URL('/admin', request.url))
+        } else {
+          return NextResponse.redirect(new URL('/', request.url))
+        }
+      }
+    } else {
+      if (!user) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/login'
+        url.searchParams.set('redirect', pathname)
+        return NextResponse.redirect(url)
+      } else {
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+        if (profile?.role !== 'admin') {
+          return NextResponse.redirect(new URL('/', request.url))
+        }
+      }
     }
   }
 

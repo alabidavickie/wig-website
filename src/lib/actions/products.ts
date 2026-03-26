@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { createNotification } from "@/lib/actions/orders";
+import { logAdminAction } from "@/lib/actions/audit";
 
 
 
@@ -46,6 +47,7 @@ export interface Product {
   category_id?: string;
   created_at?: string; // Added/moved created_at
   is_featured: boolean;
+  is_active?: boolean;
   // Transformed fields for UI
   category?: string; // Made optional
   image?: string; // Made optional
@@ -264,6 +266,9 @@ export async function deleteProduct(id: string) {
   const supabase = createAdminClient();
   const { error } = await supabase.from("products").delete().eq("id", id);
   if (error) throw new Error(error.message);
+  
+  await logAdminAction("delete_product", "product", id, { product_id: id });
+  
   revalidatePath("/shop");
   revalidatePath("/admin/products");
 }
@@ -275,3 +280,19 @@ export async function deleteCategory(id: string) {
   revalidatePath("/admin/categories");
   revalidatePath("/admin/products");
 }
+export async function toggleProductVisibility(id: string, is_active: boolean) {
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("products")
+    .update({ is_active })
+    .eq("id", id);
+    
+  if (error) throw new Error("Failed to toggle product visibility");
+  
+  await logAdminAction(is_active ? "show_product" : "hide_product", "product", id, { product_id: id, is_active });
+  
+  revalidatePath("/admin/products");
+  revalidatePath("/shop");
+}
+
+

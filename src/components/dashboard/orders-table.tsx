@@ -94,7 +94,7 @@ export const OrdersTable = ({ orders = [] }: { orders: any[] }) => {
               </div>
 
               <div className="bg-[#1A1A1D] p-4 rounded-sm border border-[#2A2A2D]">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-2">Acquisitions</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-2">Past Orders</p>
                 <p className="text-[11px] text-zinc-400 uppercase tracking-wide">
                   {order.order_items?.[0]?.product_name || "Premium Unit"} 
                   {order.order_items?.length > 1 && <span className="text-zinc-400 font-medium ml-1"> (+{order.order_items.length - 1} others)</span>}

@@ -141,28 +141,26 @@ export default function HomeClient({ products }: { products: any[] }) {
       </section>
 
       {/* Category Banners */}
-      <section className="px-4 sm:px-6 md:px-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-16 md:mb-24">
+      <section className="px-4 sm:px-6 md:px-12 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-16 md:mb-24">
         {[
-          { title: "HD Lace Frontal", img: "/hero_luxury_wig_1773402385371.png" },
-          { title: "Virgin Bundles", img: "/hair_bundles_gold_1773402406137.png" },
-          { title: "Silk Maintenance", img: "/wig_atelier_salon_1773402424116.png" }
+          { title: "Closure", img: "/hair_bundles_gold_1773402406137.png", href: "/shop?category=Closure" },
+          { title: "Frontals", img: "/hero_luxury_wig_1773402385371.png", href: "/shop?category=Frontals" },
         ].map((cat, i) => (
-          <div key={i} className={cn(
-            "relative aspect-[4/5] group overflow-hidden cursor-pointer rounded-xl md:rounded-2xl bg-secondary/20",
-            i === 2 && "sm:col-span-2 md:col-span-1"
+          <Link key={i} href={cat.href} className={cn(
+            "relative aspect-[4/5] group overflow-hidden cursor-pointer rounded-xl md:rounded-2xl bg-secondary/20 block"
           )}>
             <Image 
               src={cat.img} 
               alt={cat.title} 
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+              sizes="(max-width: 640px) 100vw, 50vw"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1s] ease-out mix-blend-multiply" 
             />
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-500 flex flex-col items-center justify-end pb-8 md:pb-12">
               <h3 className="font-serif text-white text-xl sm:text-2xl md:text-3xl uppercase tracking-widest mb-3 md:mb-4 italic">{cat.title}</h3>
               <div className="w-10 h-px bg-white/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
             </div>
-          </div>
+          </Link>
         ))}
       </section>
 

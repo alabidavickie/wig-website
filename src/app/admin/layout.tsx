@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { 
   LayoutDashboard, 
@@ -21,10 +22,19 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  if (pathname === '/admin/login') {
+    return (
+      <div className="min-h-screen bg-[#0A0A0A] text-white font-sans">
+        {children}
+      </div>
+    );
+  }
+
   const navItems = [
-    { label: "Overview", icon: LayoutDashboard, href: "/admin" },
+    { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
     { label: "Categories", icon: Tag, href: "/admin/categories" },
     { label: "Products", icon: Package, href: "/admin/products" },
     { label: "Orders", icon: ShoppingBag, href: "/admin/orders" },
@@ -38,7 +48,7 @@ export default function AdminLayout({
       <div className="p-8 border-b border-[#2A2A2D] flex items-center gap-3 bg-[#0A0A0A]">
         <Link href="/" className="flex items-center gap-3">
           <img src="/images/logo_main.png" alt="Silk Haus Logo" className="w-8 h-auto object-contain" />
-          <span className="font-serif text-lg tracking-[0.2em] font-bold uppercase italic whitespace-nowrap text-white">Silk Haus <span className="font-sans font-normal text-[#D5A754] normal-case tracking-normal">Elite</span></span>
+          <span className="font-serif text-lg tracking-[0.2em] font-bold uppercase italic whitespace-nowrap text-white">Silk Haus <span className="font-sans font-normal text-[#D5A754] normal-case tracking-normal">Admin</span></span>
         </Link>
       </div>
 
@@ -59,7 +69,7 @@ export default function AdminLayout({
       <div className="p-4 border-t border-[#2A2A2D]">
         <button className="flex items-center gap-3 px-4 py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-red-400 hover:bg-red-500/10 w-full transition-all rounded-sm group">
           <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Terminate Session
+          Log Out
         </button>
       </div>
     </>
@@ -112,7 +122,7 @@ export default function AdminLayout({
               </div>
               <div className="hidden sm:block text-[12px]">
                 <p className="font-bold uppercase tracking-widest text-[10px] text-white">Silk Haus Admin</p>
-                <p className="text-[#D5A754] text-[9px] font-bold uppercase tracking-widest opacity-80">Master Access</p>
+                <p className="text-[#D5A754] text-[9px] font-bold uppercase tracking-widest opacity-80">Admin</p>
               </div>
             </div>
           </div>

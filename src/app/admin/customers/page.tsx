@@ -61,7 +61,7 @@ export default async function AdminCustomersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Client Registry</h1>
+          <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Customers</h1>
           <p className="text-zinc-400 text-[10px] mt-1 uppercase tracking-widest font-bold">
             All registered customers &amp; their order history
           </p>
@@ -80,7 +80,7 @@ export default async function AdminCustomersPage() {
             <Users className="w-5 h-5 text-purple-400" />
           </div>
           <div>
-            <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.2em]">Total Clients</p>
+            <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.2em]">Total Customers</p>
             <p className="text-xl font-bold tracking-tighter">{totalCustomers}</p>
           </div>
         </div>
@@ -109,7 +109,7 @@ export default async function AdminCustomersPage() {
         <div className="p-6 md:p-8 border-b border-[#2A2A2D] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#0A0A0A]/30">
           <div className="flex items-center gap-3">
             <Users className="w-4 h-4 text-[#D5A754]" />
-            <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754]">Registered Clients</h3>
+            <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754]">All Customers</h3>
           </div>
           <div className="text-[9px] font-bold uppercase tracking-widest text-zinc-500">
             {customersWithOrders} of {totalCustomers} have placed orders
@@ -127,6 +127,7 @@ export default async function AdminCustomersPage() {
                 <th className="px-6 md:px-8 py-5">Total Spent</th>
                 <th className="px-6 md:px-8 py-5">Last Order</th>
                 <th className="px-6 md:px-8 py-5">Status</th>
+                <th className="px-6 md:px-8 py-5 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#2A2A2D]">
@@ -193,7 +194,11 @@ export default async function AdminCustomersPage() {
 
                     {/* Status */}
                     <td className="px-6 md:px-8 py-5">
-                      {customer.orderCount > 0 ? (
+                      {customer.is_suspended ? (
+                        <span className="px-3 py-1.5 text-[8px] font-bold uppercase tracking-[0.2em] border border-red-500/30 text-red-500 bg-red-500/5 rounded-sm">
+                          Suspended
+                        </span>
+                      ) : customer.orderCount > 0 ? (
                         <span className="px-3 py-1.5 text-[8px] font-bold uppercase tracking-[0.2em] border border-emerald-500/30 text-emerald-400 bg-emerald-500/5 rounded-sm">
                           Active
                         </span>
@@ -202,6 +207,12 @@ export default async function AdminCustomersPage() {
                           Registered
                         </span>
                       )}
+                    </td>
+
+                    <td className="px-6 md:px-8 py-5 text-right">
+                      <Link href={`/admin/customers/${customer.id}`} className="p-2.5 border border-[#2A2A2D] hover:border-white hover:text-white text-zinc-400 transition-all rounded-sm bg-[#0A0A0A] inline-block">
+                        <ChevronRight className="w-4 h-4" />
+                      </Link>
                     </td>
                   </tr>
                 ))

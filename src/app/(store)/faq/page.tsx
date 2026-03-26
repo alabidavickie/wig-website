@@ -19,7 +19,7 @@ const faqs = [
         a: "Our hair is structured using a weft-track system and hand-tied knot technique that virtually eliminates shedding. With proper care (regular deep conditioning, silk sleeping accessories), our units remain tangle-free and gorgeous for 12-18 months with everyday wear."
       },
       {
-        q: "Can I colour or bleach SOLACE hair?",
+        q: "Can I colour or bleach Silk Haus hair?",
         a: "Yes — because all our hair is raw and virgin, it can be coloured, bleached, toned, and permed just like natural hair growing from your scalp. We always recommend having this done by a licensed colour specialist for best results."
       },
     ]
@@ -32,7 +32,7 @@ const faqs = [
         a: "We accept all major credit and debit cards (Visa, Mastercard, American Express), bank transfers, and select Buy Now Pay Later options. All transactions are 256-bit SSL encrypted via Stripe for maximum security."
       },
       {
-        q: "Is it safe to shop on SOLACE?",
+        q: "Is it safe to shop on Silk Haus?",
         a: "Absolutely. Your security is our top priority. Our website uses industry-standard SSL encryption, and payment data is never stored on our servers. We are PCI DSS compliant and powered by Stripe — the world's most trusted payment infrastructure."
       },
       {
@@ -54,7 +54,7 @@ const faqs = [
       },
       {
         q: "Is shipping really free?",
-        a: "All domestic orders include complimentary express shipping — no minimum order required. International orders over $500 also ship free. It's our way of saying thank you for trusting SOLACE with your look."
+        a: "All domestic orders include complimentary express shipping — no minimum order required. International orders over $500 also ship free. It's our way of saying thank you for trusting Silk Haus with your look."
       },
     ]
   },

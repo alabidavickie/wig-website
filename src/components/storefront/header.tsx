@@ -165,7 +165,7 @@ export const Header = () => {
                   <DropdownMenuItem
                     render={
                       <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-[#2A2A2D] rounded-lg transition-colors cursor-pointer group">
-                        <LayoutDashboard className="w-4 h-4 text-zinc-400 group-hover:text-[#D5A754]" /> Studio Hub
+                        <LayoutDashboard className="w-4 h-4 text-zinc-400 group-hover:text-[#D5A754]" /> Dashboard
                       </Link>
                     }
                   />

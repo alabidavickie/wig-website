@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { sendOrderStatusUpdate, sendAdminPaymentReceived } from "@/lib/emails";
+import { logAdminAction } from "@/lib/actions/audit";
 
 export type OrderStatus = "pending" | "paid" | "processing" | "shipped" | "delivered" | "cancelled";
 
@@ -64,6 +65,10 @@ export interface OrderWithItems {
   payment_provider: string;
   payment_reference?: string;
   created_at: string;
+  tracking_number?: string | null;
+  tracking_url?: string | null;
+  is_refunded?: boolean;
+  refund_amount?: number | null;
   order_items: OrderItem[];
 }
 
@@ -369,4 +374,60 @@ export async function getOrderById(id: string) {
 
   console.warn(`Unauthorized access attempt to getOrderById for order ${id}`);
   return null;
+}
+
+/**
+ * Updates an order tracking information
+ */
+export async function updateOrderTracking(orderId: string, trackingInfo: { tracking_number: string; tracking_url?: string }) {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ 
+      tracking_number: trackingInfo.tracking_number, 
+      tracking_url: trackingInfo.tracking_url,
+      // Automatically status to shipped if tracking added
+      status: "shipped" 
+    })
+    .eq("id", orderId)
+    .select()
+    .single();
+
+  if (error) throw new Error("Failed to update tracking");
+  
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${orderId}`);
+  return data;
+}
+
+/**
+ * Processes a refund for an order (Mock implementation)
+ */
+export async function processRefund(orderId: string, amount: number) {
+  const supabase = createAdminClient();
+  
+  // In a real app, call Stripe or Paystack API here
+  
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ 
+      is_refunded: true, 
+      refund_amount: amount,
+      status: "cancelled" 
+    })
+    .eq("id", orderId)
+    .select()
+    .single();
+
+  if (error) throw new Error("Failed to process refund");
+  
+  await logAdminAction("process_refund", "order", orderId, {
+    order_id: orderId,
+    refund_amount: amount,
+    currency: data?.currency || "GBP"
+  });
+
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${orderId}`);
+  return data;
 }

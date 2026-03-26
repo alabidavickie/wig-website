@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
-import { Mail, ArrowRight, ChevronRight, Crown } from "lucide-react";
+import { Mail, ArrowRight, ChevronRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
 function VerifyEmailContent() {
@@ -19,21 +19,21 @@ function VerifyEmailContent() {
         </Link>
 
         <div className="space-y-6">
-          <h1 className="font-serif text-5xl md:text-7xl uppercase tracking-tighter italic leading-none text-white">Verification <br /> Despatched</h1>
-          <p className="text-[10px] text-[#D5A754] uppercase tracking-[0.5em] font-bold">Identity Protocol Active</p>
+          <h1 className="font-serif text-5xl md:text-7xl uppercase tracking-tighter italic leading-none text-white">Check Your <br /> Email</h1>
+          <p className="text-[10px] text-[#D5A754] uppercase tracking-[0.5em] font-bold">Email Verification</p>
         </div>
         
         <div className="space-y-8 text-center max-w-md mx-auto">
             <p className="text-[14px] text-zinc-400 tracking-wide leading-relaxed font-sans">
-              Welcome to the elite circle. A primary activation link has been transmitted to your secure inbox. 
-              Please authenticate via the link to unlock your full access to the **Silk Haus Atelier**.
+              We&apos;ve sent a verification link to your email. 
+              Please click the link in the email to verify your account and get started.
             </p>
            
            <div className="bg-[#141414] p-8 border-l-2 border-[#D5A754] rounded-sm text-left shadow-2xl">
-              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400 mb-3">Pending Destination</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400 mb-3">After verifying, you&apos;ll go to</p>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-bold uppercase tracking-[0.2em] text-white">
-                  {next === "/checkout" ? "Secure Checkout System" : "Private Client Dashboard"}
+                  {next === "/checkout" ? "Checkout" : "Your Dashboard"}
                 </span>
                 <ChevronRight className="w-4 h-4 text-[#D5A754]/40" />
               </div>
@@ -50,12 +50,12 @@ function VerifyEmailContent() {
             onClick={() => window.location.reload()}
             className="border border-[#2A2A2D] text-zinc-400 px-12 py-6 rounded-none text-[11px] font-bold uppercase tracking-[0.3em] hover:border-[#D5A754] hover:text-white transition-all bg-[#0A0A0A]"
           >
-            Re-transmit Link
+            Resend Link
           </button>
         </div>
 
         <p className="text-[10px] uppercase tracking-[0.4em] text-zinc-400 pt-12">
-          Monitor your junk repository if the transmission is delayed.
+          Check your spam folder if you don&apos;t see the email.
         </p>
       </div>
     </div>
@@ -64,7 +64,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center font-serif italic text-zinc-400">Securing transmission...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center font-serif italic text-zinc-400">Loading...</div>}>
       <VerifyEmailContent />
     </Suspense>
   );

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const routes = [
-  { label: "Studio Hub", icon: LayoutDashboard, href: "/dashboard" },
+  { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
   { label: "My Orders", icon: ShoppingBag, href: "/dashboard/orders" },
   { label: "My Profile", icon: User, href: "/dashboard/profile" },
   { label: "Wishlist", icon: Heart, href: "/dashboard/wishlist" },
@@ -65,7 +65,7 @@ export const Sidebar = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-[11px] font-bold text-white uppercase tracking-wider">Elena Vane</span>
-            <span className="text-[9px] font-bold text-[#D5A754] uppercase tracking-[0.2em]">Diamond Elite</span>
+            <span className="text-[9px] font-bold text-[#D5A754] uppercase tracking-[0.2em]">Member</span>
           </div>
         </div>
         

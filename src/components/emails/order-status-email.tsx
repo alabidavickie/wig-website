@@ -49,7 +49,7 @@ export const OrderStatusEmail: React.FC<Readonly<OrderStatusEmailProps>> = ({
           <Hr style={{ borderColor: '#2A2A2D', margin: '40px 0' }} />
           
           <Text style={{ fontSize: '12px', color: '#a1a1aa', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '1px' }}>
-            © {new Date().getFullYear()} Silk Haus Elite Studio. All rights reserved.
+            © {new Date().getFullYear()} Silk Haus. All rights reserved.
           </Text>
         </Container>
       </Body>

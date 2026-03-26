@@ -40,10 +40,8 @@ export const Footer = () => {
             <ul className="space-y-3">
               {[
                 { label: "All Collections", href: "/shop" },
-                { label: "HD Lace Frontals", href: "/shop" },
-                { label: "Glueless Wigs", href: "/shop" },
-                { label: "Raw Bundles", href: "/shop" },
-                { label: "Closure Wigs", href: "/shop" },
+                { label: "Closure", href: "/shop?category=Closure" },
+                { label: "Frontals", href: "/shop?category=Frontals" },
               ].map(l => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-[13px] text-white/50 hover:text-white transition-colors">{l.label}</Link>
@@ -57,9 +55,7 @@ export const Footer = () => {
               {[
                 { label: "About Silk Haus", href: "/about" },
                 { label: "Our Story", href: "/about" },
-                { label: "Sustainability", href: "/about" },
-                { label: "Careers", href: "/contact" },
-                { label: "Press", href: "/contact" },
+                { label: "Contact Us", href: "/contact" },
               ].map(l => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-[13px] text-white/50 hover:text-white transition-colors">{l.label}</Link>

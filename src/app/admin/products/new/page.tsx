@@ -34,14 +34,22 @@ export default function NewProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.category_id) {
-      alert("Please select a category");
-      return;
-    }
+    
+    // Validation
+    if (!formData.name.trim()) return alert("Product name is required.");
+    if (!formData.base_price || parseFloat(formData.base_price) <= 0) return alert("A valid base price greater than 0 is required.");
+    if (!formData.category_id) return alert("Please select a collection.");
+    if (!formData.images[0]?.url) return alert("At least one product image is required.");
+    if (formData.variants.length === 0) return alert("At least one product variant is required.");
+    if (formData.variants.some(v => !v.sku.trim())) return alert("All variants must have a valid SKU.");
+    
+    const slug = formData.slug.trim() || formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
     setLoading(true);
     try {
       await createProduct({
         ...formData,
+        slug,
         base_price: parseFloat(formData.base_price),
       });
       router.push("/admin/products");
