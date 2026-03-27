@@ -10,7 +10,7 @@ function VerifyEmailContent() {
   const next = searchParams.get("next") || "/dashboard";
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center font-sans text-white transition-colors duration-700">
+    <div suppressHydrationWarning className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center font-sans text-white transition-colors duration-700">
       <div className="text-center space-y-12 max-w-xl px-6 animate-in fade-in slide-in-from-bottom-8 duration-1000">
         <Link href="/" className="inline-block group mb-4">
            <div className="w-20 h-20 bg-[#D5A754]/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-[#D5A754]/20 group-hover:scale-110 transition-transform">

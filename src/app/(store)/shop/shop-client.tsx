@@ -10,7 +10,15 @@ import { useEffect, useState } from "react";
 
 import { Price } from "@/components/storefront/price";
 
-export default function ShopClient({ product }: { product: any }) {
+interface Product {
+  id: string;
+  name: string;
+  base_price?: number;
+  image?: string;
+  category?: string;
+}
+
+export default function ShopClient({ product }: { product: Product }) {
   const [mounted, setMounted] = useState(false);
   const { toggleItem, isInWishlist } = useWishlistStore();
   const { addItem } = useCartStore();
@@ -35,8 +43,8 @@ export default function ShopClient({ product }: { product: any }) {
     addItem({
       id: product.id,
       name: product.name,
-      price: product.base_price,
-      image: product.image,
+      price: product.base_price || 0,
+      image: product.image || '/placeholder.png',
       quantity: 1,
     });
     toast.success("Added to Bag", {
@@ -51,9 +59,9 @@ export default function ShopClient({ product }: { product: any }) {
     toggleItem({
       id: product.id,
       name: product.name,
-      price: product.base_price,
-      image: product.image,
-      category: product.category,
+      price: product.base_price || 0,
+      image: product.image || '/placeholder.png',
+      category: product.category || 'Product',
     });
     if (beingAdded) {
       toast.success("Added to Wishlist", {
@@ -69,12 +77,12 @@ export default function ShopClient({ product }: { product: any }) {
   return (
     <div className="reveal group cursor-pointer flex flex-col">
       <Link href={`/shop/${product.id}`} className="relative aspect-[3/4] bg-[#FAF9F6] border border-gray-50 overflow-hidden rounded-[16px] sm:rounded-[20px] md:rounded-[24px] mb-5 sm:mb-8 shadow-sm">
-        <Image 
-          src={product.image} 
-          alt={product.name} 
+        <Image
+          src={product.image || '/placeholder.png'}
+          alt={product.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="w-full h-full object-cover transition-transform duration-[1s] ease-out group-hover:scale-110" 
+          className="w-full h-full object-cover transition-transform duration-[1s] ease-out group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
         
@@ -103,7 +111,7 @@ export default function ShopClient({ product }: { product: any }) {
         <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-white mb-1">{product.name}</h3>
         <p className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold mb-4">{product.category} • SILK HAUS</p>
         <div className="text-[16px] font-serif italic text-white">
-          <Price amount={product.base_price} />
+          <Price amount={product.base_price || 0} />
         </div>
       </div>
     </div>

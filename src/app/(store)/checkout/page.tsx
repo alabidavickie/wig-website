@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/store/useCartStore";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, Lock, ArrowLeft, CheckCircle, Globe2 } from "lucide-react";
+import { ShieldCheck, Lock, ArrowLeft, Globe2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useGeoStore } from "@/lib/store/useGeoStore";
 import { Price } from "@/components/storefront/price";
@@ -93,10 +94,11 @@ export default function CheckoutPage() {
       if (data.url) {
         window.location.href = data.url;
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Something went wrong. Please try again.";
       console.error("Checkout Error:", error);
       toast.error("Checkout Failed", {
-        description: error.message || "Something went wrong. Please try again.",
+        description: errorMessage,
       });
       setSubmitting(false);
     }
@@ -213,8 +215,8 @@ export default function CheckoutPage() {
               <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
                 {items.map((item, i) => (
                   <div key={i} className="flex gap-4 items-center">
-                    <div className="w-14 h-18 bg-white border border-gray-100 overflow-hidden rounded-lg shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-14 h-18 bg-white border border-gray-100 overflow-hidden rounded-lg shrink-0 relative">
+                      <Image src={item.image} alt={item.name} fill sizes="56px" className="object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[11px] font-bold uppercase tracking-widest truncate text-white">{item.name}</p>

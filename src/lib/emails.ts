@@ -14,10 +14,14 @@ function getResend() {
   return resendInstance;
 }
 
-// Replace this with the actual verified domain email from Resend (e.g., support@silkhaus.com)
-// If testing without a domain, use the default Resend testing email (onboarding@resend.dev) but it only goes to the owner's email address.
-const SENDER_EMAIL = 'onboarding@resend.dev'; 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@silkhaus.com"; // Configurable admin email
+// Configurable sender email via env var. For production, verify a custom domain on Resend
+// (e.g., noreply@silkhaus.com). For testing, use 'onboarding@resend.dev' (only sends to account owner).
+const SENDER_EMAIL = process.env.SENDER_EMAIL || '0xdavick@gmail.com';
+
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+if (!ADMIN_EMAIL && process.env.NODE_ENV === "production") {
+  console.error("CRITICAL: ADMIN_EMAIL environment variable is not set. Admin payment notifications will not be sent.");
+}
 
 export async function sendOrderStatusUpdate(toEmail: string, customerName: string, orderId: string, status: string) {
   try {
@@ -36,13 +40,17 @@ export async function sendOrderStatusUpdate(toEmail: string, customerName: strin
 }
 
 export async function sendAdminPaymentReceived(customerEmail: string, orderId: string, amount: number, currency: string) {
+  if (!ADMIN_EMAIL) {
+    console.error("sendAdminPaymentReceived: ADMIN_EMAIL is not configured, skipping admin notification.");
+    return;
+  }
   try {
     const resend = getResend();
     if (!resend) return;
 
     await resend.emails.send({
       from: `Silk Haus System <${SENDER_EMAIL}>`,
-      to: ADMIN_EMAIL, // Should configure actual admin email in prod
+      to: ADMIN_EMAIL,
       subject: `PAYMENT RECEIVED: ${currency.toUpperCase()} ${amount}`,
       react: AdminPaymentEmail({ customerEmail, orderId, amount, currency }) as any,
     });

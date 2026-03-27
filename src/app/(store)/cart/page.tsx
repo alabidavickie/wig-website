@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Minus, Plus, X, ArrowRight, ShieldCheck, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/lib/store/useCartStore";
@@ -72,8 +73,8 @@ export default function CartPage() {
                 const variantKey = item.variant ? `${item.id}-${item.variant.length}-${item.variant.color}` : undefined;
                 return (
                   <div key={variantKey || item.id} className="reveal flex flex-col sm:flex-row gap-6 md:gap-10 group pb-12 border-b border-[#2A2A2D] last:border-0" suppressHydrationWarning>
-                    <div className="w-full sm:w-32 md:w-48 aspect-[3/4] bg-[#141414] overflow-hidden shrink-0 rounded-[24px] md:rounded-[32px] border border-[#2A2A2D] shadow-sm transition-transform duration-500 group-hover:scale-[1.02]">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-full sm:w-32 md:w-48 aspect-[3/4] bg-[#141414] overflow-hidden shrink-0 rounded-[24px] md:rounded-[32px] border border-[#2A2A2D] shadow-sm transition-transform duration-500 group-hover:scale-[1.02] relative">
+                      <Image src={item.image} alt={item.name} fill sizes="(max-width: 640px) 100vw, 192px" className="object-cover" />
                     </div>
                     
                     <div className="flex-1 flex flex-col pt-0 sm:pt-4" suppressHydrationWarning>

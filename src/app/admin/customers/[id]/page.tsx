@@ -8,13 +8,32 @@ import { ArrowLeft, UserCircle, Mail, Calendar, DollarSign, Ban, RefreshCcw, Loa
 import Link from "next/link";
 import { format } from "date-fns";
 
+interface Customer {
+  id: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  is_suspended?: boolean;
+  role?: string;
+  created_at?: string;
+}
+
+interface Order {
+  id: string;
+  email: string;
+  status: string;
+  total_amount: number;
+  currency: string;
+  created_at: string;
+}
+
 export default function AdminCustomerProfilePage() {
   const params = useParams();
   const router = useRouter();
   const supabase = createClient();
-  
-  const [customer, setCustomer] = useState<any>(null);
-  const [orders, setOrders] = useState<any[]>([]);
+
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   
   const [suspending, setSuspending] = useState(false);
@@ -48,11 +67,13 @@ export default function AdminCustomerProfilePage() {
   }, [params.id, supabase]);
 
   const handleToggleSuspend = async () => {
+    if (!customer) return;
+
     const newStatus = !customer.is_suspended;
     const action = newStatus ? "suspend" : "reactivate";
-    
+
     if (!window.confirm(`Are you sure you want to ${action} this customer?`)) return;
-    
+
     setSuspending(true);
     try {
       await suspendCustomer(customer.id, newStatus);
@@ -67,8 +88,9 @@ export default function AdminCustomerProfilePage() {
   };
 
   const handlePasswordReset = async () => {
+    if (!customer) return;
     if (!window.confirm(`Send password reset link to ${customer.email}?`)) return;
-    
+
     setSendingReset(true);
     try {
       await sendPasswordReset(customer.email);

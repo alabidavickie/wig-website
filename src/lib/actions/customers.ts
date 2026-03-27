@@ -1,10 +1,20 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { logAdminAction } from "@/lib/actions/audit";
 
+async function requireAdmin() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") throw new Error("Unauthorized");
+}
+
 export async function suspendCustomer(userId: string, suspend: boolean) {
+  await requireAdmin();
   const supabase = createAdminClient();
   
   // Try to update is_suspended in profiles database
@@ -43,6 +53,7 @@ export async function suspendCustomer(userId: string, suspend: boolean) {
 }
 
 export async function sendPasswordReset(email: string) {
+  await requireAdmin();
   const supabase = createAdminClient();
   
   const { error } = await supabase.auth.admin.generateLink({

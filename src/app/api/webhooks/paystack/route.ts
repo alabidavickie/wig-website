@@ -44,6 +44,7 @@ export async function POST(req: Request) {
     return new NextResponse("Webhook received", { status: 200 });
   } catch (error: any) {
     console.error("[PAYSTACK_WEBHOOK_ERROR]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    // Return 200 so Paystack does not retry — log the error internally for investigation
+    return new NextResponse("Webhook processing error logged", { status: 200 });
   }
 }

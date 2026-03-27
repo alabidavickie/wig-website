@@ -243,8 +243,18 @@ export async function getAllOrders() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("Error fetching all orders:", error);
-    return [];
+    console.error("Error fetching all orders (Primary):", JSON.stringify(error, null, 2));
+    // Fallback: try fetching orders without the join in case the order_items relationship is missing
+    const { data: ordersOnly, error: fallbackError } = await adminClient
+      .from("orders")
+      .select("*")
+      .order("created_at", { ascending: false });
+      
+    if (fallbackError) {
+      console.error("Error fetching all orders (Fallback):", JSON.stringify(fallbackError, null, 2));
+      return [];
+    }
+    return (ordersOnly ?? []).map((order: any) => ({ ...order, order_items: [] }));
   }
   return data;
 }
@@ -254,34 +264,46 @@ export async function getAllOrders() {
  */
 export async function getOrdersByUserId(userId: string) {
   if (!userId) return [];
-  
-  const supabase = await createClient();
-  
-  // SECURE: Check if current user is the owner or an admin
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return [];
-    
-    // Authorization logic...
-    
-    try {
-      const { data, error } = await supabase
-        .from("orders")
-        .select(`
-          *,
-          order_items (*)
-        `)
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Database error fetching user orders:", error);
-        return [] as OrderWithItems[];
-      }
-      return data;
-    } catch (err) {
-      console.error("Unexpected error in getOrdersByUserId:", err);
+  const supabase = await createClient();
+
+  // SECURE: Check if current user is the owner or an admin
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  // Only allow access if the caller is the owner of the account or an admin
+  if (user.id !== userId) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role !== "admin") {
+      console.warn(`Unauthorized access attempt to getOrdersByUserId: user ${user.id} requested orders for ${userId}`);
       return [] as OrderWithItems[];
     }
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("orders")
+      .select(`
+        *,
+        order_items (*)
+      `)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Database error fetching user orders:", error);
+      return [] as OrderWithItems[];
+    }
+    return data;
+  } catch (err) {
+    console.error("Unexpected error in getOrdersByUserId:", err);
+    return [] as OrderWithItems[];
+  }
 }
 
 /**
@@ -380,6 +402,12 @@ export async function getOrderById(id: string) {
  * Updates an order tracking information
  */
 export async function updateOrderTracking(orderId: string, trackingInfo: { tracking_number: string; tracking_url?: string }) {
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+  const { data: profile } = await userClient.from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") throw new Error("Unauthorized");
+
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("orders")
@@ -404,8 +432,14 @@ export async function updateOrderTracking(orderId: string, trackingInfo: { track
  * Processes a refund for an order (Mock implementation)
  */
 export async function processRefund(orderId: string, amount: number) {
+  const userClient = await createClient();
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+  const { data: profile } = await userClient.from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") throw new Error("Unauthorized");
+
   const supabase = createAdminClient();
-  
+
   // In a real app, call Stripe or Paystack API here
   
   const { data, error } = await supabase

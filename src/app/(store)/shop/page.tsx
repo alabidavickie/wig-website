@@ -1,12 +1,19 @@
 import Link from "next/link";
-import { Filter, ChevronDown, ChevronRight, Heart, ShoppingBag, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Filter, ChevronDown, ChevronRight } from "lucide-react";
 import { getProducts } from "@/lib/actions/products";
 import ShopClient from "./shop-client";
 
+interface Product {
+  id: string;
+  name: string;
+  base_price?: number;
+  image?: string;
+  category?: string;
+}
+
 export default async function ShopPage() {
   const productsResult = await getProducts();
-  
+
   // Ensure we have an array even if something fails
   const products = Array.isArray(productsResult) ? productsResult : [];
 
@@ -88,7 +95,7 @@ export default async function ShopPage() {
                   No products have been curated for this collection yet.
                </div>
             ) : (
-               products.map((product: any) => (
+               products.map((product: Product) => (
                  <ShopClient key={product.id} product={product} />
                ))
             )}

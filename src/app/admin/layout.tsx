@@ -3,18 +3,19 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingBag, 
-  Users, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingBag,
+  Users,
+  BarChart3,
   Settings,
   LogOut,
   Bell,
   Tag,
   Menu,
-  X
+  X,
+  FileEdit
 } from "lucide-react";
 
 export default function AdminLayout({
@@ -40,6 +41,7 @@ export default function AdminLayout({
     { label: "Orders", icon: ShoppingBag, href: "/admin/orders" },
     { label: "Customers", icon: Users, href: "/admin/customers" },
     { label: "Analytics", icon: BarChart3, href: "/admin/analytics" },
+    { label: "Content", icon: FileEdit, href: "/admin/content" },
     { label: "Settings", icon: Settings, href: "/admin/settings" },
   ];
 

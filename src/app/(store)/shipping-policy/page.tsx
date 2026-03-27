@@ -1,40 +1,43 @@
 import Link from "next/link";
+import { getSiteContent } from "@/lib/actions/content";
 
-export default function ShippingPolicyPage() {
-  const policies = [
-    {
-      title: "Processing Time",
-      content: "1–3 working days after payment confirmation."
-    },
-    {
-      title: "Delivery Times",
-      items: [
-        "Nigeria: 2–5 working days",
-        "UK: 2–5 working days",
-        "International (e.g., US): 5–10 working days"
-      ]
-    },
-    {
-      title: "Shipping Fees",
-      content: "Calculated at checkout based on your location and order weight."
-    },
-    {
-      title: "Tracking",
-      content: "Sent via email/SMS once your order is dispatched."
-    },
-    {
-      title: "Delays",
-      content: "We are not responsible for courier delays or customs issues."
-    },
-    {
-      title: "Incorrect Address",
-      content: "Please check carefully—wrong addresses may not be recoverable once the order has been processed."
-    },
-    {
-      title: "Lost/Damaged Items",
-      content: "Contact us within 48 hours of delivery with photos/videos of the package and items."
-    }
-  ];
+const FALLBACK = `Processing Time
+1–3 working days after payment confirmation.
+
+Delivery Times
+Nigeria: 2–5 working days
+UK: 2–5 working days
+International (e.g., US): 5–10 working days
+
+Shipping Fees
+Calculated at checkout based on your location and order weight.
+
+Tracking
+Sent via email/SMS once your order is dispatched.
+
+Delays
+We are not responsible for courier delays or customs issues.
+
+Incorrect Address
+Please check carefully—wrong addresses may not be recoverable once the order has been processed.
+
+Lost/Damaged Items
+Contact us within 48 hours of delivery with photos/videos of the package and items.`;
+
+export default async function ShippingPolicyPage() {
+  const db = await getSiteContent("shipping-policy");
+  const raw = db?.content ?? FALLBACK;
+
+  // Each blank-line-separated block: first line = section title, rest = body text
+  const sections = raw
+    .split(/\n\s*\n/)
+    .map((block) => {
+      const lines = block.split("\n").map((l) => l.trim()).filter(Boolean);
+      if (lines.length === 0) return null;
+      const [title, ...rest] = lines;
+      return { title, body: rest };
+    })
+    .filter(Boolean) as { title: string; body: string[] }[];
 
   return (
     <div className="min-h-screen bg-background text-white font-sans">
@@ -53,25 +56,19 @@ export default function ShippingPolicyPage() {
 
       {/* Content */}
       <div className="max-w-[900px] mx-auto px-6 md:px-12 pb-24 space-y-12">
-        {policies.map((policy) => (
-          <div key={policy.title} className="border-b border-gray-100 pb-10">
+        {sections.map((section) => (
+          <div key={section.title} className="border-b border-gray-100 pb-10">
             <h2 className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#D5A754] mb-6">
-              {policy.title}
+              {section.title}
             </h2>
-            {policy.content && (
-              <p className="text-[15px] text-white/70 leading-relaxed">
-                {policy.content}
-              </p>
-            )}
-            {policy.items && (
-              <ul className="space-y-4">
-                {policy.items.map((item, idx) => (
-                  <li key={idx} className="flex gap-4 items-start">
-                    <span className="text-[#D5A754] font-bold">✦</span>
-                    <span className="text-[15px] text-white/70 leading-relaxed">{item}</span>
-                  </li>
+            {section.body.length > 0 && (
+              <div className="space-y-2">
+                {section.body.map((line, i) => (
+                  <p key={i} className="text-[15px] text-white/70 leading-relaxed">
+                    {line}
+                  </p>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
         ))}

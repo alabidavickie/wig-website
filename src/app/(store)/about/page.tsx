@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Instagram } from "lucide-react";
 
 export default function AboutPage() {
@@ -28,7 +29,7 @@ export default function AboutPage() {
             With roots in Nigeria and a base in the UK, SilkHaus by Follienn represents a bridge between heritage and luxury. Every strand reflects quality, care, and refinement.
           </p>
           <div className="aspect-[4/5] bg-[#FAF9F6] overflow-hidden relative">
-            <img src="/images/ceo.jpg" alt="Follienn — Founder of Silk Haus" className="w-full h-full object-cover" />
+            <Image src="/images/ceo.jpg" alt="Follienn — Founder of Silk Haus" width={400} height={500} className="w-full h-full object-cover" />
             <div className="absolute bottom-6 left-6 bg-white p-4">
               <p className="text-[11px] font-bold uppercase tracking-widest">Founded 2019</p>
               <p className="text-[11px] text-zinc-400 uppercase tracking-widest">Lagos · London · New York</p>
@@ -64,7 +65,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-[400px_1fr] gap-12 lg:gap-20 items-start">
             {/* Founder Photo */}
             <div className="aspect-[3/4] bg-[#1A1A1D] overflow-hidden border border-[#2A2A2D]">
-              <img src="/images/ceo.jpg" alt="Follienn — Founder & CEO" className="w-full h-full object-cover" />
+              <Image src="/images/ceo.jpg" alt="Follienn — Founder & CEO" width={400} height={533} className="w-full h-full object-cover" />
             </div>
             {/* Founder Info */}
             <div className="flex flex-col justify-center">

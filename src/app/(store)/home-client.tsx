@@ -11,7 +11,16 @@ import { cn } from '@/lib/utils';
 
 import { Price } from '@/components/storefront/price';
 
-export default function HomeClient({ products }: { products: any[] }) {
+interface Product {
+  id: string;
+  name: string;
+  base_price?: number;
+  price?: number;
+  image?: string;
+  img?: string;
+}
+
+export default function HomeClient({ products }: { products: Product[] }) {
   const [mounted, setMounted] = useState(false);
   const addItemToCart = useCartStore((state) => state.addItem);
   const { toggleItem, isInWishlist } = useWishlistStore();
@@ -20,14 +29,14 @@ export default function HomeClient({ products }: { products: any[] }) {
     setMounted(true);
   }, []);
 
-  const handleQuickAdd = (e: React.MouseEvent, product: any) => {
+  const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
     e.preventDefault();
     e.stopPropagation();
     addItemToCart({
       id: product.id,
       name: product.name,
       price: product.base_price ? parseFloat(product.base_price.toString().replace(/[^0-9.]/g, '')) : parseFloat(product.price?.toString().replace(/[^0-9.]/g, '') || '0'),
-      image: product.image || product.img,
+      image: product.image || product.img || '/placeholder.png',
       quantity: 1
     });
     toast.success("Added to Bag", {
@@ -35,15 +44,15 @@ export default function HomeClient({ products }: { products: any[] }) {
     });
   };
 
-  const handleToggleWishlist = (e: React.MouseEvent, product: any) => {
+  const handleToggleWishlist = (e: React.MouseEvent, product: Product) => {
     e.preventDefault();
     e.stopPropagation();
     const beingAdded = !isInWishlist(product.id);
     toggleItem({
       id: product.id,
       name: product.name,
-      price: product.base_price || product.price,
-      image: product.image || product.img,
+      price: product.base_price || product.price || 0,
+      image: product.image || product.img || '/placeholder.png',
       category: "Silk Haus Piece"
     });
     if (beingAdded) {
@@ -186,12 +195,12 @@ export default function HomeClient({ products }: { products: any[] }) {
               products.map((product, i) => (
                 <div key={i} className="flex flex-col group cursor-pointer relative">
                   <Link href={`/shop/${product.id}`} className="block overflow-hidden rounded-xl md:rounded-2xl border border-gray-100/50 aspect-[3/4] relative mb-4 md:mb-8">
-                    <Image 
-                      src={product.image || product.img} 
-                      alt={product.name} 
+                    <Image
+                      src={product.image || product.img || '/placeholder.png'}
+                      alt={product.name}
                       fill
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     
@@ -218,7 +227,7 @@ export default function HomeClient({ products }: { products: any[] }) {
                   <Link href={`/shop/${product.id}`}>
                     <h4 className="text-[11px] sm:text-[12px] md:text-[14px] font-bold uppercase tracking-wider md:tracking-widest text-white mb-1 truncate">{product.name}</h4>
                     <div className="text-zinc-300 text-[12px] md:text-[14px] font-medium">
-                      <Price amount={product.base_price || product.price} />
+                      <Price amount={product.base_price || product.price || 0} />
                     </div>
                   </Link>
                 </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin, Clock, Send, Instagram, MessageCircle } from "lucide-react";
+import { Mail, MapPin, Clock, Send, Instagram, MessageCircle } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);

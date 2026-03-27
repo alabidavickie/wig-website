@@ -35,13 +35,32 @@ export default async function AdminCustomersPage() {
     .from("orders")
     .select("id, email, total_amount, currency, status, created_at");
 
-  const customers = (profiles || []).map((profile: any) => {
+  interface Profile {
+    id: string;
+    email: string;
+    first_name?: string;
+    last_name?: string;
+    role?: string;
+    is_suspended?: boolean;
+    created_at?: string;
+  }
+
+  interface Order {
+    id: string;
+    email: string;
+    total_amount: number;
+    currency: string;
+    status: string;
+    created_at: string;
+  }
+
+  const customers = (profiles || []).map((profile: Profile) => {
     const customerOrders = (allOrders || []).filter(
-      (o: any) => o.email === profile.email
+      (o: Order) => o.email === profile.email
     );
     const totalSpent = customerOrders
-      .filter((o: any) => ["paid", "processing", "shipped", "delivered"].includes(o.status))
-      .reduce((sum: number, o: any) => sum + Number(o.total_amount || 0), 0);
+      .filter((o: Order) => ["paid", "processing", "shipped", "delivered"].includes(o.status))
+      .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
     const lastOrder = customerOrders.length > 0 ? customerOrders[0] : null;
 
     return {
@@ -52,9 +71,15 @@ export default async function AdminCustomersPage() {
     };
   });
 
+  interface CustomerWithStats extends Profile {
+    orderCount: number;
+    totalSpent: number;
+    lastOrderDate: string | null;
+  }
+
   const totalCustomers = customers.length;
-  const customersWithOrders = customers.filter((c: any) => c.orderCount > 0).length;
-  const totalLifetimeValue = customers.reduce((sum: number, c: any) => sum + c.totalSpent, 0);
+  const customersWithOrders = customers.filter((c: CustomerWithStats) => c.orderCount > 0).length;
+  const totalLifetimeValue = customers.reduce((sum: number, c: CustomerWithStats) => sum + c.totalSpent, 0);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-20 text-white">
@@ -138,7 +163,7 @@ export default async function AdminCustomersPage() {
                   </td>
                 </tr>
               ) : (
-                customers.map((customer: any) => (
+                customers.map((customer: CustomerWithStats) => (
                   <tr key={customer.id} className="hover:bg-[#2A2A2D]/20 transition-colors group">
                     {/* Name / Avatar */}
                     <td className="px-6 md:px-8 py-5">

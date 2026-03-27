@@ -70,6 +70,8 @@
 }
 
 :root {
+  --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
   --background: oklch(0.145 0 0);    /* #0A0A0A equivalent */
   --foreground: oklch(0.985 0 0);   /* White */
   --card: oklch(0.17 0 0);          /* #141414 equivalent */

@@ -2,8 +2,17 @@ import { getAdminLogs } from "@/lib/actions/audit";
 import { ShieldAlert, Activity, Filter, Clock } from "lucide-react";
 import { format } from "date-fns";
 
+interface AuditLog {
+  id: string;
+  action: string;
+  entity_type: string;
+  entity_id: string;
+  details: Record<string, unknown>;
+  created_at: string;
+}
+
 export default async function AdminAuditLogsPage() {
-  const logs = await getAdminLogs();
+  const logs = await getAdminLogs() as AuditLog[];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-20 text-white max-w-5xl mx-auto">
@@ -57,7 +66,7 @@ export default async function AdminAuditLogsPage() {
                   </td>
                 </tr>
               ) : (
-                logs.map((log: any) => (
+                logs.map((log: AuditLog) => (
                   <tr key={log.id} className="hover:bg-[#2A2A2D]/20 transition-colors font-mono text-[11px]">
                     <td className="px-6 py-5 text-zinc-400 tracking-tight">
                       {format(new Date(log.created_at), "yyyy-MM-dd HH:mm:ss")}

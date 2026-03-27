@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   }
 
   const stripe = new Stripe(stripeSecretKey, {
-    apiVersion: "2026-02-25.clover" as any,
+    apiVersion: "2024-04-10" as Stripe.LatestApiVersion,
   });
 
   try {
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
     return new NextResponse("Webhook received", { status: 200 });
   } catch (error: any) {
     console.error("[STRIPE_WEBHOOK_ERROR]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    // Return 200 so Stripe does not retry — log the error internally for investigation
+    return new NextResponse("Webhook processing error logged", { status: 200 });
   }
 }

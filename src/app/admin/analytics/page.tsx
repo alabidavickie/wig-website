@@ -2,10 +2,40 @@ import { BarChart3, Users, DollarSign, ArrowUpRight, ArrowDownRight, Package, Sh
 import { getAllOrders } from "@/lib/actions/orders";
 import { getProducts, getCategories } from "@/lib/actions/products";
 
+interface Order {
+  id: string;
+  status: string;
+  total_amount: number;
+  created_at: string;
+  email: string;
+  payment_provider?: string;
+  order_items?: OrderItem[];
+}
+
+interface OrderItem {
+  product_id?: string;
+  product_name?: string;
+  product_category?: string;
+  price?: number;
+  quantity?: number;
+}
+
+interface Product {
+  id: string;
+  base_price?: number;
+  category_id?: string;
+  category?: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+}
+
 export default async function AnalyticsPage() {
-  const allOrders = await getAllOrders();
-  const products = await getProducts();
-  const categories = await getCategories();
+  const allOrders = await getAllOrders() as Order[];
+  const products = await getProducts() as Product[];
+  const categories = await getCategories() as Category[];
 
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -16,24 +46,24 @@ export default async function AnalyticsPage() {
 
   // Total Revenue (ALL TIME)
   const totalRevenue = allOrders
-    .filter((o: any) => paidStatuses.includes(o.status))
-    .reduce((sum: number, o: any) => sum + Number(o.total_amount || 0), 0);
+    .filter((o: Order) => paidStatuses.includes(o.status))
+    .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
 
   // Revenue This Month
   const startOfMonth = new Date(currentYear, currentMonth, 1);
   const revenueThisMonth = allOrders
-    .filter((o: any) => new Date(o.created_at) >= startOfMonth && paidStatuses.includes(o.status))
-    .reduce((sum: number, o: any) => sum + Number(o.total_amount || 0), 0);
+    .filter((o: Order) => new Date(o.created_at) >= startOfMonth && paidStatuses.includes(o.status))
+    .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
 
   // Revenue Last Month (for comparison)
   const startOfLastMonth = new Date(currentYear, currentMonth - 1, 1);
   const endOfLastMonth = new Date(currentYear, currentMonth, 0);
   const revenueLastMonth = allOrders
-    .filter((o: any) => {
+    .filter((o: Order) => {
       const d = new Date(o.created_at);
       return d >= startOfLastMonth && d <= endOfLastMonth && paidStatuses.includes(o.status);
     })
-    .reduce((sum: number, o: any) => sum + Number(o.total_amount || 0), 0);
+    .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
 
   const revenueChange = revenueLastMonth > 0
     ? (((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 100).toFixed(1)
@@ -41,10 +71,10 @@ export default async function AnalyticsPage() {
 
   // Total Orders
   const totalOrders = allOrders.length;
-  const ordersThisMonth = allOrders.filter((o: any) => new Date(o.created_at) >= startOfMonth).length;
+  const ordersThisMonth = allOrders.filter((o: Order) => new Date(o.created_at) >= startOfMonth).length;
 
   // Unique Customers
-  const uniqueCustomers = new Set(allOrders.map((o: any) => o.email)).size;
+  const uniqueCustomers = new Set(allOrders.map((o: Order) => o.email)).size;
 
   // Average Order Value
   const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
@@ -84,9 +114,9 @@ export default async function AnalyticsPage() {
   const categoryRevenue: Record<string, number> = {};
   const categorySales: Record<string, number> = {};
 
-  allOrders.forEach((order: any) => {
+  allOrders.forEach((order: Order) => {
     if (!paidStatuses.includes(order.status)) return;
-    order.order_items?.forEach((item: any) => {
+    order.order_items?.forEach((item: OrderItem) => {
       const cat = item.product_category || "Uncategorised";
       categoryRevenue[cat] = (categoryRevenue[cat] || 0) + Number(item.price || 0) * Number(item.quantity || 1);
       categorySales[cat] = (categorySales[cat] || 0) + Number(item.quantity || 1);
@@ -95,9 +125,9 @@ export default async function AnalyticsPage() {
 
   // Fallback to product categories if order items don't have category info
   if (Object.keys(categoryRevenue).length === 0) {
-    categories.forEach((cat: any) => {
-      const catProducts = products.filter((p: any) => p.category_id === cat.id || p.category === cat.name);
-      categoryRevenue[cat.name] = catProducts.reduce((sum: number, p: any) => sum + Number(p.base_price || 0), 0);
+    categories.forEach((cat: Category) => {
+      const catProducts = products.filter((p: Product) => p.category_id === cat.id || p.category === cat.name);
+      categoryRevenue[cat.name] = catProducts.reduce((sum: number, p: Product) => sum + Number(p.base_price || 0), 0);
       categorySales[cat.name] = catProducts.length;
     });
   }
@@ -109,7 +139,7 @@ export default async function AnalyticsPage() {
 
   // ── Monthly Revenue Chart (Live) ─────────────────
   const monthlyRevenue = new Array(12).fill(0);
-  allOrders.forEach((order: any) => {
+  allOrders.forEach((order: Order) => {
     const d = new Date(order.created_at);
     if (d.getFullYear() === currentYear && paidStatuses.includes(order.status)) {
       monthlyRevenue[d.getMonth()] += Number(order.total_amount || 0);
@@ -120,8 +150,8 @@ export default async function AnalyticsPage() {
   // ── Payment Provider Split (Live) ────────────────
   const providerTotals: Record<string, number> = {};
   allOrders
-    .filter((o: any) => paidStatuses.includes(o.status))
-    .forEach((o: any) => {
+    .filter((o: Order) => paidStatuses.includes(o.status))
+    .forEach((o: Order) => {
       const provider = o.payment_provider || "unknown";
       providerTotals[provider] = (providerTotals[provider] || 0) + Number(o.total_amount || 0);
     });
@@ -129,10 +159,10 @@ export default async function AnalyticsPage() {
 
   // ── Top Products by Revenue (Live) ───────────────
   const productRevenue: Record<string, { name: string; revenue: number; qty: number }> = {};
-  allOrders.forEach((order: any) => {
+  allOrders.forEach((order: Order) => {
     if (!paidStatuses.includes(order.status)) return;
-    order.order_items?.forEach((item: any) => {
-      const key = item.product_id || item.product_name;
+    order.order_items?.forEach((item: OrderItem) => {
+      const key = item.product_id || item.product_name || 'unknown';
       if (!productRevenue[key]) {
         productRevenue[key] = { name: item.product_name || "Unknown", revenue: 0, qty: 0 };
       }

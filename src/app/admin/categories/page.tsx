@@ -4,8 +4,15 @@ import { useState, useEffect } from "react";
 import { Plus, Trash2, Tag, Loader2, Check } from "lucide-react";
 import { getCategories, createCategory, deleteCategory } from "@/lib/actions/products";
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+}
+
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "", slug: "", description: "" });
@@ -142,7 +149,7 @@ export default function AdminCategoriesPage() {
                 </td>
               </tr>
             ) : (
-                  categories.map((cat) => (
+                  categories.map((cat: Category) => (
                     <tr key={cat.id} className="hover:bg-[#1A1A1D] transition-colors group">
                       <td className="px-8 py-5">
                         <div className="flex items-center gap-3">

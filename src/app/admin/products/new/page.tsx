@@ -197,28 +197,45 @@ export default function NewProductPage() {
             <div className="space-y-6">
               {formData.variants.map((variant, idx) => (
                 <div key={idx} className="p-6 border border-[#2A2A2D] flex flex-col md:flex-row gap-6 items-end bg-[#0A0A0A]/50 relative rounded-sm group/var">
-                  <div className="flex-1 space-y-3">
-                    <label className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">Variant Name</label>
-                    <input 
-                      required
-                      value={variant.name}
-                      onChange={(e) => {
-                        const newVariants = [...formData.variants];
-                        newVariants[idx].name = e.target.value;
-                        setFormData({...formData, variants: newVariants});
-                      }}
-                      className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#0A0A0A] focus:border-[#D5A754] outline-none transition-colors" 
-                      placeholder="e.g. 24 inch / Straight" 
-                    />
+                  <div className="flex-1 grid grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">Variant Name</label>
+                      <input 
+                        required
+                        value={variant.name}
+                        onChange={(e) => {
+                          const newVariants = [...formData.variants];
+                          newVariants[idx].name = e.target.value;
+                          setFormData({...formData, variants: newVariants});
+                        }}
+                        className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#0A0A0A] focus:border-[#D5A754] outline-none transition-colors" 
+                        placeholder="e.g. 24 inch / Straight" 
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">SKU</label>
+                      <input 
+                        required
+                        value={variant.sku}
+                        onChange={(e) => {
+                          const newVariants = [...formData.variants];
+                          newVariants[idx].sku = e.target.value;
+                          setFormData({...formData, variants: newVariants});
+                        }}
+                        className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#0A0A0A] focus:border-[#D5A754] outline-none transition-colors" 
+                        placeholder="e.g. SH-FRONTAL-24" 
+                      />
+                    </div>
                   </div>
                   <div className="w-32 space-y-3">
                     <label className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">Stock Count</label>
                     <input 
                       type="number" 
-                      value={variant.inventory_count}
+                      value={variant.inventory_count ?? 0}
                       onChange={(e) => {
                         const newVariants = [...formData.variants];
-                        newVariants[idx].inventory_count = parseInt(e.target.value);
+                        const val = parseInt(e.target.value);
+                        newVariants[idx].inventory_count = isNaN(val) ? 0 : val;
                         setFormData({...formData, variants: newVariants});
                       }}
                       className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#0A0A0A] focus:border-[#D5A754] outline-none" 

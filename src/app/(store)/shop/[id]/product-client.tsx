@@ -10,8 +10,27 @@ import { Heart, Share2, ShieldCheck, Truck } from 'lucide-react';
 
 import { Price } from "@/components/storefront/price";
 
-export default function ProductClient({ product }: { product: any }) {
-  const [selectedVariant, setSelectedVariant] = useState<any>(product.variants?.[0] || null);
+interface ProductVariant {
+  id: string;
+  name: string;
+  price_override?: number;
+  attributes?: Record<string, unknown>;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price?: number;
+  base_price?: number;
+  category: string;
+  description?: string;
+  image?: string;
+  images?: string[];
+  variants?: ProductVariant[];
+}
+
+export default function ProductClient({ product }: { product: Product }) {
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(product.variants?.[0] || null);
   const [isAdded, setIsAdded] = useState(false);
   
   const addItem = useCartStore((state) => state.addItem);
@@ -33,13 +52,10 @@ export default function ProductClient({ product }: { product: any }) {
     addItem({
       id: product.id,
       name: product.name,
-      price: selectedVariant?.price_override || product.base_price || product.price,
-      image: product.image || product.images?.[0],
+      price: selectedVariant?.price_override || product.base_price || product.price || 0,
+      image: product.image || product.images?.[0] || '/placeholder.png',
       quantity: 1,
-      variant: selectedVariant ? {
-        name: selectedVariant.name,
-        ...selectedVariant.attributes
-      } : undefined,
+      variant: selectedVariant?.attributes,
     });
     
     toast.success("Added to Bag", {
@@ -67,7 +83,7 @@ export default function ProductClient({ product }: { product: any }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-12 lg:gap-20" suppressHydrationWarning>
           <div className="space-y-6 reveal">
-            {(product.images || [product.image]).map((src: string, idx: number) => (
+            {(product.images || [product.image]).filter((src): src is string => Boolean(src)).map((src: string, idx: number) => (
               <div key={idx} className="bg-[#FAF9F6] aspect-[3/4] overflow-hidden rounded-[32px] border border-gray-100/50 group relative">
                 <Image
                   src={src}
@@ -90,7 +106,7 @@ export default function ProductClient({ product }: { product: any }) {
                 </h1>
               </div>
               <div className="text-xl md:text-2xl font-serif text-white">
-                <Price amount={selectedVariant?.price_override || product.base_price || product.price} />
+                <Price amount={selectedVariant?.price_override || product.base_price || product.price || 0} />
               </div>
             </div>
 
@@ -110,11 +126,11 @@ export default function ProductClient({ product }: { product: any }) {
             </div>
 
             <div className="space-y-10">
-              {product.variants.length > 0 && (
+              {product.variants && product.variants.length > 0 && (
                 <div className="space-y-4">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Select Options</label>
                   <div className="flex flex-wrap gap-3">
-                    {product.variants.map((v: any) => (
+                    {product.variants.map((v: ProductVariant) => (
                       <button
                         key={v.id}
                         onClick={() => setSelectedVariant(v)}

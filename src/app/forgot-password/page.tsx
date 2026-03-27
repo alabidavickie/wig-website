@@ -28,28 +28,28 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center py-12 px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-[#0A0A0A] flex flex-col justify-center py-12 px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/login" className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-8 hover:text-white transition-colors">
           <ArrowLeft className="w-3 h-3" /> Back to Login
         </Link>
         <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-white mb-8 text-center w-full">SILK HAUS</h1>
         <h2 className="text-[14px] uppercase tracking-widest font-bold text-white">Forgot Password</h2>
-        <p className="mt-2 text-[12px] text-zinc-300 uppercase tracking-widest">
-          Enter your email and we'll send you a recovery link
+        <p className="mt-2 text-[12px] text-zinc-400 uppercase tracking-widest">
+          Enter your email and we&apos;ll send you a recovery link
         </p>
       </div>
 
       <div className="mt-12 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 border border-gray-100 sm:px-10">
+        <div className="bg-[#141414] py-8 px-4 border border-[#2A2A2D] sm:px-10">
           <form action={handleSubmit} className="space-y-8">
             {error && (
-              <div className="bg-red-50 text-red-600 text-[11px] p-4 uppercase tracking-widest font-bold border-l-2 border-red-600">
+              <div className="bg-red-500/10 text-red-400 text-[11px] p-4 uppercase tracking-widest font-bold border-l-2 border-red-500">
                 {error}
               </div>
             )}
             {success && (
-              <div className="bg-emerald-50 text-emerald-600 text-[11px] p-4 uppercase tracking-widest font-bold border-l-2 border-emerald-600">
+              <div className="bg-emerald-500/10 text-emerald-400 text-[11px] p-4 uppercase tracking-widest font-bold border-l-2 border-emerald-500">
                 {success}
               </div>
             )}
@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="rounded-none border-gray-200 h-12 text-[13px] focus-visible:ring-[#1A1A1D] bg-[#FAF9F6]"
+                className="rounded-none border-[#2A2A2D] h-12 text-[13px] focus-visible:ring-[#D5A754] bg-[#0A0A0A] text-white placeholder:text-zinc-600"
                 placeholder="EMAIL@EXAMPLE.COM"
               />
             </div>
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={pending}
-              className="w-full bg-[#1A1A1D] text-white hover:bg-black py-7 rounded-none text-[13px] uppercase tracking-[0.2em] font-medium transition-all"
+              className="w-full bg-white text-black hover:bg-[#D5A754] py-7 rounded-none text-[13px] uppercase tracking-[0.2em] font-medium transition-all disabled:bg-zinc-800 disabled:text-zinc-500"
             >
               {pending ? "Sending..." : "Send Recovery Link"}
             </Button>

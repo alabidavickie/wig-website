@@ -15,40 +15,65 @@ import { getAllOrders } from "@/lib/actions/orders";
 import Image from "next/image";
 import { format } from "date-fns";
 
+interface Order {
+  id: string;
+  email: string;
+  status: string;
+  total_amount: number;
+  currency: string;
+  payment_provider?: string;
+  created_at: string;
+  order_items?: OrderItem[];
+}
+
+interface OrderItem {
+  quantity: number;
+  product_name: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  image?: string;
+  category?: string;
+  base_price: number;
+  stock?: number;
+}
+
 export default async function AdminDashboardPage() {
-  const products = await getProducts();
+  const products = await getProducts() as Product[];
   const categories = await getCategories();
-  const allOrders = await getAllOrders();
+  const allOrders = await getAllOrders() as Order[];
 
   const now = new Date();
   
   // 1. Orders Today
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const ordersToday = allOrders.filter((o: any) => new Date(o.created_at) >= startOfDay);
+  const ordersToday = allOrders.filter((o: Order) => new Date(o.created_at) >= startOfDay);
   const ordersTodayCount = ordersToday.length;
 
   // 2. Orders Awaiting Dispatch
-  const awaitingDispatchCount = allOrders.filter((o: any) => o.status === "paid" || o.status === "processing").length;
+  const awaitingDispatchCount = allOrders.filter((o: Order) => o.status === "paid" || o.status === "processing").length;
 
   // 3. Revenue This Month
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const revenueThisMonth = allOrders
-    .filter((o: any) => new Date(o.created_at) >= startOfMonth && ["paid", "processing", "shipped", "delivered"].includes(o.status))
-    .reduce((sum: number, o: any) => sum + Number(o.total_amount || 0), 0);
+    .filter((o: Order) => new Date(o.created_at) >= startOfMonth && ["paid", "processing", "shipped", "delivered"].includes(o.status))
+    .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
 
   // 4. Low Stock Alert
-  const lowStockCount = products.filter((p: any) => Number(p.stock) <= 5).length;
+  const lowStockCount = products.filter((p: Product) => Number(p.stock) <= 5).length;
 
   // 5. New Customers This Week
   const startOfWeek = new Date(now);
   startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
   startOfWeek.setHours(0,0,0,0);
-  const recentOrderCustomers = allOrders.filter((o: any) => new Date(o.created_at) >= startOfWeek);
-  const newCustomersWeekCount = new Set(recentOrderCustomers.map((o: any) => o.email)).size;
+  const recentOrderCustomers = allOrders.filter((o: Order) => new Date(o.created_at) >= startOfWeek);
+  const newCustomersWeekCount = new Set(recentOrderCustomers.map((o: Order) => o.email)).size;
 
   // 6. Newsletter Subscriber Count
   // Without a direct subscribers table, using unique customer count as a proxy base
-  const uniqueEmails = new Set(allOrders.map((o: any) => o.email));
+  const uniqueEmails = new Set(allOrders.map((o: Order) => o.email));
   const subscriberCount = uniqueEmails.size > 0 ? uniqueEmails.size * 2 + 15 : 0; 
 
   const stats = [
@@ -250,9 +275,9 @@ export default async function AdminDashboardPage() {
                   </td>
                 </tr>
               ) : (
-                recentOrders.map((order: any) => {
-                  const itemCount = order.order_items?.reduce((acc: number, item: any) => acc + item.quantity, 0) || 0;
-                  const productsPreview = order.order_items?.map((item: any) => item.product_name).join(", ") || "—";
+                recentOrders.map((order: Order) => {
+                  const itemCount = order.order_items?.reduce((acc: number, item: OrderItem) => acc + item.quantity, 0) || 0;
+                  const productsPreview = order.order_items?.map((item: OrderItem) => item.product_name).join(", ") || "—";
                   return (
                     <tr key={order.id} className="hover:bg-[#2A2A2D]/20 transition-colors group">
                       <td className="px-8 py-6 text-[12px] font-bold tracking-tighter font-mono text-zinc-400 group-hover:text-white transition-colors">

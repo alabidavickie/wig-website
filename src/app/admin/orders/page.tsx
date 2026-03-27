@@ -4,8 +4,25 @@ import { getAllOrders } from "@/lib/actions/orders";
 import { OrderStatusSelector } from "@/components/admin/order-status-selector";
 import Link from "next/link";
 
+interface OrderItem {
+  quantity: number;
+  product_name: string;
+}
+
+interface Order {
+  id: string;
+  email: string;
+  status: string;
+  total_amount: number;
+  currency: string;
+  payment_provider?: string;
+  created_at: string;
+  order_items: OrderItem[];
+  is_guest?: boolean;
+}
+
 export default async function AdminOrdersPage() {
-  const orders = await getAllOrders();
+  const orders = await getAllOrders() as Order[];
 
   // Helper to get status styles
   const getStatusInfo = (status: string) => {
@@ -39,10 +56,10 @@ export default async function AdminOrdersPage() {
       {/* Stats Quick View — Live from DB */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Pending", value: orders.filter((o: any) => o.status === "pending").length.toString().padStart(2, "0"), icon: Clock, color: "text-amber-400", bg: "bg-amber-400/5", border: "border-amber-400/20" },
-          { label: "Processing", value: orders.filter((o: any) => o.status === "paid" || o.status === "processing").length.toString().padStart(2, "0"), icon: Package, color: "text-blue-400", bg: "bg-blue-400/5", border: "border-blue-400/20" },
-          { label: "Shipped", value: orders.filter((o: any) => o.status === "shipped").length.toString().padStart(2, "0"), icon: Truck, color: "text-purple-400", bg: "bg-purple-400/5", border: "border-purple-400/20" },
-          { label: "Fulfilled", value: orders.filter((o: any) => o.status === "delivered").length.toString(), icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-400/5", border: "border-emerald-400/20" },
+          { label: "Pending", value: orders.filter((o: Order) => o.status === "pending").length.toString().padStart(2, "0"), icon: Clock, color: "text-amber-400", bg: "bg-amber-400/5", border: "border-amber-400/20" },
+          { label: "Processing", value: orders.filter((o: Order) => o.status === "paid" || o.status === "processing").length.toString().padStart(2, "0"), icon: Package, color: "text-blue-400", bg: "bg-blue-400/5", border: "border-blue-400/20" },
+          { label: "Shipped", value: orders.filter((o: Order) => o.status === "shipped").length.toString().padStart(2, "0"), icon: Truck, color: "text-purple-400", bg: "bg-purple-400/5", border: "border-purple-400/20" },
+          { label: "Fulfilled", value: orders.filter((o: Order) => o.status === "delivered").length.toString(), icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-400/5", border: "border-emerald-400/20" },
         ].map((stat) => (
           <div key={stat.label} className="bg-[#141414] p-6 border border-[#2A2A2D] shadow-sm flex items-center gap-5 group hover:border-[#D5A754]/30 transition-all rounded-sm">
             <div className={`p-3.5 ${stat.bg} ${stat.color} border ${stat.border} rounded-sm group-hover:scale-110 transition-transform`}>
@@ -92,10 +109,10 @@ export default async function AdminOrdersPage() {
                   </td>
                 </tr>
               ) : (
-                orders.map((order: any) => {
+                orders.map((order: Order) => {
                   const statusInfo = getStatusInfo(order.status);
-                  const itemCount = order.order_items.reduce((acc: number, item: any) => acc + item.quantity, 0);
-                  const productsPreview = order.order_items.map((item: any) => item.product_name).join(", ");
+                  const itemCount = order.order_items.reduce((acc: number, item: OrderItem) => acc + item.quantity, 0);
+                  const productsPreview = order.order_items.map((item: OrderItem) => item.product_name).join(", ");
                   
                   return (
                     <tr key={order.id} className="hover:bg-[#2A2A2D]/20 transition-colors group">

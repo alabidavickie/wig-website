@@ -1,17 +1,52 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { getOrderById, updateOrderTracking, processRefund } from "@/lib/actions/orders";
 import { ArrowLeft, Package, Truck, CreditCard, Clock, RotateCcw, Save, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import Image from "next/image";
 
+interface OrderItem {
+  id: string;
+  product_name: string;
+  product_id?: string;
+  quantity: number;
+  unit_price: number;
+  price?: number;
+  image_url?: string;
+  attributes?: Record<string, unknown>;
+}
+
+interface ShippingInfo {
+  firstName?: string;
+  lastName?: string;
+  address?: string;
+  city?: string;
+  zip?: string;
+}
+
+interface Order {
+  id: string;
+  email: string;
+  status: string;
+  total_amount: number;
+  currency: string;
+  payment_provider?: string;
+  payment_reference?: string;
+  is_refunded?: boolean;
+  refund_amount?: number;
+  tracking_number?: string;
+  tracking_url?: string;
+  created_at: string;
+  shipping_info?: ShippingInfo;
+  order_items?: OrderItem[];
+}
+
 export default function AdminOrderDetailPage() {
   const params = useParams();
-  const router = useRouter();
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   
   const [trackingNumber, setTrackingNumber] = useState("");
@@ -36,6 +71,7 @@ export default function AdminOrderDetailPage() {
   }, [params.id]);
 
   const handleSaveTracking = async () => {
+    if (!order) return;
     setSavingTracking(true);
     try {
       const updatedOrder = await updateOrderTracking(order.id, {
@@ -52,9 +88,10 @@ export default function AdminOrderDetailPage() {
   };
 
   const handleRefund = async () => {
+    if (!order) return;
     const confirmRefund = window.confirm(`Are you sure you want to refund ${order.currency === 'NGN' ? '₦' : '£'}${order.total_amount}? This action cannot be undone.`);
     if (!confirmRefund) return;
-    
+
     setRefunding(true);
     try {
       const updatedOrder = await processRefund(order.id, order.total_amount);
@@ -120,7 +157,7 @@ export default function AdminOrderDetailPage() {
               <Package className="w-4 h-4" /> Purchased Items
             </h2>
             <div className="space-y-6">
-              {order.order_items?.map((item: any) => (
+              {order.order_items?.map((item: OrderItem) => (
                 <div key={item.id} className="flex gap-4 border-b border-[#2A2A2D] pb-6 last:border-0 last:pb-0">
                   <div className="relative w-20 h-24 bg-[#0A0A0A] border border-[#2A2A2D] rounded-sm overflow-hidden flex-shrink-0">
                     {item.image_url ? (
