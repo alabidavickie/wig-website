@@ -5,6 +5,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { createNotification } from "@/lib/actions/orders";
 import { logAdminAction } from "@/lib/actions/audit";
+import { sendBroadcastEmail } from "@/lib/emails";
+import { getSubscriberEmails } from "@/lib/actions/newsletter";
 
 
 
@@ -100,7 +102,12 @@ export async function getProducts(category?: string): Promise<Product[]> {
     const supabase = await createClient();
     let query = supabase
       .from("products")
-      .select(`id, name, slug, base_price, category_id, categories (name), product_images (image_url, is_main)`)
+      .select(`
+        id, name, slug, base_price, category_id, 
+        categories (name), 
+        product_images (image_url, is_main),
+        product_variants (inventory_count)
+      `)
       .order("created_at", { ascending: false });
 
     // If a category filter is provided, look up the category ID first
@@ -125,16 +132,22 @@ export async function getProducts(category?: string): Promise<Product[]> {
       return [] as Product[];
     }
 
-    return (data as unknown as Product[]).map(p => ({
-      ...p,
-      category: (p as any).categories?.name || "Uncategorized",
-      image:
-        (p as any).product_images?.find((img: any) => img.is_main)?.image_url ||
-        (p as any).product_images?.[0]?.image_url ||
-        "/hero_luxury_wig_1773402385371.png",
-      created_at: (p as any).created_at || new Date().toISOString(),
-      is_featured: (p as any).is_featured || false
-    }));
+    return (data as unknown as Product[]).map(p => {
+      const variants = (p as any).product_variants || [];
+      const totalStock = variants.reduce((acc: number, v: any) => acc + (v.inventory_count || 0), 0);
+      
+      return {
+        ...p,
+        category: (p as any).categories?.name || "Uncategorized",
+        image:
+          (p as any).product_images?.find((img: any) => img.is_main)?.image_url ||
+          (p as any).product_images?.[0]?.image_url ||
+          "/hero_luxury_wig_1773402385371.png",
+        created_at: (p as any).created_at || new Date().toISOString(),
+        is_featured: (p as any).is_featured || false,
+        stock: totalStock
+      };
+    });
   } catch {
     return [] as Product[];
   }
@@ -250,6 +263,18 @@ export async function createProduct(formData: CreateProductInput) {
         );
       }
     }
+
+    // NEWSLETTER BROADCAST: Email all subscribers
+    const subscribers = await getSubscriberEmails();
+    if (subscribers.length > 0) {
+      const mainImage = formData.images?.[0]?.url || "/hero_luxury_wig_1773402385371.png";
+      await sendBroadcastEmail(subscribers, 'new_arrival', {
+        name: product.name,
+        image: mainImage,
+        base_price: product.base_price,
+        slug: product.slug
+      });
+    }
   } catch (notifyError) {
     console.warn("Failed to notify users about new product:", notifyError);
   }
@@ -302,6 +327,38 @@ export async function updateProduct(id: string, formData: Partial<CreateProductI
       }))
     );
     if (imageError) throw new Error(imageError.message);
+  }
+
+  // CHECK FOR BACK IN STOCK BROADCAST
+  if (formData.variants) {
+    try {
+      // 1. Check previous stock level
+      const { data: oldVariants } = await supabase.from("product_variants").select("inventory_count").eq("product_id", id);
+      const oldTotal = (oldVariants || []).reduce((sum, v) => sum + (v.inventory_count || 0), 0);
+      
+      // 2. Check current stock level
+      const newTotal = formData.variants.reduce((sum, v) => sum + (v.inventory_count || 0), 0);
+
+      // 3. If it was 0 and now it's > 0, broadcast!
+      if (oldTotal === 0 && newTotal > 0) {
+        const subscribers = await getSubscriberEmails();
+        if (subscribers.length > 0) {
+           const { data: product } = await supabase.from("products").select("name, base_price, slug").eq("id", id).single();
+           const { data: img } = await supabase.from("product_images").select("image_url").eq("product_id", id).eq("is_main", true).single();
+           
+           if (product) {
+             await sendBroadcastEmail(subscribers, 'back_in_stock', {
+               name: product.name,
+               image: img?.image_url || "/hero_luxury_wig_1773402385371.png",
+               base_price: product.base_price,
+               slug: product.slug
+             });
+           }
+        }
+      }
+    } catch (e) {
+      console.warn("Back in stock broadcast failed:", e);
+    }
   }
 
   revalidatePath("/shop");

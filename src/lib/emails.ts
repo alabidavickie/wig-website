@@ -2,6 +2,7 @@ import { Resend } from 'resend';
 import OrderStatusEmail from "@/components/emails/order-status-email";
 import AdminPaymentEmail from "@/components/emails/admin-payment-email";
 import VerificationEmail from "@/components/emails/verification-email";
+import NewsletterEmail from "@/components/emails/newsletter-email";
 
 // Initialize Resend lazily to avoid build-time errors if API key is missing
 let resendInstance: Resend | null = null;
@@ -72,5 +73,43 @@ export async function sendWelcomeEmail(toEmail: string, customerName: string) {
     });
   } catch (error) {
     console.error("Failed to send welcome email:", error);
+  }
+}
+
+export async function sendBroadcastEmail(
+  toEmails: string[], 
+  type: 'new_arrival' | 'back_in_stock', 
+  product: { name: string; image: string; base_price: number; slug: string }
+) {
+  if (toEmails.length === 0) return;
+
+  try {
+    const resend = getResend();
+    if (!resend) return;
+
+    // Use Resend's batch API to send to multiple subscribers
+    // Resend batch limit is 100 per call, we should chunk if needed
+    const CHUNK_SIZE = 100;
+    for (let i = 0; i < toEmails.length; i += CHUNK_SIZE) {
+      const chunk = toEmails.slice(i, i + CHUNK_SIZE);
+      const host = process.env.NEXT_PUBLIC_SITE_URL || 'https://silkhaus.co.uk';
+      
+      const emailBatch = chunk.map(email => ({
+        from: `Silk Haus <${SENDER_EMAIL}>`,
+        to: email,
+        subject: type === 'new_arrival' ? `New Arrival: ${product.name}` : `Back in Stock: ${product.name}`,
+        react: NewsletterEmail({
+          type,
+          productName: product.name,
+          productImage: product.image,
+          productPrice: product.base_price,
+          productUrl: `${host}/shop/${product.slug}`
+        }) as any,
+      }));
+
+      await resend.batch.send(emailBatch);
+    }
+  } catch (error) {
+    console.error("Failed to send newsletter broadcast email:", error);
   }
 }

@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { getProducts, getCategories } from "@/lib/actions/products";
 import { getAllOrders } from "@/lib/actions/orders";
+import { getSubscriberCount } from "@/lib/actions/newsletter";
 import Image from "next/image";
 import { format } from "date-fns";
 
@@ -44,6 +45,7 @@ export default async function AdminDashboardPage() {
   const products = await getProducts() as Product[];
   const categories = await getCategories();
   const allOrders = await getAllOrders() as Order[];
+  const subscriberCount = await getSubscriberCount();
 
   const now = new Date();
   
@@ -71,10 +73,6 @@ export default async function AdminDashboardPage() {
   const recentOrderCustomers = allOrders.filter((o: Order) => new Date(o.created_at) >= startOfWeek);
   const newCustomersWeekCount = new Set(recentOrderCustomers.map((o: Order) => o.email)).size;
 
-  // 6. Newsletter Subscriber Count
-  // Without a direct subscribers table, using unique customer count as a proxy base
-  const uniqueEmails = new Set(allOrders.map((o: Order) => o.email));
-  const subscriberCount = uniqueEmails.size > 0 ? uniqueEmails.size * 2 + 15 : 0; 
 
   const stats = [
     { 
