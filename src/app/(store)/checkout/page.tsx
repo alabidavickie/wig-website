@@ -11,6 +11,7 @@ import { useGeoStore } from "@/lib/store/useGeoStore";
 import { Price } from "@/components/storefront/price";
 import { toast } from "sonner";
 import { validateDiscountCode } from "@/lib/actions/discounts";
+import { getStoreSettings } from "@/lib/actions/settings";
 
 export default function CheckoutPage() {
   const [mounted, setMounted] = useState(false);
@@ -20,6 +21,8 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     firstName: "", lastName: "", email: "", address: "", city: "", zip: ""
   });
+  
+  const [shippingFeeGbp, setShippingFeeGbp] = useState(15.00);
 
   // Discount / promo code state
   const [promoInput, setPromoInput] = useState("");
@@ -34,6 +37,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     setMounted(true);
     initialize();
+    getStoreSettings().then(s => setShippingFeeGbp(Math.max(0, s.shipping_fee_gbp)));
     // Always fetch the latest exchange rate before checkout
     refreshRate();
   }, [initialize, refreshRate]);
@@ -46,6 +50,10 @@ export default function CheckoutPage() {
   // Discount is calculated on GBP base price
   const discountAmountGbp = appliedDiscount?.discountAmount ?? 0;
   const discountedBaseTotal = Math.max(0, baseTotalPrice - discountAmountGbp);
+  
+  // Total to charge includes shipping fee in converted currency
+  const shippingFeeConverted = shippingFeeGbp * exchangeRate;
+  const finalTotalConverted = (discountedBaseTotal * exchangeRate) + shippingFeeConverted;
 
   // Format items for the API with the converted prices if needed
   const checkoutItems = items.map(item => ({
@@ -261,7 +269,7 @@ export default function CheckoutPage() {
                         disabled={submitting}
                         className="w-full bg-[#011B33] hover:bg-[#000F1F] text-foreground py-8 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl mt-4 rounded-full transition-all"
                       >
-                        {submitting ? "Initializing Paystack..." : <span className="flex items-center justify-center gap-2">Pay <Price amount={discountedBaseTotal} /></span>}
+                        {submitting ? "Initializing Paystack..." : <span className="flex items-center justify-center gap-2">Pay <Price amount={finalTotalConverted / exchangeRate /* display un-exchanged since Price handles it */} /></span>}
                       </Button>
                    </div>
                 ) : (
@@ -277,7 +285,7 @@ export default function CheckoutPage() {
                         disabled={submitting}
                         className="w-full bg-[#635BFF] hover:bg-[#4C45D0] text-foreground py-8 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl mt-4 rounded-full transition-all"
                       >
-                        {submitting ? "Securing Session..." : <span className="flex items-center justify-center gap-2">Pay <Price amount={discountedBaseTotal} /></span>}
+                        {submitting ? "Securing Session..." : <span className="flex items-center justify-center gap-2">Pay <Price amount={finalTotalConverted / exchangeRate} /></span>}
                       </Button>
                    </div>
                 )}
@@ -330,12 +338,12 @@ export default function CheckoutPage() {
                 )}
                 <div className="flex justify-between text-[12px]">
                   <span className="text-muted-foreground uppercase tracking-widest font-bold">Shipping</span>
-                  <span className="font-bold text-[#D5A754] italic uppercase tracking-widest">Free</span>
+                  <span className="font-bold text-[#D5A754] uppercase tracking-widest"><Price amount={shippingFeeGbp} /></span>
                 </div>
                 <div className="flex justify-between text-[16px] font-bold border-t border-border pt-4">
                   <span className="uppercase tracking-widest text-foreground">Total</span>
                   <div className="font-serif italic text-[#D5A754]">
-                    <Price amount={discountedBaseTotal} />
+                    <Price amount={finalTotalConverted / exchangeRate} />
                   </div>
                 </div>
               </div>

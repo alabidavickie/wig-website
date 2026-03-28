@@ -1,7 +1,25 @@
+"use client";
+
 import Link from 'next/link';
-import { Instagram, MessageCircle, Mail } from 'lucide-react';
+import { Instagram, MessageCircle, Mail, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { subscribeToNewsletter } from '@/lib/actions/newsletter';
 
 export const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [subscribing, setSubscribing] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleSubscribe = async () => {
+    if (!email || !email.includes('@')) return;
+    setSubscribing(true);
+    const res = await subscribeToNewsletter(email);
+    setMessage(res.message);
+    setSubscribing(false);
+    if (res.success) setEmail("");
+    setTimeout(() => setMessage(""), 5000);
+  };
+
   return (
     <footer className="bg-secondary text-foreground pt-12 sm:pt-16 md:pt-24 mt-auto" suppressHydrationWarning>
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12" suppressHydrationWarning>
@@ -23,13 +41,23 @@ export const Footer = () => {
               <input
                 type="email"
                 placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 bg-white/5 border border-white/10 text-foreground placeholder-white/30 px-5 py-4 text-[13px] focus:outline-none focus:border-[#D5A754] transition-colors"
               />
-              <button className="bg-[#D5A754] text-[#1A1A1D] px-8 py-4 text-[11px] font-bold uppercase tracking-widest hover:bg-[#E6B964] transition-colors">
-                Subscribe
+              <button 
+                onClick={handleSubscribe} 
+                disabled={subscribing}
+                className="bg-[#D5A754] text-[#1A1A1D] px-8 py-4 text-[11px] font-bold uppercase tracking-widest hover:bg-[#E6B964] transition-colors flex items-center justify-center gap-2"
+              >
+                {subscribing ? <Loader2 className="w-4 h-4 animate-spin" /> : "Subscribe"}
               </button>
             </div>
-            <p className="text-[10px] text-muted-foreground mt-3 uppercase tracking-widest">No spam. Unsubscribe anytime.</p>
+            {message ? (
+              <p className="text-[10px] text-emerald-400 mt-3 uppercase tracking-widest font-bold">{message}</p>
+            ) : (
+              <p className="text-[10px] text-muted-foreground mt-3 uppercase tracking-widest">No spam. Unsubscribe anytime.</p>
+            )}
           </div>
         </div>
 

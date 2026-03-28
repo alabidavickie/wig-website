@@ -95,8 +95,10 @@ export async function POST(req: Request) {
       };
     });
 
-    // Add Shipping Fee: £15
-    const SHIPPING_AMOUNT_GBP = 15;
+    // Add Shipping Fee
+    const { getStoreSettings } = await import("@/lib/actions/settings");
+    const settings = await getStoreSettings();
+    const SHIPPING_AMOUNT_GBP = settings.shipping_fee_gbp;
     line_items.push({
       price_data: {
         currency: "gbp",

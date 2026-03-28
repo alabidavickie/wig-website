@@ -61,24 +61,8 @@ export default function ProfilePage() {
     if (!user) return;
     setIsSaving(true);
     try {
-      const { createClient } = await import("@/lib/supabase/client");
-      const supabase = createClient();
-      
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          first_name: profile?.first_name,
-          last_name: profile?.last_name,
-          // email is usually handled by auth, so we don't update it here unless it's in the profiles table too
-          phone: profile?.phone,
-          address: profile?.address,
-          city: profile?.city,
-          postal_code: profile?.postal_code,
-          country: profile?.country,
-        })
-        .eq("id", user.id);
-
-      if (error) throw error;
+      const { updateCustomerProfile } = await import("@/lib/actions/customers");
+      await updateCustomerProfile(user.id, profile);
 
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);

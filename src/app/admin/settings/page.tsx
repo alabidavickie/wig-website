@@ -1,7 +1,7 @@
 "use client";
 
 import { Save, Shield, Globe, Mail, Bell, CreditCard, ExternalLink, Sliders, Palette, Zap, Loader2, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function AdminSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
@@ -24,6 +24,23 @@ export default function AdminSettingsPage() {
     order_prefix: "SH-"
   });
 
+  // Load actual DB settings on mount
+  useEffect(() => {
+    import("@/lib/actions/settings").then((m) => {
+      m.getStoreSettings().then((settings) => {
+        setStoreConfig((prev) => ({
+          ...prev,
+          currency: settings.currency,
+          shipping_base: settings.shipping_fee_gbp.toString()
+        }));
+        setGeneralConfig((prev) => ({
+          ...prev,
+          maintenance: settings.maintenance_mode
+        }));
+      });
+    });
+  }, []);
+
   // Privacy state
   const [privacyConfig, setPrivacyConfig] = useState({
     require_auth: true,
@@ -41,9 +58,20 @@ export default function AdminSettingsPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSaving(false);
-    alert("Administrative settings have been successfully synchronized.");
+    try {
+      const { updateStoreSettings } = await import("@/lib/actions/settings");
+      await updateStoreSettings({
+        shipping_fee_gbp: parseFloat(storeConfig.shipping_base) || 15,
+        currency: storeConfig.currency,
+        maintenance_mode: generalConfig.maintenance
+      });
+      alert("Administrative settings have been successfully synchronized.");
+    } catch (e) {
+      console.error(e);
+      alert("Failed to save settings. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const tabs = [

@@ -175,34 +175,38 @@ export const Header = () => {
                     </DropdownMenuLabel>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator className="bg-border" />
-                  <DropdownMenuItem
-                    render={
-                      <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-muted rounded-lg transition-colors cursor-pointer group">
-                        <LayoutDashboard className="w-4 h-4 text-muted-foreground group-hover:text-[#D5A754]" /> Dashboard
-                      </Link>
-                    }
-                  />
-                  <DropdownMenuItem
-                    render={
-                      <Link href="/dashboard/orders" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-muted rounded-lg transition-colors cursor-pointer group">
-                        <ShoppingCart className="w-4 h-4 text-muted-foreground group-hover:text-[#D5A754]" /> My Orders
-                      </Link>
-                    }
-                  />
-                  <DropdownMenuItem
-                    render={
-                      <Link href="/dashboard/profile" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-muted rounded-lg transition-colors cursor-pointer group">
-                        <UserCircle className="w-4 h-4 text-muted-foreground group-hover:text-[#D5A754]" /> My Profile
-                      </Link>
-                    }
-                  />
-                  <DropdownMenuItem
-                    render={
-                      <Link href="/dashboard/settings" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-muted rounded-lg transition-colors cursor-pointer group">
-                        <Settings className="w-4 h-4 text-muted-foreground group-hover:text-[#D5A754]" /> Settings
-                      </Link>
-                    }
-                  />
+                  {profile?.role !== 'admin' && (
+                    <>
+                      <DropdownMenuItem
+                        render={
+                          <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-muted rounded-lg transition-colors cursor-pointer group">
+                            <LayoutDashboard className="w-4 h-4 text-muted-foreground group-hover:text-[#D5A754]" /> Dashboard
+                          </Link>
+                        }
+                      />
+                      <DropdownMenuItem
+                        render={
+                          <Link href="/dashboard/orders" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-muted rounded-lg transition-colors cursor-pointer group">
+                            <ShoppingCart className="w-4 h-4 text-muted-foreground group-hover:text-[#D5A754]" /> My Orders
+                          </Link>
+                        }
+                      />
+                      <DropdownMenuItem
+                        render={
+                          <Link href="/dashboard/profile" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-muted rounded-lg transition-colors cursor-pointer group">
+                            <UserCircle className="w-4 h-4 text-muted-foreground group-hover:text-[#D5A754]" /> My Profile
+                          </Link>
+                        }
+                      />
+                      <DropdownMenuItem
+                        render={
+                          <Link href="/dashboard/settings" className="flex items-center gap-3 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-muted rounded-lg transition-colors cursor-pointer group">
+                            <Settings className="w-4 h-4 text-muted-foreground group-hover:text-[#D5A754]" /> Settings
+                          </Link>
+                        }
+                      />
+                    </>
+                  )}
                   
                   {profile?.role === 'admin' && (
                     <>
@@ -291,7 +295,7 @@ export const Header = () => {
              <Link href="/dashboard/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground cursor-pointer hover:text-foreground transition-colors py-1">
                 <Heart className="w-4 h-4" /> Wishlist
              </Link>
-             <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground cursor-pointer hover:text-foreground transition-colors py-1">
+             <Link href={user ? (profile?.role === 'admin' ? '/admin' : '/dashboard') : '/login'} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground cursor-pointer hover:text-foreground transition-colors py-1">
                 <User className="w-4 h-4" /> My Account
              </Link>
           </div>

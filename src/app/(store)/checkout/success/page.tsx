@@ -24,7 +24,6 @@ function SuccessContent() {
   const [cleared, setCleared] = useState(false);
   const [verifying, setVerifying] = useState(true);
   const [result, setResult] = useState<VerifyResult | null>(null);
-  const [countdown, setCountdown] = useState(6);
 
   const sessionId = searchParams.get("session_id");
   const reference = searchParams.get("reference");
@@ -63,22 +62,10 @@ function SuccessContent() {
     }
   }, [sessionId, reference, verifyPayment]);
 
-  // Countdown + auto-redirect after verification
+  // Fast auto-redirect after verification
   useEffect(() => {
     if (!result?.verified) return;
-
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          router.push("/dashboard/orders");
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
+    router.push("/dashboard/orders");
   }, [result?.verified, router]);
 
   // --- Loading State ---
@@ -181,21 +168,9 @@ function SuccessContent() {
           Our team is preparing your order for dispatch.
         </p>
 
-        {/* Countdown redirect */}
-        <div className="bg-[#FAF9F6] border border-gray-100 rounded-2xl px-8 py-6 space-y-3 mt-4">
-          <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold">
-            Redirecting to your dashboard in
-          </p>
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-4xl font-serif italic font-bold text-foreground">{countdown}</span>
-            <span className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold">seconds</span>
-          </div>
-          <div className="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[#D5A754] rounded-full transition-all duration-1000 ease-linear"
-              style={{ width: `${((6 - countdown) / 6) * 100}%` }}
-            />
-          </div>
+        <div className="flex items-center justify-center pt-8">
+           <Loader2 className="w-8 h-8 text-[#D5A754] animate-spin" />
+           <span className="ml-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Redirecting to Dashboard...</span>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">

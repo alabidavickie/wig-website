@@ -68,3 +68,43 @@ export async function sendPasswordReset(email: string) {
 
   return { success: true };
 }
+
+export async function updateCustomerProfile(userId: string, data: any) {
+  // Can be called by the user themselves or an admin.
+  // Validate that the requestor is either an admin or the user themselves.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  if (user.id !== userId) {
+    const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    if (profile?.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      first_name: data.first_name,
+      last_name: data.last_name,
+      phone: data.phone,
+      address: data.address,
+      city: data.city,
+      country: data.country,
+      postal_code: data.postal_code,
+    })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("Failed to update profile", error);
+    throw new Error("Failed to update profile");
+  }
+
+  // Revalidate to ensure admin panel and client dashboard are in sync immediately
+  revalidatePath("/admin/customers");
+  revalidatePath(`/admin/customers/${userId}`);
+  revalidatePath("/dashboard/profile");
+  
+  return { success: true };
+}

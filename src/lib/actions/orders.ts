@@ -292,7 +292,7 @@ export async function getOrdersByUserId(userId: string) {
         *,
         order_items (*)
       `)
-      .eq("user_id", userId)
+      .or(`user_id.eq.${userId},email.eq.${user.email || 'unknown'}`)
       .order("created_at", { ascending: false });
 
     if (error) {

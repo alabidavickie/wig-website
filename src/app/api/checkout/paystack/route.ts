@@ -108,8 +108,9 @@ export async function POST(req: Request) {
       console.warn("[PAYSTACK_API] Rate fetch failed, using fallback:", e);
     }
 
-    // 2. APPLY SHIPPING (Fixed fee: £15 or converted NGN)
-    const SHIPPING_GBP = 15;
+    const { getStoreSettings } = await import("@/lib/actions/settings");
+    const settings = await getStoreSettings();
+    const SHIPPING_GBP = settings.shipping_fee_gbp;
     const shipping_ngn = Math.round(SHIPPING_GBP * rate);
 
     // 3. CONVERT DISCOUNTED TOTAL TO NGN
