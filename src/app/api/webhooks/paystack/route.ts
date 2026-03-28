@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { updateOrderStatus } from "@/lib/actions/orders";
+import { updateOrderStatus, deductInventoryForOrder } from "@/lib/actions/orders";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
@@ -35,7 +35,10 @@ export async function POST(req: Request) {
       
       if (verifyData.data.status === "success") {
          // Update order status to paid
-         await updateOrderStatus(reference, "paystack", "paid");
+         const updatedOrder = await updateOrderStatus(reference, "paystack", "paid");
+         if (updatedOrder?.id) {
+           await deductInventoryForOrder(updatedOrder.id);
+         }
          revalidatePath("/admin/orders");
          revalidatePath("/admin");
       }

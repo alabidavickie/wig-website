@@ -95,7 +95,7 @@ export default function ProfilePage() {
 
   if (loading) return (
     <div className="w-full h-screen flex items-center justify-center bg-white">
-      <Loader2 className="w-8 h-8 animate-spin text-white" />
+      <Loader2 className="w-8 h-8 animate-spin text-foreground" />
     </div>
   );
 
@@ -111,10 +111,10 @@ export default function ProfilePage() {
     <div className="w-full max-w-5xl min-h-screen text-[#1A1A1D] bg-white mx-auto font-sans p-8 md:p-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8 reveal">
         <div>
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-400 mb-4">Personal Info</h3>
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground mb-4">Personal Info</h3>
           <h2 className="text-5xl md:text-7xl font-serif tracking-tighter uppercase italic leading-none">Your <br /> Profile</h2>
         </div>
-        <div className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold mb-4">
+        <div className="text-[10px] uppercase tracking-[0.4em] text-foreground/30 font-bold mb-4">
           Patron Since {patronDate}
         </div>
       </header>
@@ -132,24 +132,24 @@ export default function ProfilePage() {
                  className="w-full h-full object-cover" 
                />
             </div>
-            <button className="absolute -bottom-2 -right-2 w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center text-[#1A1A1D] shadow-xl hover:bg-black hover:text-white transition-all scale-100 group-hover:scale-110">
+            <button className="absolute -bottom-2 -right-2 w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center text-[#1A1A1D] shadow-xl hover:bg-black hover:text-foreground transition-all scale-100 group-hover:scale-110">
                <Camera className="w-4 h-4" />
             </button>
           </div>
           <div className="flex flex-col flex-1">
              <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-[14px] font-bold text-white uppercase tracking-[0.2em]">{displayName}</h3>
+                <h3 className="text-[14px] font-bold text-foreground uppercase tracking-[0.2em]">{displayName}</h3>
                 <div className="bg-[#D5A754]/10 px-3 py-1 rounded-full flex items-center gap-2">
                    <Sparkles className="w-3 h-3 text-[#D5A754]" />
                    <span className="text-[9px] font-bold text-[#D5A754] uppercase tracking-widest">Silk Haus Verified</span>
                 </div>
              </div>
-             <p className="text-[11px] font-bold text-white/30 uppercase tracking-widest mb-6">Master Piece Collector & Silk Haus Patron</p>
+             <p className="text-[11px] font-bold text-foreground/30 uppercase tracking-widest mb-6">Master Piece Collector & Silk Haus Patron</p>
              <div className="flex gap-4">
-                <Button className="bg-[#1A1A1D] hover:bg-black text-white font-bold h-12 px-8 rounded-full text-[10px] uppercase tracking-[0.2em] border-none shadow-xl transition-all">
+                <Button className="bg-secondary hover:bg-black text-foreground font-bold h-12 px-8 rounded-full text-[10px] uppercase tracking-[0.2em] border-none shadow-xl transition-all">
                   Update Profile
                 </Button>
-                <Button variant="outline" className="border-gray-100 bg-transparent hover:border-white text-zinc-400 hover:text-white h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all">
+                <Button variant="outline" className="border-gray-100 bg-transparent hover:border-white text-muted-foreground hover:text-foreground h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all">
                   Remove
                 </Button>
              </div>
@@ -159,12 +159,12 @@ export default function ProfilePage() {
         {/* Personal Info Form */}
         <section className="reveal">
           <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.6em] text-zinc-400">Core Information</h3>
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.6em] text-muted-foreground">Core Information</h3>
             <div className="flex-1 h-px bg-gray-100"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12">
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Given Name</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">Given Name</Label>
                 <Input 
                   value={profile?.first_name || ""} 
                   onChange={(e) => updateProfileField("first_name", e.target.value)}
@@ -173,7 +173,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Surname</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">Surname</Label>
                 <Input 
                   value={profile?.last_name || ""} 
                   onChange={(e) => updateProfileField("last_name", e.target.value)}
@@ -182,7 +182,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Electronic Mail</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">Electronic Mail</Label>
                 <Input 
                   value={user?.email || ""} 
                   readOnly
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Direct Line</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">Direct Line</Label>
                 <Input 
                   value={profile?.phone || ""} 
                   onChange={(e) => updateProfileField("phone", e.target.value)}
@@ -206,12 +206,12 @@ export default function ProfilePage() {
         {/* Shipping Form */}
         <section className="reveal">
           <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.6em] text-zinc-400">Silk Haus Delivery</h3>
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.6em] text-muted-foreground">Silk Haus Delivery</h3>
             <div className="flex-1 h-px bg-gray-100"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12">
              <div className="space-y-4 col-span-1 md:col-span-2">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Street Address</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">Street Address</Label>
                 <Input 
                   value={profile?.address || ""} 
                   onChange={(e) => updateProfileField("address", e.target.value)}
@@ -220,7 +220,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">City / Province</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">City / Province</Label>
                 <Input 
                   value={profile?.city || ""} 
                   onChange={(e) => updateProfileField("city", e.target.value)}
@@ -229,7 +229,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Postal Code</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">Postal Code</Label>
                 <Input 
                   value={profile?.postal_code || ""} 
                   onChange={(e) => updateProfileField("postal_code", e.target.value)}
@@ -238,7 +238,7 @@ export default function ProfilePage() {
                 />
              </div>
              <div className="space-y-4">
-                <Label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Sovereign State</Label>
+                <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">Sovereign State</Label>
                 <Select 
                   value={profile?.country || "uk"} 
                   onValueChange={(val) => updateProfileField("country", val)}
@@ -261,12 +261,12 @@ export default function ProfilePage() {
            <Button 
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-[#1A1A1D] hover:bg-black text-white h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] shadow-2xl transition-all flex items-center gap-3 disabled:opacity-50"
+            className="bg-secondary hover:bg-black text-foreground h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] shadow-2xl transition-all flex items-center gap-3 disabled:opacity-50"
            >
              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
              {saved ? "Changes Committed" : "Commit Changes"}
            </Button>
-           <Button variant="outline" className="border-gray-100 bg-transparent hover:border-white text-zinc-400 hover:text-white h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] transition-all">
+           <Button variant="outline" className="border-gray-100 bg-transparent hover:border-white text-muted-foreground hover:text-foreground h-16 px-12 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] transition-all">
              Decline
            </Button>
            {saved && <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 animate-pulse">Profile updated</span>}

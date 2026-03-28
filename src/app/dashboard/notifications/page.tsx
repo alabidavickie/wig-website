@@ -66,13 +66,13 @@ export default function NotificationsPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl pb-20">
-      <div className="flex justify-between items-end border-b border-[#2A2A2D] pb-6">
+      <div className="flex justify-between items-end border-b border-border pb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em] text-white flex items-center gap-3">
+          <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em] text-foreground flex items-center gap-3">
             <Bell className="w-6 h-6 text-[#D5A754]" />
             Notifications
           </h1>
-          <p className="text-zinc-400 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">
+          <p className="text-muted-foreground text-xs mt-2 uppercase tracking-widest font-bold opacity-80">
             Stay updated on new arrivals and account alerts.
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function NotificationsPage() {
         {notifications.some(n => !n.is_read) && (
           <button 
             onClick={markAllAsRead}
-            className="text-[10px] font-bold uppercase tracking-widest text-[#D5A754] hover:text-white transition-colors flex items-center gap-2"
+            className="text-[10px] font-bold uppercase tracking-widest text-[#D5A754] hover:text-foreground transition-colors flex items-center gap-2"
           >
             <Check className="w-3 h-3" /> Mark all read
           </button>
@@ -93,10 +93,10 @@ export default function NotificationsPage() {
             <Loader2 className="w-8 h-8 text-[#D5A754] animate-spin" />
           </div>
         ) : notifications.length === 0 ? (
-          <div className="text-center py-20 border border-[#2A2A2D] bg-[#141414] rounded-sm">
+          <div className="text-center py-20 border border-border bg-card rounded-sm">
             <Bell className="w-10 h-10 text-zinc-600 mx-auto mb-4" />
-            <h3 className="text-white font-bold tracking-widest uppercase text-sm">All caught up</h3>
-            <p className="text-zinc-500 text-xs mt-2">You have no new notifications.</p>
+            <h3 className="text-foreground font-bold tracking-widest uppercase text-sm">All caught up</h3>
+            <p className="text-muted-foreground text-xs mt-2">You have no new notifications.</p>
           </div>
         ) : (
           notifications.map((notification) => (
@@ -104,20 +104,20 @@ export default function NotificationsPage() {
               key={notification.id}
               className={`p-6 border transition-all rounded-sm flex gap-6 ${
                 notification.is_read 
-                  ? "bg-[#141414] border-[#2A2A2D]" 
-                  : "bg-[#1A1A1D] border-[#D5A754] shadow-[0_0_15px_rgba(213,167,84,0.1)]"
+                  ? "bg-card border-border" 
+                  : "bg-secondary border-[#D5A754] shadow-[0_0_15px_rgba(213,167,84,0.1)]"
               }`}
             >
               <div className="flex-1">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                  <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">
                     {notification.title}
                   </h3>
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
                     {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
                   </span>
                 </div>
-                <p className="text-zinc-400 text-sm mb-4 leading-relaxed">
+                <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
                   {notification.message}
                 </p>
                 <div className="flex items-center gap-4">
@@ -132,7 +132,7 @@ export default function NotificationsPage() {
                   {!notification.is_read && (
                     <button 
                       onClick={() => markAsRead(notification.id)}
-                      className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors"
+                      className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
                     >
                       Dismiss
                     </button>

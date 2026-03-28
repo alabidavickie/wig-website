@@ -3,7 +3,7 @@ import { Instagram, MessageCircle, Mail } from 'lucide-react';
 
 export const Footer = () => {
   return (
-    <footer className="bg-[#1A1A1D] text-white pt-12 sm:pt-16 md:pt-24 mt-auto" suppressHydrationWarning>
+    <footer className="bg-secondary text-foreground pt-12 sm:pt-16 md:pt-24 mt-auto" suppressHydrationWarning>
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12" suppressHydrationWarning>
         
         {/* Top — Newsletter + Brand */}
@@ -13,23 +13,23 @@ export const Footer = () => {
               Inside<br />
               <span className="text-[#D5A754]">Silk Haus.</span>
             </h2>
-            <p className="text-[13px] text-white/50 leading-relaxed max-w-sm">
+            <p className="text-[13px] text-foreground/50 leading-relaxed max-w-sm">
               Be first to know about new arrivals, exclusive offers, hair care tutorials, and member-only early access events.
             </p>
           </div>
           <div className="flex flex-col justify-center" suppressHydrationWarning>
-            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-white/50 mb-4">Join The List</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-foreground/50 mb-4">Join The List</p>
             <div className="flex flex-col sm:flex-row" suppressHydrationWarning>
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 bg-white/5 border border-white/10 text-white placeholder-white/30 px-5 py-4 text-[13px] focus:outline-none focus:border-[#D5A754] transition-colors"
+                className="flex-1 bg-white/5 border border-white/10 text-foreground placeholder-white/30 px-5 py-4 text-[13px] focus:outline-none focus:border-[#D5A754] transition-colors"
               />
               <button className="bg-[#D5A754] text-[#1A1A1D] px-8 py-4 text-[11px] font-bold uppercase tracking-widest hover:bg-[#E6B964] transition-colors">
                 Subscribe
               </button>
             </div>
-            <p className="text-[10px] text-zinc-400 mt-3 uppercase tracking-widest">No spam. Unsubscribe anytime.</p>
+            <p className="text-[10px] text-muted-foreground mt-3 uppercase tracking-widest">No spam. Unsubscribe anytime.</p>
           </div>
         </div>
 
@@ -44,7 +44,7 @@ export const Footer = () => {
                 { label: "Frontals", href: "/shop?category=Frontals" },
               ].map(l => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-[13px] text-white/50 hover:text-white transition-colors">{l.label}</Link>
+                  <Link href={l.href} className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -58,7 +58,7 @@ export const Footer = () => {
                 { label: "Contact Us", href: "/contact" },
               ].map(l => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-[13px] text-white/50 hover:text-white transition-colors">{l.label}</Link>
+                  <Link href={l.href} className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -75,7 +75,7 @@ export const Footer = () => {
                 { label: "Terms & Conditions", href: "/terms-and-conditions" },
               ].map(l => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-[13px] text-white/50 hover:text-white transition-colors">{l.label}</Link>
+                  <Link href={l.href} className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -91,7 +91,7 @@ export const Footer = () => {
                 { label: "Create Account", href: "/signup" },
               ].map(l => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-[13px] text-white/50 hover:text-white transition-colors">{l.label}</Link>
+                  <Link href={l.href} className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -102,8 +102,8 @@ export const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 py-6 sm:py-8" suppressHydrationWarning>
           <div className="flex items-center gap-4" suppressHydrationWarning>
             <h2 className="font-serif text-2xl tracking-widest uppercase">SILK HAUS</h2>
-            <span className="text-white/20 hidden md:inline">|</span>
-            <p className="text-[11px] text-zinc-400 uppercase tracking-widest hidden md:block">Premium Wigs</p>
+            <span className="text-foreground/20 hidden md:inline">|</span>
+            <p className="text-[11px] text-muted-foreground uppercase tracking-widest hidden md:block">Premium Wigs</p>
           </div>
 
           <div className="flex items-center gap-5" suppressHydrationWarning>
@@ -118,7 +118,7 @@ export const Footer = () => {
             </a>
           </div>
 
-          <p className="text-[11px] text-zinc-400 uppercase tracking-widest" suppressHydrationWarning>
+          <p className="text-[11px] text-muted-foreground uppercase tracking-widest" suppressHydrationWarning>
             &copy; {new Date().getFullYear()} Silk Haus. All Rights Reserved.
           </p>
         </div>

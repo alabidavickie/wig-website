@@ -429,6 +429,46 @@ export async function updateOrderTracking(orderId: string, trackingInfo: { track
 }
 
 /**
+ * Deducts inventory for all items in an order after payment is confirmed.
+ * Matches order items to product variants by product_id and decrements inventory_count.
+ * Runs best-effort — a single item failure does not block the others.
+ */
+export async function deductInventoryForOrder(orderId: string) {
+  const adminClient = createAdminClient();
+
+  const { data: order, error } = await adminClient
+    .from("orders")
+    .select("order_items(*)")
+    .eq("id", orderId)
+    .single();
+
+  if (error || !order) {
+    console.error("[INVENTORY] Could not fetch order for deduction:", orderId, error);
+    return;
+  }
+
+  const items: OrderItem[] = order.order_items ?? [];
+  for (const item of items) {
+    // Find matching variant(s) for this product
+    const { data: variants } = await adminClient
+      .from("product_variants")
+      .select("id, inventory_count")
+      .eq("product_id", item.product_id)
+      .gt("inventory_count", 0)
+      .limit(1);
+
+    if (variants && variants.length > 0) {
+      const variant = variants[0];
+      const newCount = Math.max(0, (variant.inventory_count ?? 0) - item.quantity);
+      await adminClient
+        .from("product_variants")
+        .update({ inventory_count: newCount })
+        .eq("id", variant.id);
+    }
+  }
+}
+
+/**
  * Processes a refund for an order (Mock implementation)
  */
 export async function processRefund(orderId: string, amount: number) {

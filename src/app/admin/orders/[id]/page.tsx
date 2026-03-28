@@ -114,7 +114,7 @@ export default function AdminOrderDetailPage() {
 
   if (!order) {
     return (
-      <div className="text-center py-20 text-white">
+      <div className="text-center py-20 text-foreground">
         <Package className="w-12 h-12 mx-auto text-zinc-600 mb-4" />
         <h2 className="text-xl font-bold uppercase tracking-widest">Order Not Found</h2>
         <Link href="/admin/orders" className="text-[#D5A754] uppercase text-[10px] tracking-widest mt-4 inline-block hover:underline">
@@ -125,9 +125,9 @@ export default function AdminOrderDetailPage() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 text-white pb-20 max-w-5xl mx-auto">
+    <div className="space-y-8 animate-in fade-in duration-500 text-foreground pb-20 max-w-5xl mx-auto">
       <div className="flex items-center gap-4">
-        <Link href="/admin/orders" className="p-2 border border-[#2A2A2D] hover:bg-white hover:text-black transition-colors rounded-sm bg-[#141414]">
+        <Link href="/admin/orders" className="p-2 border border-border hover:bg-white hover:text-black transition-colors rounded-sm bg-card">
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
@@ -137,13 +137,13 @@ export default function AdminOrderDetailPage() {
               order.status === 'delivered' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5' :
               order.status === 'shipped' ? 'border-blue-500/30 text-blue-400 bg-blue-500/5' :
               order.status === 'paid' || order.status === 'processing' ? 'border-[#D5A754]/30 text-[#D5A754] bg-[#D5A754]/5' :
-              order.status === 'pending' ? 'border-zinc-500/30 text-zinc-400 bg-zinc-500/5' :
+              order.status === 'pending' ? 'border-zinc-500/30 text-muted-foreground bg-zinc-500/5' :
               'border-red-500/30 text-red-400 bg-red-500/5'
             }`}>
               {order.status}
             </span>
           </h1>
-          <p className="text-zinc-400 text-xs mt-2 uppercase tracking-widest font-bold opacity-80">
+          <p className="text-muted-foreground text-xs mt-2 uppercase tracking-widest font-bold opacity-80">
             Placed on {format(new Date(order.created_at), "MMMM dd, yyyy 'at' HH:mm")}
           </p>
         </div>
@@ -152,14 +152,14 @@ export default function AdminOrderDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column - Order Items & Details */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-[#141414] border border-[#2A2A2D] p-6 rounded-sm shadow-sm">
+          <div className="bg-card border border-border p-6 rounded-sm shadow-sm">
             <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754] mb-6 flex items-center gap-2">
               <Package className="w-4 h-4" /> Purchased Items
             </h2>
             <div className="space-y-6">
               {order.order_items?.map((item: OrderItem) => (
-                <div key={item.id} className="flex gap-4 border-b border-[#2A2A2D] pb-6 last:border-0 last:pb-0">
-                  <div className="relative w-20 h-24 bg-[#0A0A0A] border border-[#2A2A2D] rounded-sm overflow-hidden flex-shrink-0">
+                <div key={item.id} className="flex gap-4 border-b border-border pb-6 last:border-0 last:pb-0">
+                  <div className="relative w-20 h-24 bg-background border border-border rounded-sm overflow-hidden flex-shrink-0">
                     {item.image_url ? (
                       <Image src={item.image_url} alt={item.product_name} fill className="object-cover" />
                     ) : (
@@ -169,11 +169,11 @@ export default function AdminOrderDetailPage() {
                   <div className="flex-1">
                     <h3 className="text-[13px] font-bold uppercase tracking-widest">{item.product_name}</h3>
                     {item.attributes && Object.keys(item.attributes).length > 0 && (
-                      <p className="text-[10px] text-zinc-400 mt-1 uppercase tracking-widest">
+                      <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest">
                         {Object.entries(item.attributes).map(([k, v]) => `${k}: ${v}`).join(", ")}
                       </p>
                     )}
-                    <p className="text-[11px] text-zinc-500 mt-2 uppercase tracking-widest font-bold">Qty: {item.quantity}</p>
+                    <p className="text-[11px] text-muted-foreground mt-2 uppercase tracking-widest font-bold">Qty: {item.quantity}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-[14px] tracking-tighter">
@@ -186,34 +186,34 @@ export default function AdminOrderDetailPage() {
             </div>
           </div>
 
-          <div className="bg-[#141414] border border-[#2A2A2D] p-6 rounded-sm shadow-sm">
+          <div className="bg-card border border-border p-6 rounded-sm shadow-sm">
             <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754] mb-6 flex items-center gap-2">
               <CreditCard className="w-4 h-4" /> Payment Details
             </h2>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Provider</p>
+                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Provider</p>
                 <p className="text-[12px] uppercase tracking-widest bg-zinc-800 border border-zinc-700 w-fit px-3 py-1 font-bold">
                   {order.payment_provider}
                 </p>
               </div>
               <div>
-                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Total Amount</p>
-                <p className="text-xl font-bold tracking-tighter text-white">
+                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total Amount</p>
+                <p className="text-xl font-bold tracking-tighter text-foreground">
                   {order.currency === 'NGN' ? '₦' : order.currency === 'GBP' ? '£' : '$'}
                   {order.total_amount.toLocaleString()}
                 </p>
               </div>
               {order.payment_reference && (
                 <div className="col-span-2">
-                  <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Transaction Ref</p>
-                  <p className="text-[11px] font-mono text-zinc-300 break-all bg-[#0A0A0A] p-2 border border-[#2A2A2D]">{order.payment_reference}</p>
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Transaction Ref</p>
+                  <p className="text-[11px] font-mono text-zinc-300 break-all bg-background p-2 border border-border">{order.payment_reference}</p>
                 </div>
               )}
             </div>
 
             {/* Refund Action */}
-            <div className="mt-8 pt-8 border-t border-[#2A2A2D]">
+            <div className="mt-8 pt-8 border-t border-border">
               {order.is_refunded ? (
                 <div className="bg-red-500/10 border border-red-500/30 p-4 flex items-start gap-4">
                   <RotateCcw className="w-5 h-5 text-red-400 mt-0.5" />
@@ -228,7 +228,7 @@ export default function AdminOrderDetailPage() {
                 <button 
                   onClick={handleRefund}
                   disabled={refunding || order.status === 'cancelled'}
-                  className="flex items-center gap-2 px-6 py-3 bg-red-950/30 text-red-500 border border-red-900 hover:bg-red-900 hover:text-white transition-all text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm disabled:opacity-50"
+                  className="flex items-center gap-2 px-6 py-3 bg-red-950/30 text-red-500 border border-red-900 hover:bg-red-900 hover:text-foreground transition-all text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm disabled:opacity-50"
                 >
                   {refunding ? <Loader2 className="w-4 h-4 animate-spin" /> : <RotateCcw className="w-4 h-4" />}
                   Issue Full Refund
@@ -240,49 +240,49 @@ export default function AdminOrderDetailPage() {
 
         {/* Right Column - Customer & Shipping */}
         <div className="space-y-8">
-          <div className="bg-[#141414] border border-[#2A2A2D] p-6 rounded-sm shadow-sm">
+          <div className="bg-card border border-border p-6 rounded-sm shadow-sm">
             <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754] mb-6 flex items-center gap-2">
               <Truck className="w-4 h-4" /> Shipping & Fulfillment
             </h2>
             
             <div className="space-y-6">
               <div>
-                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Customer</p>
+                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Customer</p>
                 <p className="text-[13px] font-bold tracking-wide">{order.shipping_info?.firstName} {order.shipping_info?.lastName}</p>
-                <p className="text-[11px] text-zinc-400 mt-0.5">{order.email}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{order.email}</p>
               </div>
 
               <div>
-                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Address</p>
+                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Address</p>
                 <p className="text-[12px] leading-relaxed text-zinc-300">
                   {order.shipping_info?.address}<br />
                   {order.shipping_info?.city}, {order.shipping_info?.zip}
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-[#2A2A2D] space-y-4">
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Tracking Information</h3>
+              <div className="pt-6 border-t border-border space-y-4">
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Tracking Information</h3>
                 
                 <div className="space-y-3">
                   <div>
-                    <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1 block">Tracking Number / Courier</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Tracking Number / Courier</label>
                     <input 
                       type="text" 
                       value={trackingNumber}
                       onChange={e => setTrackingNumber(e.target.value)}
                       placeholder="e.g. DHL-123456789"
-                      className="w-full bg-[#0A0A0A] border border-[#2A2A2D] p-3 text-[12px] focus:border-[#D5A754] outline-none transition-colors"
+                      className="w-full bg-background border border-border p-3 text-[12px] focus:border-[#D5A754] outline-none transition-colors"
                       disabled={order.status === 'cancelled'}
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1 block">Tracking URL (Optional)</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Tracking URL (Optional)</label>
                     <input 
                       type="text" 
                       value={trackingUrl}
                       onChange={e => setTrackingUrl(e.target.value)}
                       placeholder="https://dhl.com/track/..."
-                      className="w-full bg-[#0A0A0A] border border-[#2A2A2D] p-3 text-[12px] focus:border-[#D5A754] outline-none transition-colors"
+                      className="w-full bg-background border border-border p-3 text-[12px] focus:border-[#D5A754] outline-none transition-colors"
                       disabled={order.status === 'cancelled'}
                     />
                   </div>

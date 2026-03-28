@@ -1,6 +1,6 @@
 export default function DashboardLoading() {
   return (
-    <div className="w-full max-w-7xl animate-pulse space-y-24 p-8 md:p-12 bg-[#0A0A0A]">
+    <div className="w-full max-w-7xl animate-pulse space-y-24 p-8 md:p-12 bg-background">
       <div className="space-y-6">
         <div className="h-4 w-48 bg-zinc-800 rounded-full"></div>
         <div className="h-24 w-full max-w-lg bg-zinc-800 rounded-2xl"></div>

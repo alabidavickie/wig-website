@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Tag, Loader2, Check } from "lucide-react";
-import { getCategories, createCategory, deleteCategory } from "@/lib/actions/products";
+import { getCategories, createCategory, deleteCategory, getProducts } from "@/lib/actions/products";
 
 interface Category {
   id: string;
@@ -18,6 +18,7 @@ export default function AdminCategoriesPage() {
   const [newCategory, setNewCategory] = useState({ name: "", slug: "", description: "" });
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [productCounts, setProductCounts] = useState<Record<string, number>>({});
 
   const handleDeleteCategory = async (id: string, name: string) => {
     if (!confirm(`Delete category "${name}"? Products in this category will become uncategorized.`)) return;
@@ -33,13 +34,20 @@ export default function AdminCategoriesPage() {
   };
 
   useEffect(() => {
-    fetchCategories();
+    fetchData();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchData = async () => {
     setLoading(true);
-    const data = await getCategories();
-    setCategories(data);
+    const [cats, prods] = await Promise.all([getCategories(), getProducts()]);
+    setCategories(cats);
+    // Count products per category
+    const counts: Record<string, number> = {};
+    prods.forEach((p: any) => {
+      const catName = p.category || "Uncategorized";
+      counts[catName] = (counts[catName] || 0) + 1;
+    });
+    setProductCounts(counts);
     setLoading(false);
   };
 
@@ -50,7 +58,7 @@ export default function AdminCategoriesPage() {
       await createCategory(newCategory);
       setNewCategory({ name: "", slug: "", description: "" });
       setIsAdding(false);
-      await fetchCategories();
+      await fetchData();
     } catch (error) {
       alert("Failed to create category");
     } finally {
@@ -59,11 +67,11 @@ export default function AdminCategoriesPage() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 text-white">
+    <div className="space-y-8 animate-in fade-in duration-500 text-foreground">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Categories</h1>
-          <p className="text-zinc-400 text-[10px] mt-1 uppercase tracking-widest font-bold">Organize your products into luxury collections.</p>
+          <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">Organize your products into luxury collections.</p>
         </div>
         <button 
           onClick={() => setIsAdding(!isAdding)}
@@ -74,11 +82,11 @@ export default function AdminCategoriesPage() {
       </div>
 
       {isAdding && (
-        <div className="bg-[#141414] p-8 border border-[#D5A754]/20 shadow-2xl animate-in slide-in-from-top-4 duration-300 rounded-sm">
-          <form onSubmit={handleCreate} className="space-y-6 max-w-2xl text-white">
+        <div className="bg-card p-8 border border-[#D5A754]/20 shadow-2xl animate-in slide-in-from-top-4 duration-300 rounded-sm">
+          <form onSubmit={handleCreate} className="space-y-6 max-w-2xl text-foreground">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Category Name</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Category Name</label>
                 <input 
                   required
                   value={newCategory.name}
@@ -88,34 +96,34 @@ export default function AdminCategoriesPage() {
                     setNewCategory({ ...newCategory, name, slug });
                   }}
                   type="text" 
-                  className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#0A0A0A] focus:border-[#D5A754] outline-none transition-all text-[13px] font-bold tracking-wide"
+                  className="w-full h-12 px-4 border border-border bg-background focus:border-[#D5A754] outline-none transition-all text-[13px] font-bold tracking-wide"
                   placeholder="e.g. Lace Frontals"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Slug</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Slug</label>
                 <input 
                   required
                   value={newCategory.slug}
                   onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
                   type="text" 
-                  className="w-full h-12 px-4 border border-[#2A2A2D] bg-[#0A0A0A] focus:border-[#D5A754] outline-none transition-all text-[12px] font-mono opacity-60"
+                  className="w-full h-12 px-4 border border-border bg-background focus:border-[#D5A754] outline-none transition-all text-[12px] font-mono opacity-60"
                   placeholder="lace-frontals"
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Description</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Description</label>
               <textarea 
                 value={newCategory.description}
                 onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-                className="w-full p-4 border border-[#2A2A2D] bg-[#0A0A0A] focus:border-[#D5A754] outline-none transition-all resize-none text-[13px] leading-relaxed"
+                className="w-full p-4 border border-border bg-background focus:border-[#D5A754] outline-none transition-all resize-none text-[13px] leading-relaxed"
                 placeholder="Brief description for SEO and UI..."
               />
             </div>
             <button 
               disabled={submitting}
-              className="bg-white text-black px-8 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-[#D5A754] transition-all flex items-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-500 rounded-sm"
+              className="bg-white text-black px-8 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-[#D5A754] transition-all flex items-center gap-2 disabled:bg-zinc-800 disabled:text-muted-foreground rounded-sm"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
               Save Category
@@ -124,10 +132,10 @@ export default function AdminCategoriesPage() {
         </div>
       )}
 
-      <div className="bg-[#141414] border border-[#2A2A2D] shadow-sm overflow-hidden rounded-sm">
+      <div className="bg-card border border-border shadow-sm overflow-hidden rounded-sm">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-[#1A1A1D] text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 border-b border-[#2A2A2D]">
+            <tr className="bg-secondary text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground border-b border-border">
               <th className="px-8 py-5">Name</th>
               <th className="px-8 py-5">Slug</th>
               <th className="px-8 py-5 text-center">Products</th>
@@ -150,22 +158,22 @@ export default function AdminCategoriesPage() {
               </tr>
             ) : (
                   categories.map((cat: Category) => (
-                    <tr key={cat.id} className="hover:bg-[#1A1A1D] transition-colors group">
+                    <tr key={cat.id} className="hover:bg-secondary transition-colors group">
                       <td className="px-8 py-5">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-[#0A0A0A] flex items-center justify-center border border-[#2A2A2D]">
+                          <div className="w-8 h-8 bg-background flex items-center justify-center border border-border">
                             <Tag className="w-3.5 h-3.5 text-[#D5A754]" />
                           </div>
-                          <span className="text-[13px] font-bold uppercase tracking-wide text-white group-hover:text-[#D5A754] transition-colors">{cat.name}</span>
+                          <span className="text-[13px] font-bold uppercase tracking-wide text-foreground group-hover:text-[#D5A754] transition-colors">{cat.name}</span>
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-[11px] font-mono text-zinc-500">{cat.slug}</td>
-                      <td className="px-8 py-5 text-[12px] font-bold text-center text-zinc-400">--</td>
+                      <td className="px-8 py-5 text-[11px] font-mono text-muted-foreground">{cat.slug}</td>
+                      <td className="px-8 py-5 text-[12px] font-bold text-center text-muted-foreground">{productCounts[cat.name] || 0}</td>
                       <td className="px-8 py-5 text-right">
                         <button 
                           onClick={() => handleDeleteCategory(cat.id, cat.name)}
                           disabled={deletingId === cat.id}
-                          className="p-2 text-zinc-500 hover:text-rose-500 transition-colors disabled:opacity-50"
+                          className="p-2 text-muted-foreground hover:text-rose-500 transition-colors disabled:opacity-50"
                         >
                           {deletingId === cat.id ? (
                             <Loader2 className="w-4 h-4 animate-spin" />

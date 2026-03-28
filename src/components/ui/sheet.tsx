@@ -117,7 +117,7 @@ function SheetDescription({
   return (
     <SheetPrimitive.Description
       data-slot="sheet-description"
-      className={cn("text-sm text-zinc-400", className)}
+      className={cn("text-sm text-muted-foreground", className)}
       {...props}
     />
   )

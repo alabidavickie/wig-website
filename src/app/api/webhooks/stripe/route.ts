@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { headers } from "next/headers";
-import { updateOrderStatus } from "@/lib/actions/orders";
+import { updateOrderStatus, deductInventoryForOrder } from "@/lib/actions/orders";
 import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
@@ -39,7 +39,10 @@ export async function POST(req: Request) {
       console.log(`[STRIPE_WEBHOOK] Payment successful for session ${reference}`);
       
       // Update order status to paid
-      await updateOrderStatus(reference, "stripe", "paid");
+      const updatedOrder = await updateOrderStatus(reference, "stripe", "paid");
+      if (updatedOrder?.id) {
+        await deductInventoryForOrder(updatedOrder.id);
+      }
       revalidatePath("/admin/orders");
       revalidatePath("/admin");
     }

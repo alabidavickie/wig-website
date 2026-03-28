@@ -11,12 +11,12 @@ export default function FaqClient({ faqs }: { faqs: FaqCategory[] }) {
   };
 
   return (
-    <div className="min-h-screen bg-background text-white font-sans">
+    <div className="min-h-screen bg-background text-foreground font-sans">
       <div className="h-[120px]"></div>
 
       {/* Header */}
       <div className="max-w-[900px] mx-auto px-6 md:px-12 py-20">
-        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 mb-6">Knowledge Base</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground mb-6">Knowledge Base</p>
         <h1 className="font-serif text-6xl md:text-8xl uppercase tracking-tighter italic leading-none mb-6">
           FAQ
         </h1>
@@ -49,7 +49,7 @@ export default function FaqClient({ faqs }: { faqs: FaqCategory[] }) {
                     </button>
                     {isOpen && (
                       <div className="mt-4 pr-10">
-                        <p className="text-[14px] text-white/65 leading-[1.9]">{item.a}</p>
+                        <p className="text-[14px] text-foreground/65 leading-[1.9]">{item.a}</p>
                       </div>
                     )}
                   </div>
@@ -61,14 +61,14 @@ export default function FaqClient({ faqs }: { faqs: FaqCategory[] }) {
       </div>
 
       {/* Still Have Questions */}
-      <div className="bg-[#1A1A1D] text-white py-20">
+      <div className="bg-secondary text-foreground py-20">
         <div className="max-w-[900px] mx-auto px-6 md:px-12 text-center">
-          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/40 mb-6">Still Need Help?</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-foreground/40 mb-6">Still Need Help?</p>
           <h2 className="font-serif text-5xl uppercase tracking-tighter italic mb-6">Our Concierge<br />Is Standing By</h2>
-          <p className="text-[14px] text-white/60 mb-10 leading-relaxed">Our dedicated hair stylists and client specialists answer within 2 hours during business hours.</p>
+          <p className="text-[14px] text-foreground/60 mb-10 leading-relaxed">Our dedicated hair stylists and client specialists answer within 2 hours during business hours.</p>
           <a
             href="/contact"
-            className="inline-block border border-white text-white px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:bg-white hover:text-[#1A1A1D] transition-all"
+            className="inline-block border border-white text-foreground px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:bg-white hover:text-[#1A1A1D] transition-all"
           >
             Contact Our Team
           </a>

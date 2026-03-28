@@ -54,16 +54,16 @@ export default function AdminSettingsPage() {
   ];
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 pb-20 text-white">
+    <div className="space-y-10 animate-in fade-in duration-500 pb-20 text-foreground">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Settings</h1>
-          <p className="text-zinc-400 text-[10px] mt-1 uppercase tracking-widest font-bold">Manage global parameters for Silk Haus.</p>
+          <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">Manage global parameters for Silk Haus.</p>
         </div>
         <button 
           onClick={handleSave}
           disabled={isSaving}
-          className="bg-white text-black px-8 py-4 text-[11px] font-bold uppercase tracking-widest hover:bg-[#D5A754] transition-all flex items-center gap-3 disabled:bg-zinc-800 disabled:text-zinc-500 rounded-sm"
+          className="bg-white text-black px-8 py-4 text-[11px] font-bold uppercase tracking-widest hover:bg-[#D5A754] transition-all flex items-center gap-3 disabled:bg-zinc-800 disabled:text-muted-foreground rounded-sm"
         >
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save Changes
@@ -90,43 +90,43 @@ export default function AdminSettingsPage() {
         </aside>
 
         {/* Content Area */}
-        <div className="bg-[#141414] p-8 md:p-12 border border-[#2A2A2D] shadow-sm space-y-12 rounded-sm text-white">
+        <div className="bg-card p-8 md:p-12 border border-border shadow-sm space-y-12 rounded-sm text-foreground">
            
            {selectedTab === "general" && (
              <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500">
                  <section className="space-y-6">
-                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-white">Store Profile</h3>
+                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-foreground">Store Profile</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <div className="space-y-3">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Official Contact Email</label>
-                          <input defaultValue="follienn@gmail.com" className="w-full h-12 px-4 border border-[#2A2A2D] text-[13px] outline-none focus:border-[#D5A754] bg-[#0A0A0A] font-bold" />
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Official Contact Email</label>
+                          <input defaultValue="follienn@gmail.com" className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
                        </div>
                        <div className="space-y-3">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Support Phone Line</label>
-                          <input defaultValue="+234 800 000 0000" className="w-full h-12 px-4 border border-[#2A2A2D] text-[13px] outline-none focus:border-[#D5A754] bg-[#0A0A0A] font-bold" />
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Support Phone Line</label>
+                          <input defaultValue="+234 800 000 0000" className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
                        </div>
                     </div>
                  </section>
  
                  <section className="space-y-6">
-                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-white">Social Media</h3>
+                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-foreground">Social Media</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <div className="space-y-3">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Instagram Handle</label>
-                          <input defaultValue="@follienn_hair" className="w-full h-12 px-4 border border-[#2A2A2D] text-[13px] outline-none focus:border-[#D5A754] bg-[#0A0A0A] font-bold" />
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Instagram Handle</label>
+                          <input defaultValue="@follienn_hair" className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
                        </div>
                        <div className="space-y-3">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">TikTok Identifier</label>
-                          <input defaultValue="@follienn_hair" className="w-full h-12 px-4 border border-[#2A2A2D] text-[13px] outline-none focus:border-[#D5A754] bg-[#0A0A0A] font-bold" />
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">TikTok Identifier</label>
+                          <input defaultValue="@follienn_hair" className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
                        </div>
                     </div>
                  </section>
  
-                 <section className="space-y-6 pt-10 border-t border-[#2A2A2D]">
+                 <section className="space-y-6 pt-10 border-t border-border">
                      <div className="flex items-center justify-between">
                         <div>
                            <p className="text-[12px] font-bold uppercase tracking-widest">Maintenance Mode</p>
-                           <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Temporarily disable storefront access for updates.</p>
+                           <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Temporarily disable storefront access for updates.</p>
                         </div>
                         <button 
                           onClick={() => setGeneralConfig({...generalConfig, maintenance: !generalConfig.maintenance})}
@@ -142,14 +142,14 @@ export default function AdminSettingsPage() {
             {selectedTab === "notifications" && (
               <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500">
                  <section className="space-y-6">
-                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-white">Commerce Logic</h3>
+                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-foreground">Commerce Logic</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <div className="space-y-3">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Default Currency</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Default Currency</label>
                           <select 
                             value={storeConfig.currency}
                             onChange={(e) => setStoreConfig({...storeConfig, currency: e.target.value})}
-                            className="w-full h-12 px-4 border border-[#2A2A2D] text-[13px] outline-none focus:border-[#D5A754] bg-[#0A0A0A] font-bold"
+                            className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold"
                           >
                             <option value="GBP">GBP (£)</option>
                             <option value="NGN">NGN (₦)</option>
@@ -157,11 +157,11 @@ export default function AdminSettingsPage() {
                           </select>
                        </div>
                        <div className="space-y-3">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Base Shipping Fee</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Base Shipping Fee</label>
                           <input 
                             value={storeConfig.shipping_base}
                             onChange={(e) => setStoreConfig({...storeConfig, shipping_base: e.target.value})}
-                            className="w-full h-12 px-4 border border-[#2A2A2D] text-[13px] outline-none focus:border-[#D5A754] bg-[#0A0A0A] font-bold" 
+                            className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" 
                           />
                        </div>
                     </div>
@@ -172,13 +172,13 @@ export default function AdminSettingsPage() {
             {selectedTab === "security" && (
               <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500">
                  <section className="space-y-6">
-                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-white">Access & Compliance</h3>
+                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-foreground">Access & Compliance</h3>
                     
                     <div className="space-y-6">
-                      <div className="flex items-center justify-between p-6 bg-[#0A0A0A] border border-[#2A2A2D]">
+                      <div className="flex items-center justify-between p-6 bg-background border border-border">
                           <div>
                              <p className="text-[12px] font-bold uppercase tracking-widest">Require Authentication for Checkout</p>
-                             <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Disables guest checkout globally.</p>
+                             <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Disables guest checkout globally.</p>
                           </div>
                           <button 
                             onClick={() => setPrivacyConfig({...privacyConfig, require_auth: !privacyConfig.require_auth})}
@@ -188,10 +188,10 @@ export default function AdminSettingsPage() {
                           </button>
                       </div>
 
-                      <div className="flex items-center justify-between p-6 bg-[#0A0A0A] border border-[#2A2A2D]">
+                      <div className="flex items-center justify-between p-6 bg-background border border-border">
                           <div>
                              <p className="text-[12px] font-bold uppercase tracking-widest">Strict Cookie Consent</p>
-                             <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Limits tracking until user accepts banner.</p>
+                             <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Limits tracking until user accepts banner.</p>
                           </div>
                           <button 
                             onClick={() => setPrivacyConfig({...privacyConfig, cookie_consent: !privacyConfig.cookie_consent})}
@@ -208,29 +208,29 @@ export default function AdminSettingsPage() {
             {selectedTab === "appearance" && (
               <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500">
                  <section className="space-y-6">
-                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-white">Visual Identity</h3>
+                    <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-foreground">Visual Identity</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <div className="space-y-3">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Store Name</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Store Name</label>
                           <input 
                             value={brandingConfig.store_name}
                             onChange={(e) => setBrandingConfig({...brandingConfig, store_name: e.target.value})}
-                            className="w-full h-12 px-4 border border-[#2A2A2D] text-[13px] outline-none focus:border-[#D5A754] bg-[#0A0A0A] font-bold" 
+                            className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" 
                           />
                        </div>
                        <div className="space-y-3">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Primary Brand Color (Hex)</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Primary Brand Color (Hex)</label>
                           <div className="flex gap-4">
                             <input 
                               type="color"
                               value={brandingConfig.primary_color}
                               onChange={(e) => setBrandingConfig({...brandingConfig, primary_color: e.target.value})}
-                              className="w-12 h-12 border border-[#2A2A2D] bg-[#0A0A0A] cursor-pointer" 
+                              className="w-12 h-12 border border-border bg-background cursor-pointer" 
                             />
                             <input 
                               value={brandingConfig.primary_color}
                               onChange={(e) => setBrandingConfig({...brandingConfig, primary_color: e.target.value})}
-                              className="flex-1 h-12 px-4 border border-[#2A2A2D] text-[13px] uppercase outline-none focus:border-[#D5A754] bg-[#0A0A0A] font-bold" 
+                              className="flex-1 h-12 px-4 border border-border text-[13px] uppercase outline-none focus:border-[#D5A754] bg-background font-bold" 
                             />
                           </div>
                        </div>

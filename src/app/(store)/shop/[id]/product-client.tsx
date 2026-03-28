@@ -72,12 +72,12 @@ export default function ProductClient({ product }: { product: Product }) {
 
       <div className="max-w-[1600px] mx-auto py-8 sm:py-12 px-4 sm:px-6 md:px-12">
         <div className="mb-8 sm:mb-12 reveal">
-          <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+          <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
             <span>/</span>
-            <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
+            <Link href="/shop" className="hover:text-foreground transition-colors">Shop</Link>
             <span>/</span>
-            <span className="text-white truncate max-w-[120px] sm:max-w-xs">{product.name}</span>
+            <span className="text-foreground truncate max-w-[120px] sm:max-w-xs">{product.name}</span>
           </nav>
         </div>
 
@@ -100,18 +100,18 @@ export default function ProductClient({ product }: { product: Product }) {
           <div className="lg:sticky lg:top-[160px] h-fit space-y-8 md:space-y-12 reveal" suppressHydrationWarning>
             <div className="space-y-4 md:space-y-6" suppressHydrationWarning>
               <div className="space-y-2">
-                <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-zinc-400">{product.category}</h3>
+                <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-muted-foreground">{product.category}</h3>
                 <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase tracking-tighter leading-tight italic">
                   {product.name}
                 </h1>
               </div>
-              <div className="text-xl md:text-2xl font-serif text-white">
+              <div className="text-xl md:text-2xl font-serif text-foreground">
                 <Price amount={selectedVariant?.price_override || product.base_price || product.price || 0} />
               </div>
             </div>
 
             <div className="space-y-6" suppressHydrationWarning>
-              <p className="text-[14px] md:text-[15px] leading-relaxed text-white/80 max-w-lg">
+              <p className="text-[14px] md:text-[15px] leading-relaxed text-foreground/80 max-w-lg">
                 {product.description}
               </p>
               
@@ -128,7 +128,7 @@ export default function ProductClient({ product }: { product: Product }) {
             <div className="space-y-10">
               {product.variants && product.variants.length > 0 && (
                 <div className="space-y-4">
-                  <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Select Options</label>
+                  <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Select Options</label>
                   <div className="flex flex-wrap gap-3">
                     {product.variants.map((v: ProductVariant) => (
                       <button
@@ -136,7 +136,7 @@ export default function ProductClient({ product }: { product: Product }) {
                         onClick={() => setSelectedVariant(v)}
                         className={`min-w-[100px] px-6 py-4 text-[11px] font-bold border transition-all rounded-full uppercase tracking-widest cursor-pointer ${
                           selectedVariant?.id === v.id 
-                          ? 'border-black bg-black text-white shadow-lg' 
+                          ? 'border-black bg-black text-foreground shadow-lg' 
                           : 'border-gray-100 hover:border-black text-zinc-300'
                         }`}
                       >
@@ -152,8 +152,8 @@ export default function ProductClient({ product }: { product: Product }) {
                   onClick={handleAddToCart}
                   className={`flex-1 py-7 sm:py-8 text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.2em] transition-all rounded-full shadow-2xl cursor-pointer ${
                     isAdded 
-                    ? 'bg-green-600 text-white hover:bg-green-600' 
-                    : 'bg-[#1A1A1D] text-white hover:bg-black'
+                    ? 'bg-green-600 text-foreground hover:bg-green-600' 
+                    : 'bg-secondary text-foreground hover:bg-black'
                   }`}
                 >
                   {isAdded ? 'Piece Added to Bag' : 'Add to Bag'}
@@ -172,7 +172,7 @@ export default function ProductClient({ product }: { product: Product }) {
                  </div>
                  <div>
                    <h4 className="text-[12px] font-bold uppercase tracking-widest mb-1">Authenticity Guaranteed</h4>
-                   <p className="text-[11px] text-zinc-400 uppercase font-bold tracking-widest">Silk Haus Certificate Included</p>
+                   <p className="text-[11px] text-muted-foreground uppercase font-bold tracking-widest">Silk Haus Certificate Included</p>
                  </div>
               </div>
             </div>

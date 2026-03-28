@@ -13,12 +13,12 @@ export default function TermsConditionsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-white font-sans">
+    <div className="min-h-screen bg-background text-foreground font-sans">
       <div className="h-[120px]"></div>
 
       {/* Header */}
       <div className="max-w-[900px] mx-auto px-6 md:px-12 py-20">
-        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 mb-6">Legals</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground mb-6">Legals</p>
         <h1 className="font-serif text-6xl md:text-8xl uppercase tracking-tighter italic leading-none mb-6">
           Terms &<br />Conditions
         </h1>
@@ -38,7 +38,7 @@ export default function TermsConditionsPage() {
               {section.items.map((item, idx) => (
                 <li key={idx} className="flex gap-4 items-start">
                   <span className="text-[#D5A754] font-bold">✦</span>
-                  <span className="text-[15px] text-white/70 leading-relaxed">{item}</span>
+                  <span className="text-[15px] text-foreground/70 leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>

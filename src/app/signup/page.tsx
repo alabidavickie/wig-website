@@ -35,16 +35,16 @@ function SignupForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex flex-col justify-center py-16 px-6 lg:px-8 font-sans transition-colors duration-700">
+    <div className="min-h-screen bg-background flex flex-col justify-center py-16 px-6 lg:px-8 font-sans transition-colors duration-700">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/" className="inline-block group">
            <div className="mb-8 group-hover:scale-105 transition-transform">
               <img src="/images/logo_main.png" alt="Silk Haus Logo" className="w-16 h-auto mx-auto object-contain" />
            </div>
-          <h1 className="font-serif text-4xl tracking-[0.3em] uppercase text-white mb-2 leading-none">SILK HAUS</h1>
+          <h1 className="font-serif text-4xl tracking-[0.3em] uppercase text-foreground mb-2 leading-none">SILK HAUS</h1>
         </Link>
         <h2 className="text-[12px] uppercase tracking-[0.4em] font-bold text-[#D5A754] mb-2 mt-8">Create Your Account</h2>
-        <p className="text-[11px] text-zinc-400 uppercase tracking-widest max-w-sm mx-auto leading-loose">
+        <p className="text-[11px] text-muted-foreground uppercase tracking-widest max-w-sm mx-auto leading-loose">
           {redirectTo === "/checkout" 
             ? "Create an account to complete your order" 
             : "Join Silk Haus to start shopping"}
@@ -52,7 +52,7 @@ function SignupForm() {
       </div>
 
       <div className="mt-12 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-[#141414] py-10 px-8 border border-[#2A2A2D] sm:px-12 rounded-sm shadow-2xl relative overflow-hidden">
+        <div className="bg-card py-10 px-8 border border-border sm:px-12 rounded-sm shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#D5A754]/40 to-transparent"></div>
           
           <form action={handleSubmit} className="space-y-8">
@@ -72,51 +72,51 @@ function SignupForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-3">
-                <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="firstName">First Name</Label>
+                <Label className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-bold ml-1" htmlFor="firstName">First Name</Label>
                 <Input
                   id="firstName"
                   name="firstName"
                   type="text"
                   required
-                  className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
+                  className="rounded-none border-border h-14 text-[13px] text-foreground focus-visible:ring-[#D5A754]/50 bg-background placeholder:text-muted-foreground/50 transition-all border-l-2 focus:border-l-[#D5A754]"
                   placeholder="First name"
                 />
               </div>
               <div className="space-y-3">
-                <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="lastName">Last Name</Label>
+                <Label className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-bold ml-1" htmlFor="lastName">Last Name</Label>
                 <Input
                   id="lastName"
                   name="lastName"
                   type="text"
                   required
-                  className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
+                  className="rounded-none border-border h-14 text-[13px] text-foreground focus-visible:ring-[#D5A754]/50 bg-background placeholder:text-muted-foreground/50 transition-all border-l-2 focus:border-l-[#D5A754]"
                   placeholder="Last name"
                 />
               </div>
             </div>
 
             <div className="space-y-3">
-              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="email">Email Address</Label>
+              <Label className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-bold ml-1" htmlFor="email">Email Address</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 required
-                className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
+                className="rounded-none border-border h-14 text-[13px] text-foreground focus-visible:ring-[#D5A754]/50 bg-background placeholder:text-muted-foreground/50 transition-all border-l-2 focus:border-l-[#D5A754]"
                 placeholder="your@email.com"
               />
             </div>
 
             <div className="space-y-3">
-              <Label className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-bold ml-1" htmlFor="password">Password</Label>
+              <Label className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-bold ml-1" htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
                 autoComplete="new-password"
                 required
-                className="rounded-none border-[#2A2A2D] h-14 text-[13px] text-white focus-visible:ring-[#D5A754]/50 bg-[#0A0A0A] placeholder:text-zinc-700 transition-all border-l-2 focus:border-l-[#D5A754]"
+                className="rounded-none border-border h-14 text-[13px] text-foreground focus-visible:ring-[#D5A754]/50 bg-background placeholder:text-muted-foreground/50 transition-all border-l-2 focus:border-l-[#D5A754]"
                 placeholder="Minimum 6 characters"
               />
             </div>
@@ -141,15 +141,15 @@ function SignupForm() {
             </div>
           </form>
 
-          <div className="mt-12 pt-10 border-t border-[#2A2A2D] text-center space-y-6">
+          <div className="mt-12 pt-10 border-t border-border text-center space-y-6">
             <Link
               href={redirectTo === "/checkout" ? "/checkout" : "/shop"}
-              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-zinc-400 hover:text-white transition-colors group"
+              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground transition-colors group"
             >
               Continue as Guest <ArrowRight className="w-3 h-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            <p className="text-[10px] text-zinc-400 uppercase tracking-widest">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
               Already have an account?{" "}
               <Link href={`/login${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`} className="font-bold text-[#D5A754] hover:text-[#E6B964] transition-colors underline underline-offset-4">
                 Sign In
@@ -158,7 +158,7 @@ function SignupForm() {
           </div>
         </div>
         
-        <div className="mt-8 flex items-center justify-center gap-4 text-zinc-700">
+        <div className="mt-8 flex items-center justify-center gap-4 text-muted-foreground/50">
            <ShieldCheck className="w-4 h-4" />
            <span className="text-[9px] uppercase tracking-[0.4em]">Secure & encrypted</span>
         </div>
@@ -169,7 +169,7 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center"><p className="font-serif italic text-zinc-400 animate-pulse">Loading...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><p className="font-serif italic text-muted-foreground animate-pulse">Loading...</p></div>}>
       <SignupForm />
     </Suspense>
   );

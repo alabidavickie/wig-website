@@ -28,20 +28,20 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex flex-col justify-center py-12 px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-background flex flex-col justify-center py-12 px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/login" className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-8 hover:text-white transition-colors">
+        <Link href="/login" className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-8 hover:text-foreground transition-colors">
           <ArrowLeft className="w-3 h-3" /> Back to Login
         </Link>
-        <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-white mb-8 text-center w-full">SILK HAUS</h1>
-        <h2 className="text-[14px] uppercase tracking-widest font-bold text-white">Forgot Password</h2>
-        <p className="mt-2 text-[12px] text-zinc-400 uppercase tracking-widest">
+        <h1 className="font-serif text-4xl tracking-[0.2em] uppercase text-foreground mb-8 text-center w-full">SILK HAUS</h1>
+        <h2 className="text-[14px] uppercase tracking-widest font-bold text-foreground">Forgot Password</h2>
+        <p className="mt-2 text-[12px] text-muted-foreground uppercase tracking-widest">
           Enter your email and we&apos;ll send you a recovery link
         </p>
       </div>
 
       <div className="mt-12 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-[#141414] py-8 px-4 border border-[#2A2A2D] sm:px-10">
+        <div className="bg-card py-8 px-4 border border-border sm:px-10">
           <form action={handleSubmit} className="space-y-8">
             {error && (
               <div className="bg-red-500/10 text-red-400 text-[11px] p-4 uppercase tracking-widest font-bold border-l-2 border-red-500">
@@ -55,14 +55,14 @@ export default function ForgotPasswordPage() {
             )}
 
             <div className="space-y-2">
-              <Label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold" htmlFor="email">Email Address</Label>
+              <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold" htmlFor="email">Email Address</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 required
-                className="rounded-none border-[#2A2A2D] h-12 text-[13px] focus-visible:ring-[#D5A754] bg-[#0A0A0A] text-white placeholder:text-zinc-600"
+                className="rounded-none border-border h-12 text-[13px] focus-visible:ring-[#D5A754] bg-background text-foreground placeholder:text-zinc-600"
                 placeholder="EMAIL@EXAMPLE.COM"
               />
             </div>
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={pending}
-              className="w-full bg-white text-black hover:bg-[#D5A754] py-7 rounded-none text-[13px] uppercase tracking-[0.2em] font-medium transition-all disabled:bg-zinc-800 disabled:text-zinc-500"
+              className="w-full bg-white text-black hover:bg-[#D5A754] py-7 rounded-none text-[13px] uppercase tracking-[0.2em] font-medium transition-all disabled:bg-zinc-800 disabled:text-muted-foreground"
             >
               {pending ? "Sending..." : "Send Recovery Link"}
             </Button>

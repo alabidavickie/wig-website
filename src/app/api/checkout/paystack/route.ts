@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createOrder, OrderInput } from "@/lib/actions/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { validateDiscountCode, incrementDiscountUsage } from "@/lib/actions/discounts";
 
 export async function POST(req: Request) {
   try {
@@ -38,7 +39,9 @@ export async function POST(req: Request) {
         city: z.string().min(2),
         zip: z.string().default("")
       }),
-      currency: z.string().optional()
+      currency: z.string().optional(),
+      discountCode: z.string().nullable().optional(),
+      discountAmount: z.number().min(0).optional(),
     });
 
     const validatedData = checkoutSchema.safeParse(body);
@@ -49,7 +52,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { items, shippingDetails } = validatedData.data;
+    const { items, shippingDetails, discountCode } = validatedData.data;
 
     // Fetch products from database to get authentic prices
     // Filter out mock IDs for DB lookup (they won't exist in Supabase)
@@ -81,6 +84,18 @@ export async function POST(req: Request) {
       );
     }
 
+    // Server-side discount validation
+    let validatedDiscount: { id: string; code: string; discountAmount: number } | null = null;
+    let discountAmountGbp = 0;
+    if (discountCode) {
+      const discountResult = await validateDiscountCode(discountCode, base_total);
+      if (discountResult.valid && discountResult.discount) {
+        validatedDiscount = discountResult.discount;
+        discountAmountGbp = discountResult.discount.discountAmount;
+      }
+    }
+    const discounted_base = Math.max(0, base_total - discountAmountGbp);
+
     // 1. FETCH LATEST EXCHANGE RATE (GBP -> NGN)
     let rate = 1500; // Fallback
     try {
@@ -96,9 +111,9 @@ export async function POST(req: Request) {
     // 2. APPLY SHIPPING (Fixed fee: £15 or converted NGN)
     const SHIPPING_GBP = 15;
     const shipping_ngn = Math.round(SHIPPING_GBP * rate);
-    
-    // 3. CONVERT TOTAL TO NGN
-    const total_ngn = Math.round(base_total * rate) + shipping_ngn;
+
+    // 3. CONVERT DISCOUNTED TOTAL TO NGN
+    const total_ngn = Math.round(discounted_base * rate) + shipping_ngn;
 
     const email = user?.email || shippingDetails?.email || "unknown@example.com";
     
@@ -167,6 +182,9 @@ export async function POST(req: Request) {
     // Save Pending Order to Database only after successful initialization
     try {
       await createOrder(orderInput);
+      if (validatedDiscount) {
+        await incrementDiscountUsage(validatedDiscount.id);
+      }
     } catch (orderError: any) {
       console.warn("[PAYSTACK_ORDER_SAVE_WARNING] Order save failed but payment was initialized:", orderError.message);
       // Don't block the payment — the webhook will handle order reconciliation

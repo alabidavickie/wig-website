@@ -7,10 +7,10 @@ const DashboardLayout = ({
   children: React.ReactNode;
 }) => {
   return ( 
-    <div className="flex flex-col min-h-screen bg-[#0A0A0A] text-white font-sans" suppressHydrationWarning>
+    <div className="flex flex-col min-h-screen bg-background text-foreground font-sans" suppressHydrationWarning>
       <Header />
       <main className="flex-1 mt-[80px] md:mt-[100px]" suppressHydrationWarning>
-        <div className="h-full overflow-auto bg-[#0A0A0A]" suppressHydrationWarning>
+        <div className="h-full overflow-auto bg-background" suppressHydrationWarning>
           {children}
         </div>
       </main>

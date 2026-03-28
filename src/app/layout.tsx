@@ -26,7 +26,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className="antialiased font-sans bg-background text-white"
+        className="antialiased font-sans bg-background text-foreground"
         style={{
           fontFamily: 'var(--font-inter, Inter, system-ui, sans-serif)',
         }}

@@ -21,12 +21,12 @@ export const MobileSidebar = () => {
     <Sheet>
       <SheetTrigger
         render={
-          <Button variant="ghost" size="icon" className="md:hidden text-zinc-400 hover:text-white hover:bg-[#1A1A1D]">
+          <Button variant="ghost" size="icon" className="md:hidden text-muted-foreground hover:text-foreground hover:bg-secondary">
             <Menu className="w-6 h-6" />
           </Button>
         }
       />
-      <SheetContent side="left" className="p-0 bg-[#0A0A0A] border-r border-[#1F1F1F] text-white w-[280px]">
+      <SheetContent side="left" className="p-0 bg-background border-r border-[#1F1F1F] text-foreground w-[280px]">
         <Sidebar />
       </SheetContent>
     </Sheet>

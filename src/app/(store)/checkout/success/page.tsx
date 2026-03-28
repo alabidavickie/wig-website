@@ -94,7 +94,7 @@ function SuccessContent() {
           </h1>
           <p className="text-[14px] text-zinc-300 tracking-wide leading-relaxed">
             Securely confirming your payment with{" "}
-            <span className="font-bold text-white uppercase tracking-widest">{provider}</span>...
+            <span className="font-bold text-foreground uppercase tracking-widest">{provider}</span>...
           </p>
         </div>
       </div>
@@ -119,13 +119,13 @@ function SuccessContent() {
           <div className="flex gap-4 justify-center mt-12">
             <Link
               href="/contact"
-              className="bg-black text-white px-10 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl"
+              className="bg-black text-foreground px-10 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl"
             >
               Contact Support
             </Link>
             <Link
               href="/shop"
-              className="border border-gray-200 text-white px-10 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] hover:border-white transition-all"
+              className="border border-gray-200 text-foreground px-10 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] hover:border-white transition-all"
             >
               Back to Shop
             </Link>
@@ -153,23 +153,23 @@ function SuccessContent() {
         <div className="space-y-4">
           <p className="text-[14px] text-zinc-300 tracking-wide leading-relaxed">
             Your luxury acquisition has been verified and confirmed via{" "}
-            <span className="font-bold text-white uppercase tracking-widest">{result.provider}</span>.
+            <span className="font-bold text-foreground uppercase tracking-widest">{result.provider}</span>.
           </p>
 
           {result.amount && result.currency && (
-            <p className="text-[18px] font-bold font-serif italic text-white">
+            <p className="text-[18px] font-bold font-serif italic text-foreground">
               {result.currency === "GBP" ? "£" : result.currency === "NGN" ? "₦" : "$"}
               {result.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </p>
           )}
 
           {reference && (
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
               Ref: {reference}
             </p>
           )}
           {sessionId && (
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
               Session: {sessionId.slice(0, 20)}...
             </p>
           )}
@@ -183,12 +183,12 @@ function SuccessContent() {
 
         {/* Countdown redirect */}
         <div className="bg-[#FAF9F6] border border-gray-100 rounded-2xl px-8 py-6 space-y-3 mt-4">
-          <p className="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">
+          <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold">
             Redirecting to your dashboard in
           </p>
           <div className="flex items-center justify-center gap-2">
-            <span className="text-4xl font-serif italic font-bold text-white">{countdown}</span>
-            <span className="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">seconds</span>
+            <span className="text-4xl font-serif italic font-bold text-foreground">{countdown}</span>
+            <span className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold">seconds</span>
           </div>
           <div className="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
             <div
@@ -201,14 +201,14 @@ function SuccessContent() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
           <Link
             href="/dashboard/orders"
-            className="inline-flex items-center justify-center gap-3 bg-black text-white px-10 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl"
+            className="inline-flex items-center justify-center gap-3 bg-black text-foreground px-10 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl"
           >
             <LayoutDashboard className="w-4 h-4" />
             Go to Dashboard
           </Link>
           <Link
             href="/shop"
-            className="inline-flex items-center justify-center gap-3 border border-gray-200 text-white px-10 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] hover:border-white transition-all"
+            className="inline-flex items-center justify-center gap-3 border border-gray-200 text-foreground px-10 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] hover:border-white transition-all"
           >
             <ShoppingBag className="w-4 h-4" />
             Continue Shopping

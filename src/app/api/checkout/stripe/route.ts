@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { z } from "zod";
 import { createOrder, OrderInput } from "@/lib/actions/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { validateDiscountCode, incrementDiscountUsage } from "@/lib/actions/discounts";
 
 export async function POST(req: Request) {
   try {
@@ -43,7 +44,9 @@ export async function POST(req: Request) {
         city: z.string().min(2),
         zip: z.string().default("")
       }),
-      currency: z.string().optional()
+      currency: z.string().optional(),
+      discountCode: z.string().nullable().optional(),
+      discountAmount: z.number().min(0).optional(),
     });
 
     const validatedData = checkoutSchema.safeParse(body);
@@ -54,7 +57,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { items, shippingDetails } = validatedData.data;
+    const { items, shippingDetails, discountCode } = validatedData.data;
 
     // Fetch products from database to get authentic prices
     // Filter out mock IDs for DB lookup
@@ -105,6 +108,28 @@ export async function POST(req: Request) {
       },
       quantity: 1,
     } as any);
+
+    // Server-side discount validation
+    let validatedDiscount: { id: string; code: string; discountAmount: number } | null = null;
+    const subtotalGbp = line_items
+      .filter((li: any) => li.price_data.product_data.name !== "Global Shipping & Handling")
+      .reduce((acc: number, li: any) => acc + (li.price_data.unit_amount / 100) * li.quantity, 0);
+
+    if (discountCode) {
+      const discountResult = await validateDiscountCode(discountCode, subtotalGbp);
+      if (discountResult.valid && discountResult.discount) {
+        validatedDiscount = discountResult.discount;
+        // Add a negative discount line item
+        line_items.push({
+          price_data: {
+            currency: "gbp",
+            product_data: { name: `Discount: ${discountResult.discount.code}` },
+            unit_amount: -Math.round(discountResult.discount.discountAmount * 100),
+          },
+          quantity: 1,
+        } as any);
+      }
+    }
 
     // Validate total > 0
     const total_amount = line_items.reduce((acc: number, li: any) => acc + (li.price_data.unit_amount / 100) * li.quantity, 0);
@@ -164,6 +189,9 @@ export async function POST(req: Request) {
     // Save Pending Order to Database
     try {
       await createOrder(orderInput);
+      if (validatedDiscount) {
+        await incrementDiscountUsage(validatedDiscount.id);
+      }
     } catch (orderError: any) {
       console.warn("[STRIPE_ORDER_SAVE_WARNING] Order save failed but session was created:", orderError.message);
       // Don't block the payment — the webhook will handle order reconciliation

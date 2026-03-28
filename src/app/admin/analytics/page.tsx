@@ -1,4 +1,4 @@
-import { BarChart3, Users, DollarSign, ArrowUpRight, ArrowDownRight, Package, ShoppingBag, TrendingUp } from "lucide-react";
+import { BarChart3, Users, DollarSign, ArrowUpRight, ArrowDownRight, Package, ShoppingBag, TrendingUp, Truck, CheckCircle, Clock, MapPin } from "lucide-react";
 import { getAllOrders } from "@/lib/actions/orders";
 import { getProducts, getCategories } from "@/lib/actions/products";
 
@@ -172,15 +172,44 @@ export default async function AnalyticsPage() {
   });
   const topProducts = Object.values(productRevenue).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
 
+  // ── Fulfillment Pipeline (Live) ──────────────────
+  const pendingOrders = allOrders.filter((o: Order) => o.status === 'pending').length;
+  const processingOrders = allOrders.filter((o: Order) => o.status === 'paid' || o.status === 'processing').length;
+  const shippedOrders = allOrders.filter((o: Order) => o.status === 'shipped').length;
+  const deliveredOrders = allOrders.filter((o: Order) => o.status === 'delivered').length;
+  const cancelledOrders = allOrders.filter((o: Order) => o.status === 'cancelled').length;
+
+  const fulfillmentRate = totalOrders > 0 ? ((deliveredOrders / totalOrders) * 100).toFixed(1) : '0';
+  const shipmentRate = totalOrders > 0 ? (((shippedOrders + deliveredOrders) / totalOrders) * 100).toFixed(1) : '0';
+
+  // Avg fulfillment time (orders that have been delivered)
+  const deliveredOrdersList = allOrders.filter((o: Order) => o.status === 'delivered');
+  const avgFulfillmentDays = deliveredOrdersList.length > 0
+    ? Math.round(
+        deliveredOrdersList.reduce((sum: number, o: Order) => {
+          const created = new Date(o.created_at).getTime();
+          const now = Date.now();
+          return sum + (now - created) / (1000 * 60 * 60 * 24);
+        }, 0) / deliveredOrdersList.length
+      )
+    : 0;
+
+  const pipeline = [
+    { label: 'Pending', count: pendingOrders, color: 'bg-amber-400', textColor: 'text-amber-400', icon: Clock },
+    { label: 'Processing', count: processingOrders, color: 'bg-blue-400', textColor: 'text-blue-400', icon: Package },
+    { label: 'Shipped', count: shippedOrders, color: 'bg-indigo-400', textColor: 'text-indigo-400', icon: Truck },
+    { label: 'Delivered', count: deliveredOrders, color: 'bg-emerald-400', textColor: 'text-emerald-400', icon: CheckCircle },
+  ];
+
   // Month labels
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pb-20 text-white">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-20 text-foreground">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Business Analytics</h1>
-          <p className="text-zinc-400 text-[10px] mt-1 uppercase tracking-widest font-bold">Live data from your store.</p>
+          <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">Live data from your store.</p>
         </div>
         <div className="text-[9px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-sm flex items-center gap-2">
           <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
@@ -191,11 +220,11 @@ export default async function AnalyticsPage() {
       {/* Overview Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {metrics.map((m) => (
-          <div key={m.label} className="bg-[#141414] p-4 sm:p-6 border border-[#2A2A2D] shadow-sm relative overflow-hidden group rounded-sm transition-all hover:border-[#D5A754]/30">
+          <div key={m.label} className="bg-card p-4 sm:p-6 border border-border shadow-sm relative overflow-hidden group rounded-sm transition-all hover:border-[#D5A754]/30">
              <div className="absolute top-0 right-0 p-3 sm:p-4 opacity-5 group-hover:opacity-20 transition-opacity">
                 <BarChart3 className="w-8 sm:w-12 h-8 sm:h-12 text-[#D5A754]" />
              </div>
-             <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-500 mb-1 sm:mb-2">{m.label}</h3>
+             <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-muted-foreground mb-1 sm:mb-2">{m.label}</h3>
              <p className="text-lg sm:text-2xl md:text-3xl font-bold tracking-tighter break-all sm:break-normal">{m.value}</p>
              <div className="flex items-center gap-1 mt-2">
                 <span className={`text-[9px] sm:text-[10px] font-bold flex items-center gap-0.5 ${m.trend === 'up' ? 'text-emerald-500' : 'text-rose-500'}`}>
@@ -207,12 +236,86 @@ export default async function AnalyticsPage() {
         ))}
       </div>
 
+      {/* Fulfillment Pipeline */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-card p-4 sm:p-8 border border-border shadow-sm rounded-sm">
+          <h3 className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 mb-6 sm:mb-8 flex items-center gap-2">
+            <Truck className="w-4 h-4 text-[#D5A754]" /> Shipping & Fulfillment Pipeline
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+            {pipeline.map((stage) => (
+              <div key={stage.label} className="text-center p-4 bg-background border border-border rounded-sm">
+                <stage.icon className={`w-5 h-5 mx-auto mb-2 ${stage.textColor}`} />
+                <p className="text-2xl font-bold tracking-tighter">{stage.count}</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mt-1">{stage.label}</p>
+              </div>
+            ))}
+          </div>
+          {/* Visual funnel bar */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
+              <span>Order Flow</span>
+              <span className="flex-1 h-px bg-[#2A2A2D]"></span>
+              <span>{totalOrders} Total</span>
+            </div>
+            <div className="h-6 flex rounded-sm overflow-hidden bg-background border border-border">
+              {pipeline.map((stage) => (
+                totalOrders > 0 && stage.count > 0 && (
+                  <div
+                    key={stage.label}
+                    className={`${stage.color} opacity-80 hover:opacity-100 transition-opacity relative group`}
+                    style={{ width: `${(stage.count / totalOrders) * 100}%` }}
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[8px] py-0.5 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 font-bold rounded-sm">
+                      {stage.label}: {stage.count}
+                    </div>
+                  </div>
+                )
+              ))}
+              {cancelledOrders > 0 && totalOrders > 0 && (
+                <div
+                  className="bg-red-500 opacity-60 hover:opacity-100 transition-opacity relative group"
+                  style={{ width: `${(cancelledOrders / totalOrders) * 100}%` }}
+                >
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[8px] py-0.5 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 font-bold rounded-sm">
+                    Cancelled: {cancelledOrders}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Fulfillment Stats */}
+        <div className="bg-card p-4 sm:p-8 border border-border shadow-sm rounded-sm flex flex-col justify-between">
+          <h3 className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 mb-6 sm:mb-8 flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-[#D5A754]" /> Delivery Stats
+          </h3>
+          <div className="space-y-6 flex-1">
+            <div>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Fulfillment Rate</p>
+              <p className="text-3xl font-bold tracking-tighter text-emerald-400">{fulfillmentRate}%</p>
+              <p className="text-[9px] text-muted-foreground uppercase tracking-widest mt-1 font-bold">{deliveredOrders} of {totalOrders} orders delivered</p>
+            </div>
+            <div>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Shipment Rate</p>
+              <p className="text-2xl font-bold tracking-tighter text-blue-400">{shipmentRate}%</p>
+              <p className="text-[9px] text-muted-foreground uppercase tracking-widest mt-1 font-bold">{shippedOrders + deliveredOrders} shipped or delivered</p>
+            </div>
+            <div>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Avg Fulfillment Time</p>
+              <p className="text-2xl font-bold tracking-tighter text-[#D5A754]">{avgFulfillmentDays || '—'} <span className="text-[11px] text-muted-foreground">days</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Revenue Chart */}
-        <div className="bg-[#141414] p-4 sm:p-8 border border-[#2A2A2D] shadow-sm rounded-sm">
+        <div className="bg-card p-4 sm:p-8 border border-border shadow-sm rounded-sm">
           <h3 className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 mb-6 sm:mb-8">Monthly Revenue ({currentYear})</h3>
-          <div className="h-48 sm:h-64 flex items-end gap-1 sm:gap-2 px-1 pb-2 border-b border-l border-[#2A2A2D]">
+          <div className="h-48 sm:h-64 flex items-end gap-1 sm:gap-2 px-1 pb-2 border-b border-l border-border">
             {monthlyRevenue.map((rev, i) => (
               <div
                 key={i}
@@ -233,21 +336,21 @@ export default async function AnalyticsPage() {
         </div>
 
         {/* Category Revenue Share */}
-        <div className="bg-[#141414] p-4 sm:p-8 border border-[#2A2A2D] shadow-sm rounded-sm">
+        <div className="bg-card p-4 sm:p-8 border border-border shadow-sm rounded-sm">
           <h3 className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 mb-6 sm:mb-8">Category Revenue Share</h3>
           <div className="space-y-5 sm:space-y-6">
             {categoryData.length === 0 ? (
-              <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold py-10 text-center">No category data yet. Revenue will appear after orders are placed.</p>
+              <p className="text-muted-foreground text-[10px] uppercase tracking-widest font-bold py-10 text-center">No category data yet. Revenue will appear after orders are placed.</p>
             ) : (
               categoryData.map(([name, revenue]) => (
                 <div key={name} className="space-y-2">
                   <div className="flex justify-between items-end gap-2">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-zinc-400 truncate">{name}</span>
-                    <span className="text-[11px] sm:text-[12px] font-bold text-white tracking-tighter shrink-0">
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-muted-foreground truncate">{name}</span>
+                    <span className="text-[11px] sm:text-[12px] font-bold text-foreground tracking-tighter shrink-0">
                       £{revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
-                  <div className="h-1.5 w-full bg-[#0A0A0A] rounded-full overflow-hidden border border-[#2A2A2D]">
+                  <div className="h-1.5 w-full bg-background rounded-full overflow-hidden border border-border">
                     <div
                       className="h-full bg-[#D5A754] transition-all duration-1000 ease-out rounded-full"
                       style={{ width: `${Math.max((revenue / maxCatRevenue) * 100, 2)}%` }}
@@ -263,18 +366,18 @@ export default async function AnalyticsPage() {
       {/* Bottom Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Payment Provider Split */}
-        <div className="bg-[#141414] p-4 sm:p-8 border border-[#2A2A2D] shadow-sm rounded-sm">
+        <div className="bg-card p-4 sm:p-8 border border-border shadow-sm rounded-sm">
           <h3 className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 mb-6 sm:mb-8">Payment Provider Split</h3>
           <div className="space-y-4 sm:space-y-5">
             {Object.keys(providerTotals).length === 0 ? (
-              <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold py-10 text-center">No payment data yet.</p>
+              <p className="text-muted-foreground text-[10px] uppercase tracking-widest font-bold py-10 text-center">No payment data yet.</p>
             ) : (
               Object.entries(providerTotals).sort(([, a], [, b]) => b - a).map(([provider, amount]) => (
                 <div key={provider} className="flex items-center gap-4 sm:gap-6 group">
                   <div className={`w-3 h-3 shrink-0 rounded-sm ${provider === 'stripe' ? 'bg-indigo-500' : provider === 'paystack' ? 'bg-teal-500' : 'bg-zinc-500'}`}></div>
-                  <span className="flex-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors capitalize">{provider}</span>
-                  <span className="text-[10px] sm:text-[11px] font-bold text-zinc-400">{((amount / providerTotal) * 100).toFixed(1)}%</span>
-                  <span className="text-[11px] sm:text-[12px] font-bold text-white">£{amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span className="flex-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors capitalize">{provider}</span>
+                  <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground">{((amount / providerTotal) * 100).toFixed(1)}%</span>
+                  <span className="text-[11px] sm:text-[12px] font-bold text-foreground">£{amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               ))
             )}
@@ -282,20 +385,20 @@ export default async function AnalyticsPage() {
         </div>
 
         {/* Top Products by Revenue */}
-        <div className="bg-[#141414] p-4 sm:p-8 border border-[#2A2A2D] shadow-sm rounded-sm">
+        <div className="bg-card p-4 sm:p-8 border border-border shadow-sm rounded-sm">
           <h3 className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 mb-6 sm:mb-8">Top Products by Revenue</h3>
           <div className="space-y-4 sm:space-y-5">
             {topProducts.length === 0 ? (
-              <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold py-10 text-center">No product data yet.</p>
+              <p className="text-muted-foreground text-[10px] uppercase tracking-widest font-bold py-10 text-center">No product data yet.</p>
             ) : (
               topProducts.map((p, i) => (
                 <div key={i} className="flex items-center gap-3 sm:gap-4 group">
                   <span className="text-[10px] font-bold text-zinc-600 w-5 shrink-0">#{i + 1}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest truncate group-hover:text-[#D5A754] transition-colors">{p.name}</p>
-                    <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">{p.qty} sold</p>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">{p.qty} sold</p>
                   </div>
-                  <span className="text-[11px] sm:text-[12px] font-bold text-white tracking-tighter shrink-0">
+                  <span className="text-[11px] sm:text-[12px] font-bold text-foreground tracking-tighter shrink-0">
                     £{p.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>

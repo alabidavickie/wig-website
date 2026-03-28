@@ -54,13 +54,13 @@ function PolicyEditor({
 }) {
   return (
     <div className="space-y-4">
-      <p className="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">
+      <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold">
         Edit the content below. Use blank lines to separate paragraphs.
       </p>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full p-5 border border-[#2A2A2D] bg-[#0A0A0A] text-white focus:border-[#D5A754] outline-none min-h-[420px] resize-y text-[13px] leading-loose font-mono rounded-sm"
+        className="w-full p-5 border border-border bg-background text-foreground focus:border-[#D5A754] outline-none min-h-[420px] resize-y text-[13px] leading-loose font-mono rounded-sm"
         placeholder="Enter policy content here…"
         spellCheck
       />
@@ -126,14 +126,14 @@ function FaqEditor({
 
   return (
     <div className="space-y-4">
-      <p className="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">
+      <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold">
         Add, edit, or remove FAQ categories and questions.
       </p>
 
       {faq.map((cat, ci) => (
-        <div key={ci} className="border border-[#2A2A2D] rounded-sm">
+        <div key={ci} className="border border-border rounded-sm">
           {/* Category header */}
-          <div className="flex items-center gap-3 p-4 bg-[#0A0A0A]">
+          <div className="flex items-center gap-3 p-4 bg-background">
             <button
               type="button"
               onClick={() => setOpenCategory(openCategory === ci ? null : ci)}
@@ -142,12 +142,12 @@ function FaqEditor({
               {openCategory === ci ? (
                 <ChevronUp className="w-4 h-4 text-[#D5A754] shrink-0" />
               ) : (
-                <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
+                <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />
               )}
-              <span className="text-[12px] font-bold uppercase tracking-widest text-white">
+              <span className="text-[12px] font-bold uppercase tracking-widest text-foreground">
                 {cat.category || "Untitled Category"}
               </span>
-              <span className="text-[10px] text-zinc-500 font-normal">
+              <span className="text-[10px] text-muted-foreground font-normal">
                 ({cat.questions.length} questions)
               </span>
             </button>
@@ -163,22 +163,22 @@ function FaqEditor({
 
           {/* Category content */}
           {openCategory === ci && (
-            <div className="p-5 space-y-6 border-t border-[#2A2A2D]">
+            <div className="p-5 space-y-6 border-t border-border">
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-2">
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
                   Category Name
                 </label>
                 <input
                   type="text"
                   value={cat.category}
                   onChange={(e) => updateCategory(ci, e.target.value)}
-                  className="w-full px-4 py-3 border border-[#2A2A2D] bg-[#0A0A0A] text-white focus:border-[#D5A754] outline-none text-[13px] rounded-sm"
+                  className="w-full px-4 py-3 border border-border bg-background text-foreground focus:border-[#D5A754] outline-none text-[13px] rounded-sm"
                   placeholder="e.g. About Our Hair"
                 />
               </div>
 
               {cat.questions.map((item, qi) => (
-                <div key={qi} className="border border-[#2A2A2D] p-4 space-y-3 rounded-sm">
+                <div key={qi} className="border border-border p-4 space-y-3 rounded-sm">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#D5A754]">
                       Question {qi + 1}
@@ -193,25 +193,25 @@ function FaqEditor({
                     </button>
                   </div>
                   <div>
-                    <label className="block text-[10px] text-zinc-500 uppercase tracking-widest mb-1.5">
+                    <label className="block text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5">
                       Question
                     </label>
                     <input
                       type="text"
                       value={item.q}
                       onChange={(e) => updateQuestion(ci, qi, "q", e.target.value)}
-                      className="w-full px-4 py-3 border border-[#2A2A2D] bg-[#141414] text-white focus:border-[#D5A754] outline-none text-[13px] rounded-sm"
+                      className="w-full px-4 py-3 border border-border bg-card text-foreground focus:border-[#D5A754] outline-none text-[13px] rounded-sm"
                       placeholder="Enter the question…"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-zinc-500 uppercase tracking-widest mb-1.5">
+                    <label className="block text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5">
                       Answer
                     </label>
                     <textarea
                       value={item.a}
                       onChange={(e) => updateQuestion(ci, qi, "a", e.target.value)}
-                      className="w-full px-4 py-3 border border-[#2A2A2D] bg-[#141414] text-white focus:border-[#D5A754] outline-none text-[13px] leading-relaxed resize-y min-h-[100px] rounded-sm"
+                      className="w-full px-4 py-3 border border-border bg-card text-foreground focus:border-[#D5A754] outline-none text-[13px] leading-relaxed resize-y min-h-[100px] rounded-sm"
                       placeholder="Enter the answer…"
                     />
                   </div>
@@ -221,7 +221,7 @@ function FaqEditor({
               <button
                 type="button"
                 onClick={() => addQuestion(ci)}
-                className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#D5A754] hover:text-white transition-colors"
+                className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#D5A754] hover:text-foreground transition-colors"
               >
                 <Plus className="w-4 h-4" /> Add Question
               </button>
@@ -233,7 +233,7 @@ function FaqEditor({
       <button
         type="button"
         onClick={addCategory}
-        className="flex items-center gap-2 px-5 py-3 border border-dashed border-[#2A2A2D] text-[11px] font-bold uppercase tracking-widest text-zinc-400 hover:text-[#D5A754] hover:border-[#D5A754] transition-all rounded-sm w-full justify-center"
+        className="flex items-center gap-2 px-5 py-3 border border-dashed border-border text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:text-[#D5A754] hover:border-[#D5A754] transition-all rounded-sm w-full justify-center"
       >
         <Plus className="w-4 h-4" /> Add Category
       </button>
@@ -303,21 +303,21 @@ export default function AdminContentPage() {
   }, [selectedTab, faqData, policyContent]);
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 pb-20 text-white">
+    <div className="space-y-10 animate-in fade-in duration-500 pb-20 text-foreground">
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">
             Site Content
           </h1>
-          <p className="text-zinc-400 text-[10px] mt-1 uppercase tracking-widest font-bold">
+          <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">
             Edit FAQ, policies, and static page text without touching code.
           </p>
         </div>
         <button
           onClick={handleSave}
           disabled={isSaving || isLoading}
-          className="flex items-center gap-3 bg-white text-black px-8 py-4 text-[11px] font-bold uppercase tracking-widest hover:bg-[#D5A754] transition-all disabled:bg-zinc-800 disabled:text-zinc-500 rounded-sm"
+          className="flex items-center gap-3 bg-white text-black px-8 py-4 text-[11px] font-bold uppercase tracking-widest hover:bg-[#D5A754] transition-all disabled:bg-zinc-800 disabled:text-muted-foreground rounded-sm"
         >
           {isSaving ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -346,7 +346,7 @@ export default function AdminContentPage() {
                   className={`w-full flex items-center gap-4 px-5 py-4 text-[11px] font-bold uppercase tracking-widest transition-all rounded-sm ${
                     active
                       ? "bg-white text-black"
-                      : "text-zinc-400 hover:text-white hover:bg-[#2A2A2D]/40"
+                      : "text-muted-foreground hover:text-foreground hover:bg-[#2A2A2D]/40"
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -357,8 +357,8 @@ export default function AdminContentPage() {
           </aside>
 
           {/* Content area */}
-          <div className="bg-[#141414] p-6 md:p-10 border border-[#2A2A2D] rounded-sm">
-            <div className="mb-6 pb-6 border-b border-[#2A2A2D]">
+          <div className="bg-card p-6 md:p-10 border border-border rounded-sm">
+            <div className="mb-6 pb-6 border-b border-border">
               <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754] border-l-2 border-[#D5A754] pl-4">
                 {tabs.find((t) => t.id === selectedTab)?.label}
               </h2>

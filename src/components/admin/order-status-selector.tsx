@@ -49,14 +49,14 @@ export function OrderStatusSelector({ orderId, currentStatus }: Props) {
             'border-amber-500/30 text-amber-500 bg-amber-500/5'}
         `}
       >
-        <option value="pending" className="bg-[#0A0A0A] text-white">🚧 Pending</option>
-        <option value="paid" className="bg-[#0A0A0A] text-white">💳 Paid</option>
-        <option value="processing" className="bg-[#0A0A0A] text-white">📦 Processing</option>
-        <option value="shipped" className="bg-[#0A0A0A] text-white">🚚 Shipped</option>
-        <option value="delivered" className="bg-[#0A0A0A] text-white">✅ Delivered</option>
-        <option value="cancelled" className="bg-[#0A0A0A] text-white">❌ Cancelled</option>
+        <option value="pending" className="bg-background text-foreground">🚧 Pending</option>
+        <option value="paid" className="bg-background text-foreground">💳 Paid</option>
+        <option value="processing" className="bg-background text-foreground">📦 Processing</option>
+        <option value="shipped" className="bg-background text-foreground">🚚 Shipped</option>
+        <option value="delivered" className="bg-background text-foreground">✅ Delivered</option>
+        <option value="cancelled" className="bg-background text-foreground">❌ Cancelled</option>
       </select>
-      {loading && <Loader2 className="w-3 h-3 animate-spin text-zinc-400" />}
+      {loading && <Loader2 className="w-3 h-3 animate-spin text-muted-foreground" />}
     </div>
   );
 }

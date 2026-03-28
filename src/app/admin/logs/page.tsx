@@ -15,11 +15,11 @@ export default async function AdminAuditLogsPage() {
   const logs = await getAdminLogs() as AuditLog[];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pb-20 text-white max-w-5xl mx-auto">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-20 text-foreground max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em]">Audit Trail</h1>
-          <p className="text-zinc-400 text-[10px] mt-1 uppercase tracking-widest font-bold">
+          <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">
             Security logs and sensitive administrative actions
           </p>
         </div>
@@ -30,13 +30,13 @@ export default async function AdminAuditLogsPage() {
         </div>
       </div>
 
-      <div className="bg-[#141414] border border-[#2A2A2D] rounded-sm overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-[#2A2A2D] bg-[#0A0A0A]/30 flex justify-between items-center">
+      <div className="bg-card border border-border rounded-sm overflow-hidden shadow-sm">
+        <div className="p-6 border-b border-border bg-background/30 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <Activity className="w-4 h-4 text-zinc-400" />
-            <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">System Record</h3>
+            <Activity className="w-4 h-4 text-muted-foreground" />
+            <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">System Record</h3>
           </div>
-          <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">
+          <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
             <Filter className="w-3 h-3" /> Filter Logs
           </button>
         </div>
@@ -44,7 +44,7 @@ export default async function AdminAuditLogsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-[#1A1A1D] text-[9px] font-bold uppercase tracking-[0.3em] text-zinc-400 border-b border-[#2A2A2D]">
+              <tr className="bg-secondary text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground border-b border-border">
                 <th className="px-6 py-5 w-40">Timestamp</th>
                 <th className="px-6 py-5">Action</th>
                 <th className="px-6 py-5">Entity Type</th>
@@ -56,7 +56,7 @@ export default async function AdminAuditLogsPage() {
               {logs.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-8 py-20 text-center">
-                    <div className="flex flex-col items-center gap-4 text-zinc-500">
+                    <div className="flex flex-col items-center gap-4 text-muted-foreground">
                       <Clock className="w-8 h-8 opacity-50" />
                       <p className="text-[10px] font-bold uppercase tracking-widest">No audit logs recorded yet.</p>
                       <p className="text-[9px] text-zinc-600 uppercase tracking-widest max-w-sm">
@@ -68,7 +68,7 @@ export default async function AdminAuditLogsPage() {
               ) : (
                 logs.map((log: AuditLog) => (
                   <tr key={log.id} className="hover:bg-[#2A2A2D]/20 transition-colors font-mono text-[11px]">
-                    <td className="px-6 py-5 text-zinc-400 tracking-tight">
+                    <td className="px-6 py-5 text-muted-foreground tracking-tight">
                       {format(new Date(log.created_at), "yyyy-MM-dd HH:mm:ss")}
                     </td>
                     <td className="px-6 py-5">
@@ -83,11 +83,11 @@ export default async function AdminAuditLogsPage() {
                     <td className="px-6 py-5 text-zinc-300 uppercase tracking-widest font-sans font-bold text-[10px]">
                       {log.entity_type}
                     </td>
-                    <td className="px-6 py-5 text-zinc-500">
+                    <td className="px-6 py-5 text-muted-foreground">
                       {log.entity_id}
                     </td>
                     <td className="px-6 py-5">
-                      <pre className="text-[9px] text-zinc-400 overflow-x-auto bg-[#0A0A0A] p-2 border border-[#2A2A2D] rounded-sm whitespace-pre-wrap max-h-20 max-w-xs">
+                      <pre className="text-[9px] text-muted-foreground overflow-x-auto bg-background p-2 border border-border rounded-sm whitespace-pre-wrap max-h-20 max-w-xs">
                         {JSON.stringify(log.details, null, 2)}
                       </pre>
                     </td>

@@ -40,12 +40,12 @@ export default async function ShippingPolicyPage() {
     .filter(Boolean) as { title: string; body: string[] }[];
 
   return (
-    <div className="min-h-screen bg-background text-white font-sans">
+    <div className="min-h-screen bg-background text-foreground font-sans">
       <div className="h-[120px]"></div>
 
       {/* Header */}
       <div className="max-w-[900px] mx-auto px-6 md:px-12 py-20">
-        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-zinc-400 mb-6">Policies</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground mb-6">Policies</p>
         <h1 className="font-serif text-6xl md:text-8xl uppercase tracking-tighter italic leading-none mb-6">
           Shipping<br />Policy
         </h1>
@@ -64,7 +64,7 @@ export default async function ShippingPolicyPage() {
             {section.body.length > 0 && (
               <div className="space-y-2">
                 {section.body.map((line, i) => (
-                  <p key={i} className="text-[15px] text-white/70 leading-relaxed">
+                  <p key={i} className="text-[15px] text-foreground/70 leading-relaxed">
                     {line}
                   </p>
                 ))}
@@ -75,12 +75,12 @@ export default async function ShippingPolicyPage() {
       </div>
 
       {/* CTA */}
-      <div className="bg-[#1A1A1D] text-white py-20">
+      <div className="bg-secondary text-foreground py-20">
         <div className="max-w-[900px] mx-auto px-6 md:px-12 text-center">
           <h2 className="font-serif text-5xl uppercase tracking-tighter italic mb-8">Need Further<br />Assistance?</h2>
           <Link
             href="/contact"
-            className="inline-block border border-white text-white px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:bg-white hover:text-[#1A1A1D] transition-all"
+            className="inline-block border border-white text-foreground px-12 py-5 rounded-full text-[12px] font-bold uppercase tracking-widest hover:bg-white hover:text-[#1A1A1D] transition-all"
           >
             Contact Support
           </Link>

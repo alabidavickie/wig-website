@@ -95,13 +95,31 @@ export async function createCategory(formData: { name: string; slug: string; des
   return data;
 }
 
-export async function getProducts(): Promise<Product[]> {
+export async function getProducts(category?: string): Promise<Product[]> {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase
+    let query = supabase
       .from("products")
-      .select(`id, name, slug, base_price, categories (name), product_images (image_url, is_main)`)
+      .select(`id, name, slug, base_price, category_id, categories (name), product_images (image_url, is_main)`)
       .order("created_at", { ascending: false });
+
+    // If a category filter is provided, look up the category ID first
+    if (category) {
+      const { data: catData } = await supabase
+        .from("categories")
+        .select("id")
+        .ilike("name", `%${category}%`)
+        .single();
+
+      if (catData) {
+        query = query.eq("category_id", catData.id);
+      } else {
+        // No matching category found — return empty
+        return [] as Product[];
+      }
+    }
+
+    const { data, error } = await query;
 
     if (error || !data || data.length === 0) {
       return [] as Product[];
@@ -119,6 +137,35 @@ export async function getProducts(): Promise<Product[]> {
     }));
   } catch {
     return [] as Product[];
+  }
+}
+
+export async function searchProducts(query: string): Promise<Product[]> {
+  if (!query || query.trim().length < 2) return [];
+  
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select(`id, name, slug, base_price, categories (name), product_images (image_url, is_main)`)
+      .ilike("name", `%${query.trim()}%`)
+      .order("created_at", { ascending: false })
+      .limit(12);
+
+    if (error || !data) return [];
+
+    return (data as unknown as Product[]).map(p => ({
+      ...p,
+      category: (p as any).categories?.name || "Uncategorized",
+      image:
+        (p as any).product_images?.find((img: any) => img.is_main)?.image_url ||
+        (p as any).product_images?.[0]?.image_url ||
+        "/hero_luxury_wig_1773402385371.png",
+      created_at: (p as any).created_at || new Date().toISOString(),
+      is_featured: (p as any).is_featured || false
+    }));
+  } catch {
+    return [];
   }
 }
 
