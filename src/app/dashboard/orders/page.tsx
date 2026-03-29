@@ -53,7 +53,7 @@ export default async function OrdersPage() {
               <div className="text-left md:text-right">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1">Estimated Arrival</p>
                 <p className="text-[14px] font-bold text-foreground uppercase tracking-widest">
-                  {activeOrder.status === 'shipped' ? 'In 2-3 Days' : 'Processing...'}
+                  {activeOrder.status === 'shipped' ? 'Tracking will be updated' : 'Processing...'}
                 </p>
               </div>
             </div>

@@ -73,16 +73,6 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Length</h4>
-                  <div className="grid grid-cols-4 gap-2" suppressHydrationWarning>
-                    {["14\"", "18\"", "22\"", "26\""].map((len) => (
-                      <button key={len} className="py-2 border border-gray-100 text-[11px] font-bold hover:border-white/20 transition-all rounded-lg uppercase cursor-pointer">
-                        {len}
-                      </button>
-                    ))}
-                  </div>
-                </div>
 
                 <div className="p-6 bg-[#FAF9F6] rounded-2xl border border-gray-100 italic text-[12px] text-zinc-300 leading-relaxed">
                   &quot;Each piece is uniquely hand-finished by our master stylists. No two wings are identical.&quot;

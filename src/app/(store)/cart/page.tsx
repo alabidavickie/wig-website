@@ -138,7 +138,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-[13px]">
                     <span className="text-muted-foreground font-bold uppercase tracking-widest">Silk Haus Delivery</span>
-                    <span className="font-bold text-[#D5A754] uppercase tracking-widest italic">Free</span>
+                    <span className="font-bold text-muted-foreground uppercase tracking-widest italic">Calculated at checkout</span>
                   </div>
                 </div>
 

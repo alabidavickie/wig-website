@@ -116,10 +116,9 @@ export default function AdminLayout({
           </div>
           
           <div className="flex items-center gap-3 md:gap-6">
-            <button className="relative text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+            <Link href="/admin/orders" className="relative text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
               <Bell className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#D5A754] rounded-full border-2 border-[#141414]"></span>
-            </button>
+            </Link>
             <div className="flex items-center gap-3 pl-3 md:pl-6 border-l border-border">
               <div className="w-8 h-8 bg-[#2A2A2D] border border-border rounded-sm flex items-center justify-center font-bold text-[10px] md:text-[12px] text-[#D5A754]">
                 SH

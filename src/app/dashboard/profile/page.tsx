@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Camera, MapPin, ShieldCheck, User, Sparkles, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { useState } from "react";
 
 export default function ProfilePage() {
@@ -68,6 +69,7 @@ export default function ProfilePage() {
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {
       console.error("Save failed:", error);
+      toast.error("Failed to save profile. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -196,9 +198,9 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12">
              <div className="space-y-4 col-span-1 md:col-span-2">
                 <Label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground ml-4">Street Address</Label>
-                <Input 
-                  value={profile?.address || ""} 
-                  onChange={(e) => updateProfileField("address", e.target.value)}
+                <Input
+                  value={profile?.address_line1 || ""}
+                  onChange={(e) => updateProfileField("address_line1", e.target.value)}
                   placeholder="123 Luxury Lane"
                   className="bg-[#FAF9F6] border-gray-100 rounded-[32px] h-20 px-8 text-[12px] font-bold uppercase tracking-widest focus-visible:ring-black transition-all shadow-sm" 
                 />

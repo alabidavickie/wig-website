@@ -71,7 +71,7 @@ function SuccessContent() {
   // --- Loading State ---
   if (verifying) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center font-sans text-[#1A1A1D]">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-sans text-foreground">
         <div className="text-center space-y-8 max-w-lg px-6 animate-in fade-in duration-500">
           <div className="relative mx-auto w-24 h-24">
             <Loader2 className="w-24 h-24 text-[#D5A754] animate-spin" />
@@ -91,7 +91,7 @@ function SuccessContent() {
   // --- Failed Verification ---
   if (!result?.verified) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center font-sans text-[#1A1A1D]">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-sans text-foreground">
         <div className="text-center space-y-8 max-w-lg px-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <AlertTriangle className="w-20 h-20 text-amber-500 mx-auto" />
           <h1 className="font-serif text-4xl md:text-5xl uppercase tracking-tighter italic leading-none">
@@ -196,7 +196,7 @@ function SuccessContent() {
 
 export default function CheckoutSuccessPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <SuccessContent />
     </Suspense>
   );

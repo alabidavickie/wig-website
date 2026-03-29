@@ -159,7 +159,7 @@ export async function POST(req: Request) {
         email: email,
         amount: total_ngn * 100, // Paystack expects kobo (value * 100)
         reference: reference,
-        callback_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout/success?reference=${reference}&provider=paystack`,
+        callback_url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://silkhausbyfollienn.xyz"}/checkout/success?reference=${reference}&provider=paystack`,
         metadata: {
           custom_fields: items.map((item: any) => ({
             display_name: item.name,

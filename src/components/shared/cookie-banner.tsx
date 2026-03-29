@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { X } from "lucide-react";
 
 export function CookieBanner() {
   const [show, setShow] = useState(false);
@@ -45,12 +43,6 @@ export function CookieBanner() {
           >
             Reject
           </button>
-          <Link
-            href="/cookie-policy"
-            className="flex-1 md:flex-none text-center px-4 py-2 border border-border hover:bg-[#2A2A2D] text-muted-foreground hover:text-foreground text-[11px] font-bold uppercase tracking-widest rounded-sm transition-all"
-          >
-            Settings
-          </Link>
           <button
             onClick={handleAccept}
             className="flex-1 md:flex-none px-6 py-2 bg-[#D5A754] hover:bg-[#E6B964] text-[#141414] text-[11px] font-bold uppercase tracking-widest rounded-sm transition-all shadow-lg"
@@ -58,14 +50,6 @@ export function CookieBanner() {
             Accept
           </button>
         </div>
-        
-        <button 
-          onClick={handleReject}
-          className="absolute top-4 right-4 md:hidden text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Close"
-        >
-          <X className="w-5 h-5" />
-        </button>
       </div>
     </div>
   );

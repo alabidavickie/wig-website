@@ -175,7 +175,7 @@ export function OrdersClient({ orders }: { orders: Order[] }) {
                         {itemCount} {itemCount === 1 ? 'Unit' : 'Units'}: {productsPreview}
                       </td>
                       <td className="px-8 py-6 text-[13px] font-bold text-foreground tracking-tighter">
-                        ${Number(order.total_amount).toLocaleString()}
+                        {order.currency === 'NGN' ? '₦' : order.currency === 'GBP' ? '£' : '$'}{Number(order.total_amount).toLocaleString()}
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex flex-col gap-2">

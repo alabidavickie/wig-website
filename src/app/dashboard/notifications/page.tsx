@@ -124,7 +124,7 @@ export default function NotificationsPage() {
                   {notification.link && (
                     <Link 
                       href={notification.link}
-                      className="text-[11px] font-bold uppercase tracking-widest text-black bg-white px-4 py-2 hover:bg-[#D5A754] transition-colors rounded-sm"
+                      className="text-[11px] font-bold uppercase tracking-widest text-[#141414] bg-[#D5A754] px-4 py-2 hover:bg-[#E6B964] transition-colors rounded-sm"
                     >
                       View Product
                     </Link>

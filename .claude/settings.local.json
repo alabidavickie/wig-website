@@ -3,7 +3,11 @@
     "allow": [
       "Bash(npx tsc:*)",
       "Bash(npm run lint)",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "Bash(ls -la /c/Users/new/OneDrive/Desktop/fullstack-client-dashboard/src/app/\\\\\\(store\\\\\\)/checkout/)",
+      "Bash(xargs grep:*)",
+      "Bash(cat \"/c/Users/new/OneDrive/Desktop/fullstack-client-dashboard/src/app/\\(store\\)/checkout/page.tsx\")",
+      "Bash(cat \"/c/Users/new/OneDrive/Desktop/fullstack-client-dashboard/src/app/\\(store\\)/checkout/success/page.tsx\")"
     ]
   }
 }

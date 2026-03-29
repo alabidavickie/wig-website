@@ -7,6 +7,7 @@ import { ArrowLeft, Package, Truck, CreditCard, Clock, RotateCcw, Save, Loader2 
 import Link from "next/link";
 import { format } from "date-fns";
 import Image from "next/image";
+import { toast } from "sonner";
 
 interface OrderItem {
   id: string;
@@ -79,9 +80,9 @@ export default function AdminOrderDetailPage() {
         tracking_url: trackingUrl
       });
       setOrder(updatedOrder);
-      alert("Tracking updated and order marked as shipped.");
+      toast.success("Tracking updated and order marked as shipped.");
     } catch (err) {
-      alert("Failed to update tracking.");
+      toast.error("Failed to update tracking.");
     } finally {
       setSavingTracking(false);
     }
@@ -96,9 +97,9 @@ export default function AdminOrderDetailPage() {
     try {
       const updatedOrder = await processRefund(order.id, order.total_amount);
       setOrder(updatedOrder);
-      alert("Order successfully refunded.");
+      toast.success("Order successfully refunded.");
     } catch (err) {
-      alert("Failed to process refund.");
+      toast.error("Failed to process refund.");
     } finally {
       setRefunding(false);
     }

@@ -267,7 +267,7 @@ export default function CheckoutPage() {
                       <Button
                         onClick={() => handlePlaceOrder('paystack')}
                         disabled={submitting}
-                        className="w-full bg-[#011B33] hover:bg-[#000F1F] text-foreground py-8 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl mt-4 rounded-full transition-all"
+                        className="w-full bg-[#011B33] hover:bg-[#000F1F] text-white py-8 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl mt-4 rounded-full transition-all"
                       >
                         {submitting ? "Initializing Paystack..." : <span className="flex items-center justify-center gap-2">Pay <Price amount={finalTotalConverted / exchangeRate /* display un-exchanged since Price handles it */} /></span>}
                       </Button>

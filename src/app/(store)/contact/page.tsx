@@ -22,14 +22,18 @@ export default function ContactPage() {
     };
 
     try {
-      await fetch('/api/contact', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      setSubmitted(true);
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        alert("Failed to send message. Please try again or email us directly.");
+      }
     } catch {
-      setSubmitted(true); // Still show success to user
+      alert("Failed to send message. Please check your connection and try again.");
     }
     setSubmitting(false);
   };

@@ -68,6 +68,7 @@ export default async function AdminCustomersPage() {
       orderCount: customerOrders.length,
       totalSpent,
       lastOrderDate: lastOrder?.created_at || null,
+      lastOrderCurrency: lastOrder?.currency || 'GBP',
     };
   });
 
@@ -75,6 +76,7 @@ export default async function AdminCustomersPage() {
     orderCount: number;
     totalSpent: number;
     lastOrderDate: string | null;
+    lastOrderCurrency: string;
   }
 
   const totalCustomers = customers.length;
@@ -124,7 +126,7 @@ export default async function AdminCustomersPage() {
           </div>
           <div>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em]">Total Lifetime Value</p>
-            <p className="text-xl font-bold tracking-tighter">${totalLifetimeValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <p className="text-xl font-bold tracking-tighter">£{totalLifetimeValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
         </div>
       </div>
@@ -158,7 +160,7 @@ export default async function AdminCustomersPage() {
             <tbody className="divide-y divide-[#2A2A2D]">
               {customers.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-8 py-20 text-center text-muted-foreground uppercase tracking-widest text-[10px] font-bold">
+                  <td colSpan={8} className="px-8 py-20 text-center text-muted-foreground uppercase tracking-widest text-[10px] font-bold">
                     No registered clients yet. Clients will appear here after signing up.
                   </td>
                 </tr>
@@ -204,7 +206,7 @@ export default async function AdminCustomersPage() {
                     {/* Total Spent */}
                     <td className="px-6 md:px-8 py-5">
                       <span className={`text-[12px] font-bold tracking-tighter ${customer.totalSpent > 0 ? "text-[#D5A754]" : "text-zinc-600"}`}>
-                        ${customer.totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        {customer.lastOrderCurrency === 'NGN' ? '₦' : '£'}{customer.totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </td>
 
@@ -257,7 +259,7 @@ export default async function AdminCustomersPage() {
                 <span className="text-emerald-400">{customersWithOrders}</span> active buyers
               </p>
               <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
-                <span className="text-[#D5A754]">${totalLifetimeValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> lifetime value
+                <span className="text-[#D5A754]">£{totalLifetimeValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> lifetime value
               </p>
             </div>
           </div>
