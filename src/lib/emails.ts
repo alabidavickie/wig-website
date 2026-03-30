@@ -17,7 +17,7 @@ function getResend() {
 
 // Configurable sender email via env var. For production, verify a custom domain on Resend
 // (e.g., noreply@silkhaus.com). For testing, use 'onboarding@resend.dev' (only sends to account owner).
-const SENDER_EMAIL = process.env.SENDER_EMAIL || '0xdavick@gmail.com';
+const SENDER_EMAIL = process.env.SENDER_EMAIL || 'onboarding@resend.dev';
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 if (!ADMIN_EMAIL && process.env.NODE_ENV === "production") {

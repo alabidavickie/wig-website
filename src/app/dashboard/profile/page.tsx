@@ -132,11 +132,11 @@ export default function ProfilePage() {
              </div>
              <p className="text-[11px] font-bold text-foreground/30 uppercase tracking-widest mb-6">Master Piece Collector & Silk Haus Patron</p>
              <div className="flex gap-4">
-                <Button className="bg-secondary hover:bg-black text-foreground font-bold h-12 px-8 rounded-full text-[10px] uppercase tracking-[0.2em] border-none shadow-xl transition-all">
+                <Button
+                  onClick={() => document.getElementById("profile-form-footer")?.scrollIntoView({ behavior: "smooth" })}
+                  className="bg-secondary hover:bg-black text-foreground font-bold h-12 px-8 rounded-full text-[10px] uppercase tracking-[0.2em] border-none shadow-xl transition-all"
+                >
                   Update Profile
-                </Button>
-                <Button variant="outline" className="border-gray-100 bg-transparent hover:border-white text-muted-foreground hover:text-foreground h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all">
-                  Remove
                 </Button>
              </div>
           </div>
@@ -243,7 +243,7 @@ export default function ProfilePage() {
         </section>
 
         {/* Action Buttons */}
-        <footer className="flex items-center gap-6 pt-10 pb-20 reveal">
+        <footer id="profile-form-footer" className="flex items-center gap-6 pt-10 pb-20 reveal">
            <Button 
             onClick={handleSave}
             disabled={isSaving}

@@ -119,9 +119,11 @@ export default function DashboardPage() {
               </Button>
             </Link>
           )}
-          <Button className="bg-[#D5A754] hover:bg-[#E6B964] text-black px-10 h-16 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] transition-all shrink-0">
-            Silk Haus Benefits
-          </Button>
+          <Link href="/dashboard/orders">
+            <Button className="bg-[#D5A754] hover:bg-[#E6B964] text-black px-10 h-16 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] transition-all shrink-0">
+              View My Orders
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -220,9 +222,11 @@ export default function DashboardPage() {
                 <p className="text-muted-foreground text-[14px] mb-10 z-10 font-sans leading-relaxed">
                   Book an exclusive session with our Master Stylist or @follien.
                 </p>
-                <Button className="w-full bg-foreground hover:bg-muted text-background h-16 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] transition-all z-10 shadow-xl">
-                  Message Stylist
-                </Button>
+                <Link href="/contact" className="z-10">
+                  <Button className="w-full bg-foreground hover:bg-muted text-background h-16 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl">
+                    Message Stylist
+                  </Button>
+                </Link>
              </div>
           </div>
 

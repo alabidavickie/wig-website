@@ -109,9 +109,9 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async (provider: 'stripe' | 'paystack') => {
     // Basic validation
-    if (!formData.email || !formData.firstName || !formData.lastName || !formData.address) {
+    if (!formData.email || !formData.firstName || !formData.lastName || !formData.address || !formData.city || !formData.zip) {
       toast.error("Missing Details", {
-        description: "Please fill in all required shipping details.",
+        description: "Please fill in all required shipping details including city and postal code.",
       });
       return;
     }

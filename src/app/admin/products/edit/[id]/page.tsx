@@ -161,7 +161,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </div>
 
           <div className="bg-card p-8 border border-border shadow-sm space-y-8 rounded-sm">
-            <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] border-l-2 border-[#D5A754] pl-4">Media Gallary</h3>
+            <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] border-l-2 border-[#D5A754] pl-4">Media Gallery</h3>
             <div className="space-y-6">
               {formData.images.map((img, idx) => (
                 <div key={idx} className="space-y-4">

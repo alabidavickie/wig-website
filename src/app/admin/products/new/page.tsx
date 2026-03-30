@@ -289,7 +289,7 @@ export default function NewProductPage() {
           {/* Media */}
           <div className="bg-card p-8 border border-border shadow-sm space-y-8 rounded-sm">
             <div className="flex justify-between items-center">
-              <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] border-l-2 border-[#D5A754] pl-4">Media Gallary</h3>
+              <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] border-l-2 border-[#D5A754] pl-4">Media Gallery</h3>
               <button 
                 type="button" 
                 onClick={addImage}

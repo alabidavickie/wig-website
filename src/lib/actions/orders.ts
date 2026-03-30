@@ -135,7 +135,7 @@ export async function createNotification(userId: string, title: string, message:
       title,
       message,
       link,
-      is_read: false
+      read: false
     }]);
     
   if (error) console.error("Error creating notification:", error);

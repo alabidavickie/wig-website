@@ -107,7 +107,7 @@ function LoginForm() {
 
           <div className="mt-12 pt-10 border-t border-border text-center space-y-6">
             <Link
-              href={redirectTo}
+              href={redirectTo === "/dashboard" ? "/shop" : redirectTo}
               className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground transition-colors group"
             >
               Continue as Guest <ArrowRight className="w-3 h-3 translate-x-0 group-hover:translate-x-1 transition-transform" />

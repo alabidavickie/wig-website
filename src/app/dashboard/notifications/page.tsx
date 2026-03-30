@@ -11,7 +11,7 @@ type Notification = {
   title: string;
   message: string;
   link: string;
-  is_read: boolean;
+  read: boolean;
   created_at: string;
 };
 
@@ -22,14 +22,14 @@ export default function NotificationsPage() {
   const fetchNotifications = async () => {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (user) {
       const { data } = await supabase
         .from("notifications")
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
-        
+
       if (data) setNotifications(data);
     }
     setLoading(false);
@@ -41,31 +41,28 @@ export default function NotificationsPage() {
 
   const markAsRead = async (id: string) => {
     const supabase = createClient();
-    // Optimistic UI update
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
-    
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     await supabase
       .from("notifications")
-      .update({ is_read: true })
+      .update({ read: true })
       .eq("id", id);
   };
 
   const markAllAsRead = async () => {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    
     if (user) {
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       await supabase
         .from("notifications")
-        .update({ is_read: true })
+        .update({ read: true })
         .eq("user_id", user.id)
-        .eq("is_read", false);
+        .eq("read", false);
     }
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl pb-20">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl pb-20 p-8">
       <div className="flex justify-between items-end border-b border-border pb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight uppercase tracking-[0.1em] text-foreground flex items-center gap-3">
@@ -76,9 +73,9 @@ export default function NotificationsPage() {
             Stay updated on new arrivals and account alerts.
           </p>
         </div>
-        
-        {notifications.some(n => !n.is_read) && (
-          <button 
+
+        {notifications.some(n => !n.read) && (
+          <button
             onClick={markAllAsRead}
             className="text-[10px] font-bold uppercase tracking-widest text-[#D5A754] hover:text-foreground transition-colors flex items-center gap-2"
           >
@@ -96,15 +93,15 @@ export default function NotificationsPage() {
           <div className="text-center py-20 border border-border bg-card rounded-sm">
             <Bell className="w-10 h-10 text-zinc-600 mx-auto mb-4" />
             <h3 className="text-foreground font-bold tracking-widest uppercase text-sm">All caught up</h3>
-            <p className="text-muted-foreground text-xs mt-2">You have no new notifications.</p>
+            <p className="text-muted-foreground text-xs mt-2">You have no notifications yet.</p>
           </div>
         ) : (
           notifications.map((notification) => (
-            <div 
+            <div
               key={notification.id}
               className={`p-6 border transition-all rounded-sm flex gap-6 ${
-                notification.is_read 
-                  ? "bg-card border-border" 
+                notification.read
+                  ? "bg-card border-border opacity-70"
                   : "bg-secondary border-[#D5A754] shadow-[0_0_15px_rgba(213,167,84,0.1)]"
               }`}
             >
@@ -122,15 +119,15 @@ export default function NotificationsPage() {
                 </p>
                 <div className="flex items-center gap-4">
                   {notification.link && (
-                    <Link 
+                    <Link
                       href={notification.link}
                       className="text-[11px] font-bold uppercase tracking-widest text-[#141414] bg-[#D5A754] px-4 py-2 hover:bg-[#E6B964] transition-colors rounded-sm"
                     >
-                      View Product
+                      View Details
                     </Link>
                   )}
-                  {!notification.is_read && (
-                    <button 
+                  {!notification.read && (
+                    <button
                       onClick={() => markAsRead(notification.id)}
                       className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
                     >
