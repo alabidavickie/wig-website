@@ -3,6 +3,10 @@ import Stripe from "stripe";
 import { headers } from "next/headers";
 import { updateOrderStatus, deductInventoryForOrder } from "@/lib/actions/orders";
 import { revalidatePath } from "next/cache";
+import { createAdminClient } from "@/lib/supabase/admin";
+
+// In-process deduplication: prevents double inventory deduction from Stripe retries
+const processedEvents = new Set<string>();
 
 export async function POST(req: Request) {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -31,14 +35,32 @@ export async function POST(req: Request) {
     }
 
     if (event.type === "checkout.session.completed") {
+      // Idempotency: skip if this exact event was already processed in-memory
+      if (processedEvents.has(event.id)) {
+        console.log(`[STRIPE_WEBHOOK] Skipping duplicate event ${event.id}`);
+        return new NextResponse("Already processed", { status: 200 });
+      }
+      processedEvents.add(event.id);
+
       const session = event.data.object as Stripe.Checkout.Session;
-      
-      // We stored the reference in session.id during creation
       const reference = session.id;
-      
+
+      // Idempotency: skip if order is already paid in DB
+      const adminClient = createAdminClient();
+      const { data: existingOrder } = await adminClient
+        .from("orders")
+        .select("status")
+        .eq("payment_reference", reference)
+        .eq("payment_provider", "stripe")
+        .single();
+        
+      if (existingOrder?.status === "paid" || existingOrder?.status === "processing" || existingOrder?.status === "shipped" || existingOrder?.status === "delivered") {
+        console.log(`[STRIPE_WEBHOOK] Skipping already processed order ${reference}`);
+        return new NextResponse("Already processed", { status: 200 });
+      }
+
       console.log(`[STRIPE_WEBHOOK] Payment successful for session ${reference}`);
-      
-      // Update order status to paid
+
       const updatedOrder = await updateOrderStatus(reference, "stripe", "paid");
       if (updatedOrder?.id) {
         await deductInventoryForOrder(updatedOrder.id);

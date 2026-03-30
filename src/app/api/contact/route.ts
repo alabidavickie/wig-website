@@ -4,7 +4,7 @@ import { z } from "zod";
 const contactSchema = z.object({
   firstName: z.string().min(1, "First name is required").max(50, "First name too long"),
   lastName: z.string().min(1, "Last name is required").max(50, "Last name too long"),
-  email: z.string().email("Invalid email address").max(255, "Email too long"),
+  email: z.email("Invalid email address").max(255, "Email too long"),
   topic: z.string().min(1, "Topic is required").max(100, "Topic too long"),
   message: z.string().min(5, "Message too short").max(5000, "Message too long"),
 });
@@ -15,9 +15,14 @@ const RATE_LIMIT = 5;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 
 export async function POST(req: NextRequest) {
+  // Purge expired entries lazily on each request to prevent memory leaks in serverless environments
+  const now = Date.now();
+  for (const [ip, record] of ipSubmissions.entries()) {
+    if (now >= record.resetAt) ipSubmissions.delete(ip);
+  }
+
   // Rate limiting by IP
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const now = Date.now();
   const record = ipSubmissions.get(ip);
   if (record && now < record.resetAt) {
     if (record.count >= RATE_LIMIT) {

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function subscribeToNewsletter(email: string) {
   try {
@@ -18,7 +19,7 @@ export async function subscribeToNewsletter(email: string) {
       throw error;
     }
     
-    import("next/cache").then(m => m.revalidatePath("/admin"));
+    revalidatePath("/admin");
     
     return { success: true, message: "Thank you for subscribing to Silk Haus." };
   } catch (error) {

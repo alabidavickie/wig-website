@@ -75,10 +75,17 @@ export async function POST(req: Request) {
       }
     }
 
-    // Prepare Stripe Line Items — use DB price if available, client price as fallback
+    // Reject any real-ID items not found in the database (prevents price manipulation)
+    const missingRealProducts = realIds.filter(id => !dbProducts.find((p: any) => p.id === id));
+    if (missingRealProducts.length > 0) {
+      console.error("[STRIPE_CHECKOUT] Unknown product IDs:", missingRealProducts);
+      return NextResponse.json({ message: "One or more products could not be verified." }, { status: 400 });
+    }
+
+    // Prepare Stripe Line Items — always use DB price for real products
     const line_items = items.map((item: any) => {
       const dbProduct = dbProducts.find((p: any) => p.id === item.id);
-      const price = dbProduct ? dbProduct.base_price : (item.price || 0);
+      const price = dbProduct ? dbProduct.base_price : (item.price || 0); // mock items use client price
       const attributes = item.variant ? Object.entries(item.variant).map(([k, v]) => `${k}: ${v}`).join(", ") : "";
 
       return {

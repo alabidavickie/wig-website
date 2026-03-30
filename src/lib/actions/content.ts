@@ -16,7 +16,7 @@ export interface SiteContent {
  * Public - anyone can read site content.
  */
 export async function getSiteContent(slug: string): Promise<SiteContent | null> {
-  const supabase = createAdminClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("site_content")
     .select("slug, title, content, updated_at")

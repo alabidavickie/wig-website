@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
+import Link from "next/link";
 export function CookieBanner() {
   const [show, setShow] = useState(false);
 

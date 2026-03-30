@@ -3,8 +3,12 @@ import crypto from "crypto";
 import { updateOrderStatus, deductInventoryForOrder } from "@/lib/actions/orders";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 const secret = process.env.PAYSTACK_SECRET_KEY!;
+
+// In-process deduplication: prevents double inventory deduction from Paystack retries
+const processedReferences = new Set<string>();
 
 export async function POST(req: Request) {
   try {
@@ -22,25 +26,43 @@ export async function POST(req: Request) {
 
     if (event.event === "charge.success") {
       const reference = event.data.reference;
-      
+
+      // Idempotency: skip if this reference was already processed in-memory
+      if (processedReferences.has(reference)) {
+        console.log(`[PAYSTACK_WEBHOOK] Skipping duplicate reference ${reference}`);
+        return new NextResponse("Already processed", { status: 200 });
+      }
+      processedReferences.add(reference);
+
+      // Idempotency: skip if order is already paid in DB
+      const adminClient = createAdminClient();
+      const { data: existingOrder } = await adminClient
+        .from("orders")
+        .select("status")
+        .eq("payment_reference", reference)
+        .eq("payment_provider", "paystack")
+        .single();
+
+      if (existingOrder?.status === "paid" || existingOrder?.status === "processing" || existingOrder?.status === "shipped" || existingOrder?.status === "delivered") {
+        console.log(`[PAYSTACK_WEBHOOK] Skipping already processed order ${reference}`);
+        return new NextResponse("Already processed", { status: 200 });
+      }
+
       console.log(`[PAYSTACK_WEBHOOK] Payment successful for reference ${reference}`);
-      
-      // Verify the transaction specifically (best practice for Paystack)
+
+      // Verify the transaction with Paystack (best practice)
       const verifyRes = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
-        headers: {
-          Authorization: `Bearer ${secret}`,
-        },
+        headers: { Authorization: `Bearer ${secret}` },
       });
       const verifyData = await verifyRes.json();
-      
-      if (verifyData.data.status === "success") {
-         // Update order status to paid
-         const updatedOrder = await updateOrderStatus(reference, "paystack", "paid");
-         if (updatedOrder?.id) {
-           await deductInventoryForOrder(updatedOrder.id);
-         }
-         revalidatePath("/admin/orders");
-         revalidatePath("/admin");
+
+      if (verifyData.data?.status === "success") {
+        const updatedOrder = await updateOrderStatus(reference, "paystack", "paid");
+        if (updatedOrder?.id) {
+          await deductInventoryForOrder(updatedOrder.id);
+        }
+        revalidatePath("/admin/orders");
+        revalidatePath("/admin");
       }
     }
 

@@ -70,10 +70,17 @@ export async function POST(req: Request) {
       }
     }
 
-    // Calculate total amount in GBP (base)
+    // Reject any real-ID items not found in the database (prevents price manipulation)
+    const missingRealProducts = realIds.filter(id => !dbProducts.find((p: any) => p.id === id));
+    if (missingRealProducts.length > 0) {
+      console.error("[PAYSTACK_CHECKOUT] Unknown product IDs:", missingRealProducts);
+      return NextResponse.json({ message: "One or more products could not be verified." }, { status: 400 });
+    }
+
+    // Calculate total amount in GBP (base) — always use DB price for real products
     const base_total = items.reduce((acc: number, item: any) => {
       const dbProduct = dbProducts.find((p: any) => p.id === item.id);
-      const unitPrice = dbProduct ? dbProduct.base_price : (item.price || 0);
+      const unitPrice = dbProduct ? dbProduct.base_price : (item.price || 0); // mock items use client price
       return acc + (unitPrice * item.quantity);
     }, 0);
 
@@ -97,7 +104,7 @@ export async function POST(req: Request) {
     const discounted_base = Math.max(0, base_total - discountAmountGbp);
 
     // 1. FETCH LATEST EXCHANGE RATE (GBP -> NGN)
-    let rate = 1500; // Fallback
+    let rate = 2050; // Fallback (updated March 2026; live rate fetched below)
     try {
       const rateRes = await fetch("https://open.er-api.com/v6/latest/GBP", { next: { revalidate: 3600 } });
       const rateData = await rateRes.json();

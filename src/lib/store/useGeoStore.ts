@@ -20,7 +20,7 @@ export const useGeoStore = create<GeoState>()(
   persist(
     (set, get) => ({
       geo: null,
-      rate: 1500, // Default fallback
+      rate: 2050, // Default fallback (updated March 2026; live rate fetched on init)
       lastFetched: null,
       loading: false,
       initialized: false,
