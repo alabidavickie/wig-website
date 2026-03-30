@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -25,7 +25,26 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [pendingOrderCount, setPendingOrderCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch count of orders needing attention (paid/processing) for bell badge
+    import("@/lib/actions/orders").then((m) => {
+      m.getAllOrders().then((orders) => {
+        const count = orders.filter((o: any) => o.status === "paid" || o.status === "processing").length;
+        setPendingOrderCount(count);
+      }).catch(() => {});
+    });
+  }, [pathname]); // Re-fetch when navigating
+
+  const handleLogout = async () => {
+    const { createClient } = await import("@/lib/supabase/client");
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/admin/login");
+  };
 
   if (pathname === '/admin/login') {
     return (
@@ -71,7 +90,10 @@ export default function AdminLayout({
       </nav>
 
       <div className="p-4 border-t border-border">
-        <button className="flex items-center gap-3 px-4 py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-red-400 hover:bg-red-500/10 w-full transition-all rounded-sm group">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-red-400 hover:bg-red-500/10 w-full transition-all rounded-sm group cursor-pointer"
+        >
           <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Log Out
         </button>
@@ -118,6 +140,11 @@ export default function AdminLayout({
           <div className="flex items-center gap-3 md:gap-6">
             <Link href="/admin/orders" className="relative text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
               <Bell className="w-5 h-5" />
+              {pendingOrderCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center">
+                  {pendingOrderCount > 9 ? "9+" : pendingOrderCount}
+                </span>
+              )}
             </Link>
             <div className="flex items-center gap-3 pl-3 md:pl-6 border-l border-border">
               <div className="w-8 h-8 bg-[#2A2A2D] border border-border rounded-sm flex items-center justify-center font-bold text-[10px] md:text-[12px] text-[#D5A754]">

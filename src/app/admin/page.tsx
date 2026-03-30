@@ -233,7 +233,9 @@ export default async function AdminDashboardPage() {
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-[11px] sm:text-[12px] font-bold tracking-tighter text-foreground">£{product.base_price}</p>
-                    <p className="text-[8px] sm:text-[9px] text-emerald-500 font-bold uppercase tracking-widest mt-0.5 italic">In Stock</p>
+                    <p className={`text-[8px] sm:text-[9px] font-bold uppercase tracking-widest mt-0.5 italic ${(product.stock ?? 0) === 0 ? 'text-red-400' : (product.stock ?? 0) <= 5 ? 'text-amber-400' : 'text-emerald-500'}`}>
+                      {(product.stock ?? 0) === 0 ? 'Out of Stock' : `${product.stock} in stock`}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -243,6 +245,39 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Low Stock Alert Banner */}
+      {(() => {
+        const lowStockProducts = products.filter((p: Product) => (p.stock ?? 0) <= 5);
+        if (lowStockProducts.length === 0) return null;
+        return (
+          <div className="bg-amber-500/5 border border-amber-500/30 rounded-sm p-4 sm:p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Package className="w-4 h-4 text-amber-400 shrink-0" />
+              <h3 className="text-[11px] font-bold uppercase tracking-widest text-amber-400">
+                {lowStockProducts.length} Product{lowStockProducts.length > 1 ? "s" : ""} Need Restocking
+              </h3>
+              <Link href="/admin/products" className="ml-auto text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
+                Manage Stock →
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {lowStockProducts.map((p: Product) => (
+                <Link
+                  key={p.id}
+                  href={`/admin/products/edit/${p.id}`}
+                  className="flex items-center gap-3 bg-background border border-border px-4 py-2 rounded-sm hover:border-amber-500/50 transition-colors group"
+                >
+                  <span className="text-[11px] font-bold text-foreground uppercase tracking-wide group-hover:text-amber-400 transition-colors">{p.name}</span>
+                  <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${(p.stock ?? 0) === 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}`}>
+                    {(p.stock ?? 0) === 0 ? 'Out of stock' : `${p.stock} left`}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Recent Orders Table — Now from real DB data */}
       <div className="bg-card border border-border shadow-sm overflow-hidden rounded-sm">

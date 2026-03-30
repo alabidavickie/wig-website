@@ -12,6 +12,7 @@ interface ProductVariant {
   name: string;
   price_override?: number;
   attributes?: Record<string, unknown>;
+  inventory_count?: number;
 }
 
 interface Product {

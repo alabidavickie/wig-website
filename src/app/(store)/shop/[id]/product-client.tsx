@@ -15,6 +15,7 @@ interface ProductVariant {
   name: string;
   price_override?: number;
   attributes?: Record<string, unknown>;
+  inventory_count?: number;
 }
 
 interface Product {
@@ -32,6 +33,11 @@ interface Product {
 export default function ProductClient({ product }: { product: Product }) {
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(product.variants?.[0] || null);
   const [isAdded, setIsAdded] = useState(false);
+
+  const stockCount = selectedVariant?.inventory_count ??
+    (product.variants?.reduce((sum, v) => sum + (v.inventory_count ?? 0), 0) ?? 0);
+  const isOutOfStock = stockCount === 0;
+  const isLowStock = !isOutOfStock && stockCount <= 5;
   
   const addItem = useCartStore((state) => state.addItem);
 
@@ -108,6 +114,17 @@ export default function ProductClient({ product }: { product: Product }) {
               <div className="text-xl md:text-2xl font-serif text-foreground">
                 <Price amount={selectedVariant?.price_override || product.base_price || product.price || 0} />
               </div>
+
+              {/* Stock indicator */}
+              {isOutOfStock ? (
+                <span className="inline-block text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
+                  Out of Stock
+                </span>
+              ) : isLowStock ? (
+                <span className="inline-block text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  Only {stockCount} left — Order Soon
+                </span>
+              ) : null}
             </div>
 
             <div className="space-y-6" suppressHydrationWarning>
@@ -130,33 +147,43 @@ export default function ProductClient({ product }: { product: Product }) {
                 <div className="space-y-4">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Select Options</label>
                   <div className="flex flex-wrap gap-3">
-                    {product.variants.map((v: ProductVariant) => (
-                      <button
-                        key={v.id}
-                        onClick={() => setSelectedVariant(v)}
-                        className={`min-w-[100px] px-6 py-4 text-[11px] font-bold border transition-all rounded-full uppercase tracking-widest cursor-pointer ${
-                          selectedVariant?.id === v.id 
-                          ? 'border-black bg-black text-foreground shadow-lg' 
-                          : 'border-gray-100 hover:border-black text-zinc-300'
-                        }`}
-                      >
-                        {v.name}
-                      </button>
-                    ))}
+                    {product.variants.map((v: ProductVariant) => {
+                      const vOutOfStock = (v.inventory_count ?? 0) === 0;
+                      return (
+                        <button
+                          key={v.id}
+                          onClick={() => !vOutOfStock && setSelectedVariant(v)}
+                          disabled={vOutOfStock}
+                          className={`min-w-[100px] px-6 py-4 text-[11px] font-bold border transition-all rounded-full uppercase tracking-widest relative ${
+                            vOutOfStock
+                            ? 'border-gray-800 text-gray-600 cursor-not-allowed line-through'
+                            : selectedVariant?.id === v.id
+                            ? 'border-black bg-black text-foreground shadow-lg cursor-pointer'
+                            : 'border-gray-100 hover:border-black text-zinc-300 cursor-pointer'
+                          }`}
+                        >
+                          {v.name}
+                          {vOutOfStock && <span className="block text-[8px] mt-0.5 normal-case no-underline">sold out</span>}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
 
               <div className="flex gap-3 sm:gap-4">
-                <Button 
+                <Button
                   onClick={handleAddToCart}
-                  className={`flex-1 py-7 sm:py-8 text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.2em] transition-all rounded-full shadow-2xl cursor-pointer ${
-                    isAdded 
-                    ? 'bg-green-600 text-foreground hover:bg-green-600' 
+                  disabled={isOutOfStock}
+                  className={`flex-1 py-7 sm:py-8 text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.2em] transition-all rounded-full shadow-2xl cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isOutOfStock
+                    ? 'bg-secondary text-muted-foreground'
+                    : isAdded
+                    ? 'bg-green-600 text-foreground hover:bg-green-600'
                     : 'bg-secondary text-foreground hover:bg-black'
                   }`}
                 >
-                  {isAdded ? 'Piece Added to Bag' : 'Add to Bag'}
+                  {isOutOfStock ? 'Out of Stock' : isAdded ? 'Piece Added to Bag' : 'Add to Bag'}
                 </Button>
                 <button className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-white transition-all cursor-pointer">
                   <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
