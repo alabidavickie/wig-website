@@ -184,12 +184,12 @@ export default async function AnalyticsPage() {
 
   // Avg fulfillment time (orders that have been delivered)
   const deliveredOrdersList = allOrders.filter((o: Order) => o.status === 'delivered');
-  const now = Date.now();
+  const nowTime = Date.now();
   const avgFulfillmentDays = deliveredOrdersList.length > 0
     ? Math.round(
         deliveredOrdersList.reduce((sum: number, o: Order) => {
           const created = new Date(o.created_at).getTime();
-          return sum + (now - created) / (1000 * 60 * 60 * 24);
+          return sum + (nowTime - created) / (1000 * 60 * 60 * 24);
         }, 0) / deliveredOrdersList.length
       )
     : 0;
