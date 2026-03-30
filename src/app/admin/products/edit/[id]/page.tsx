@@ -229,10 +229,41 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
+          {formData.variants.length > 0 && (
+            <div className="bg-card p-8 border border-border shadow-sm space-y-6 rounded-sm">
+              <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] border-l-2 border-[#D5A754] pl-4">Stock Levels</h3>
+              <div className="space-y-4">
+                {formData.variants.map((variant: any, idx: number) => (
+                  <div key={variant.id || idx} className="flex items-center justify-between gap-4 p-4 bg-background border border-border rounded-sm">
+                    <div className="flex flex-col">
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-foreground">{variant.name || `Variant ${idx + 1}`}</span>
+                      {variant.sku && <span className="text-[9px] text-muted-foreground font-mono mt-0.5">SKU: {variant.sku}</span>}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Stock</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={variant.inventory_count ?? 0}
+                        onChange={(e) => {
+                          const updated = [...formData.variants];
+                          updated[idx] = { ...updated[idx], inventory_count: parseInt(e.target.value) || 0 };
+                          setFormData({ ...formData, variants: updated });
+                        }}
+                        className="w-20 h-10 px-3 border border-border focus:border-[#D5A754] outline-none bg-background font-bold text-sm text-center"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-bold">Stock changes are saved when you click "Commit Adjustments".</p>
+            </div>
+          )}
+
           <div className="space-y-4 pt-4">
-            <button 
+            <button
               disabled={saving}
-              type="submit" 
+              type="submit"
               className="w-full bg-white text-black py-5 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-[#D5A754] transition-all flex items-center justify-center gap-3 shadow-2xl"
             >
               {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}

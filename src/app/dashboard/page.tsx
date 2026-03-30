@@ -23,32 +23,23 @@ export default function DashboardPage() {
         const { createClient } = await import("@/lib/supabase/client");
         const supabase = createClient();
         const { data: { user: authUser } } = await supabase.auth.getUser();
-        
+
         if (authUser) {
           setUser(authUser);
-          
-          // Check for admin role
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("role")
-            .eq("id", authUser.id)
-            .single();
-          
-          if (profile?.role === "admin") {
-            setIsAdmin(true);
-          }
 
           const { getOrdersByUserId } = await import("@/lib/actions/orders");
-          const data = await getOrdersByUserId(authUser.id);
-          if (data && Array.isArray(data)) {
-            setOrders(data);
-          }
-
           const { getProducts } = await import("@/lib/actions/products");
-          const productsData = await getProducts();
-          if (productsData && productsData.length > 0) {
-            setSpotlight(productsData[0]);
-          }
+
+          // Fetch all data in parallel instead of sequentially
+          const [profile, ordersData, productsData] = await Promise.all([
+            supabase.from("profiles").select("role").eq("id", authUser.id).single().then(r => r.data),
+            getOrdersByUserId(authUser.id),
+            getProducts(),
+          ]);
+
+          if (profile?.role === "admin") setIsAdmin(true);
+          if (ordersData && Array.isArray(ordersData)) setOrders(ordersData);
+          if (productsData && productsData.length > 0) setSpotlight(productsData[0]);
         }
       } catch (error) {
         console.error("Dashboard data fetch failed:", error);

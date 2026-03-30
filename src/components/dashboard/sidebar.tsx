@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { LayoutDashboard, ShoppingBag, User, Heart, Settings, LogOut, Crown, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 const routes = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
@@ -17,11 +18,35 @@ const routes = [
 
 export const Sidebar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
+  const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
     setIsMounted(true);
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      supabase
+        .from("profiles")
+        .select("first_name, last_name")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.first_name || data?.last_name) {
+            setDisplayName(`${data.first_name || ""} ${data.last_name || ""}`.trim());
+          } else {
+            setDisplayName(user.email?.split("@")[0] || "Member");
+          }
+        });
+    });
   }, []);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/");
+  };
 
   if (!isMounted) return null;
 
@@ -31,7 +56,7 @@ export const Sidebar = () => {
         <Link href="/" className="flex items-center mb-16 gap-3 group">
           <img src="/images/logo_main.png" alt="Silk Haus Logo" className="w-16 h-auto object-contain transition-transform group-hover:scale-105" />
         </Link>
-        
+
         {/* Navigation Links */}
         <div className="space-y-1">
           {routes.map((route) => {
@@ -42,8 +67,8 @@ export const Sidebar = () => {
                 key={route.href}
                 className={cn(
                   "flex items-center px-5 py-4 text-[11px] font-bold transition-all uppercase tracking-[0.2em] rounded-sm",
-                  isActive 
-                    ? "text-[#D5A754] bg-secondary border-l-2 border-[#D5A754]" 
+                  isActive
+                    ? "text-[#D5A754] bg-secondary border-l-2 border-[#D5A754]"
                     : "text-muted-foreground hover:text-foreground hover:bg-card"
                 )}
               >
@@ -58,18 +83,20 @@ export const Sidebar = () => {
       <div className="mt-auto px-8 space-y-4 pb-4">
         <div className="p-4 bg-card rounded-sm border border-border flex items-center gap-4">
           <div className="relative">
-            <img src="https://i.pravatar.cc/150?img=12" alt="User" className="w-10 h-10 rounded-full object-cover border-2 border-border" />
-            <div className="absolute -bottom-1 -right-0.5 w-4 h-4 bg-[#D5A754] rounded-full flex items-center justify-center border-2 border-[#141414]">
-              <Crown className="w-2 h-2 text-foreground" />
+            <div className="w-10 h-10 rounded-full bg-[#D5A754]/20 border-2 border-border flex items-center justify-center">
+              <Crown className="w-4 h-4 text-[#D5A754]" />
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="text-[11px] font-bold text-foreground uppercase tracking-wider">Elena Vane</span>
+            <span className="text-[11px] font-bold text-foreground uppercase tracking-wider truncate max-w-[120px]">{displayName || "Member"}</span>
             <span className="text-[9px] font-bold text-[#D5A754] uppercase tracking-[0.2em]">Member</span>
           </div>
         </div>
-        
-        <button className="flex items-center justify-center w-full px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all text-muted-foreground hover:text-foreground hover:bg-secondary rounded-sm border border-transparent hover:border-border">
+
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center w-full px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all text-muted-foreground hover:text-foreground hover:bg-secondary rounded-sm border border-transparent hover:border-border cursor-pointer"
+        >
           <LogOut className="h-4 w-4 mr-4" />
           Secure Logout
         </button>

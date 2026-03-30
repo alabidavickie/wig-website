@@ -207,6 +207,20 @@ export async function adminUpdateOrderStatus(orderId: string, status: OrderStatu
   // Send an automated order status update email to the customer
   await sendOrderStatusUpdate(order.email, order.shipping_info?.firstName || "Customer", order.id, status);
 
+  // Notify the customer in their dashboard
+  if (order.user_id) {
+    const statusMessages: Partial<Record<OrderStatus, string>> = {
+      processing: `Your order #SH-${order.id.slice(0, 8)} is now being processed.`,
+      shipped: `Your order #SH-${order.id.slice(0, 8)} has been shipped! Check your email for tracking details.`,
+      delivered: `Your order #SH-${order.id.slice(0, 8)} has been delivered. Enjoy your Silk Haus piece!`,
+      cancelled: `Your order #SH-${order.id.slice(0, 8)} has been cancelled. Contact us if you have questions.`,
+    };
+    const message = statusMessages[status];
+    if (message) {
+      await createNotification(order.user_id, `Order ${status.charAt(0).toUpperCase() + status.slice(1)}`, message, "/dashboard/orders");
+    }
+  }
+
   revalidatePath("/dashboard/orders");
   revalidatePath("/admin/orders");
   return order;

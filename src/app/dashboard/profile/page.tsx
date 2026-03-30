@@ -80,7 +80,7 @@ export default function ProfilePage() {
   };
 
   if (loading) return (
-    <div className="w-full h-screen flex items-center justify-center bg-white">
+    <div className="w-full h-screen flex items-center justify-center bg-background">
       <Loader2 className="w-8 h-8 animate-spin text-foreground" />
     </div>
   );
@@ -94,7 +94,7 @@ export default function ProfilePage() {
     : new Date().getFullYear();
 
   return (
-    <div className="w-full max-w-5xl min-h-screen text-[#1A1A1D] bg-white mx-auto font-sans p-8 md:p-12">
+    <div className="w-full max-w-5xl min-h-screen text-foreground bg-background mx-auto font-sans p-8 md:p-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8 reveal">
         <div>
           <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground mb-4">Personal Info</h3>

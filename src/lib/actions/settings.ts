@@ -6,6 +6,12 @@ export interface StoreSettings {
   shipping_fee_gbp: number;
   currency: string;
   maintenance_mode: boolean;
+  store_name?: string;
+  store_email?: string;
+  store_phone?: string;
+  instagram_url?: string;
+  tiktok_url?: string;
+  facebook_url?: string;
 }
 
 /**
@@ -17,7 +23,7 @@ export async function getStoreSettings(): Promise<StoreSettings> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("store_settings")
-      .select("*")
+      .select("shipping_fee_gbp, currency, maintenance_mode, store_name, store_email, store_phone, instagram_url, tiktok_url, facebook_url")
       .limit(1)
       .single();
 

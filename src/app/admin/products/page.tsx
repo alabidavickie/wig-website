@@ -131,6 +131,7 @@ export default function AdminProductsPage() {
                 <th className="px-8 py-6">Unit Description</th>
                 <th className="px-8 py-6">Collection</th>
                 <th className="px-8 py-6">Valuation</th>
+                <th className="px-8 py-6">Stock</th>
                 <th className="px-8 py-6">Archived On</th>
                 <th className="px-8 py-6 text-right">Operations</th>
               </tr>
@@ -138,7 +139,7 @@ export default function AdminProductsPage() {
             <tbody className="divide-y divide-[#2A2A2D]">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-8 py-20 text-center">
+                  <td colSpan={6} className="px-8 py-20 text-center">
                     <div className="flex flex-col items-center gap-4 text-muted-foreground">
                       <Loader2 className="w-8 h-8 animate-spin text-[#D5A754]" />
                       <p className="text-[10px] font-bold uppercase tracking-[0.4em]">Loading products...</p>
@@ -147,7 +148,7 @@ export default function AdminProductsPage() {
                 </tr>
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-8 py-20 text-center">
+                  <td colSpan={6} className="px-8 py-20 text-center">
                     <div className="flex flex-col items-center gap-4 text-muted-foreground">
                       <Package className="w-12 h-12 stroke-[0.5]" />
                       <p className="text-[10px] font-bold uppercase tracking-[0.4em]">Vault is currently vacant</p>
@@ -157,7 +158,7 @@ export default function AdminProductsPage() {
                 </tr>
               ) : filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-8 py-20 text-center">
+                  <td colSpan={6} className="px-8 py-20 text-center">
                     <div className="flex flex-col items-center gap-4 text-muted-foreground">
                       <Search className="w-12 h-12 stroke-[0.5]" />
                       <p className="text-[10px] font-bold uppercase tracking-[0.4em]">No products match your search</p>
@@ -190,6 +191,16 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-8 py-6 text-[13px] font-bold text-foreground tracking-tighter">
                       £{Number(product.base_price).toLocaleString()}
+                    </td>
+                    <td className="px-8 py-6">
+                      {(() => {
+                        const stock = (product as any).stock ?? 0;
+                        return (
+                          <span className={`text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${stock === 0 ? 'text-red-400 border-red-500/30 bg-red-500/10' : stock < 5 ? 'text-amber-400 border-amber-500/30 bg-amber-500/10' : 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10'}`}>
+                            {stock === 0 ? 'Out of stock' : stock < 5 ? `Low — ${stock}` : stock}
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="px-8 py-6 text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                       {product.created_at ? format(new Date(product.created_at), 'MMM dd, yyyy') : '—'}

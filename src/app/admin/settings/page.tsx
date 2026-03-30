@@ -9,10 +9,10 @@ export default function AdminSettingsPage() {
 
   // General state
   const [generalConfig, setGeneralConfig] = useState({
-    email: "follienn@gmail.com",
-    phone: "+234 800 000 0000",
-    instagram: "@follienn_hair",
-    tiktok: "@follienn_hair",
+    email: "",
+    phone: "",
+    instagram: "",
+    tiktok: "",
     maintenance: false
   });
 
@@ -33,9 +33,16 @@ export default function AdminSettingsPage() {
           currency: settings.currency,
           shipping_base: settings.shipping_fee_gbp.toString()
         }));
-        setGeneralConfig((prev) => ({
-          ...prev,
+        setGeneralConfig({
+          email: settings.store_email || "",
+          phone: settings.store_phone || "",
+          instagram: settings.instagram_url || "",
+          tiktok: settings.tiktok_url || "",
           maintenance: settings.maintenance_mode
+        });
+        setBrandingConfig((prev) => ({
+          ...prev,
+          store_name: settings.store_name || "Silk Haus"
         }));
       });
     });
@@ -60,15 +67,22 @@ export default function AdminSettingsPage() {
     setIsSaving(true);
     try {
       const { updateStoreSettings } = await import("@/lib/actions/settings");
+      const { toast } = await import("sonner");
       await updateStoreSettings({
         shipping_fee_gbp: parseFloat(storeConfig.shipping_base) || 15,
         currency: storeConfig.currency,
-        maintenance_mode: generalConfig.maintenance
+        maintenance_mode: generalConfig.maintenance,
+        store_email: generalConfig.email,
+        store_phone: generalConfig.phone,
+        instagram_url: generalConfig.instagram,
+        tiktok_url: generalConfig.tiktok,
+        store_name: brandingConfig.store_name,
       });
-      alert("Administrative settings have been successfully synchronized.");
+      toast.success("Settings saved successfully.");
     } catch (e) {
       console.error(e);
-      alert("Failed to save settings. Please try again.");
+      const { toast } = await import("sonner");
+      toast.error("Failed to save settings. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -127,25 +141,25 @@ export default function AdminSettingsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <div className="space-y-3">
                           <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Official Contact Email</label>
-                          <input defaultValue="follienn@gmail.com" className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
+                          <input value={generalConfig.email} onChange={(e) => setGeneralConfig({...generalConfig, email: e.target.value})} className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
                        </div>
                        <div className="space-y-3">
                           <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Support Phone Line</label>
-                          <input defaultValue="+234 800 000 0000" className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
+                          <input value={generalConfig.phone} onChange={(e) => setGeneralConfig({...generalConfig, phone: e.target.value})} className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
                        </div>
                     </div>
                  </section>
- 
+
                  <section className="space-y-6">
                     <h3 className="text-[12px] font-bold uppercase tracking-widest border-l-2 border-[#D5A754] pl-4 text-foreground">Social Media</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <div className="space-y-3">
                           <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Instagram Handle</label>
-                          <input defaultValue="@follienn_hair" className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
+                          <input value={generalConfig.instagram} onChange={(e) => setGeneralConfig({...generalConfig, instagram: e.target.value})} className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
                        </div>
                        <div className="space-y-3">
                           <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">TikTok Identifier</label>
-                          <input defaultValue="@follienn_hair" className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
+                          <input value={generalConfig.tiktok} onChange={(e) => setGeneralConfig({...generalConfig, tiktok: e.target.value})} className="w-full h-12 px-4 border border-border text-[13px] outline-none focus:border-[#D5A754] bg-background font-bold" />
                        </div>
                     </div>
                  </section>

@@ -124,7 +124,7 @@ function SuccessContent() {
 
   // --- Success State ---
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center font-sans text-[#1A1A1D]">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center font-sans text-foreground">
       <div className="text-center space-y-8 max-w-lg px-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
         {/* Animated check with gold ring */}
         <div className="relative mx-auto w-28 h-28">

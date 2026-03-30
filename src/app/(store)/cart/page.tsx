@@ -33,14 +33,17 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     setCheckingAuth(true);
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      router.push("/checkout");
-    } else {
-      router.push("/login?redirect=/checkout");
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        router.push("/checkout");
+      } else {
+        router.push("/login?redirect=/checkout");
+      }
+    } finally {
+      setCheckingAuth(false);
     }
-    setCheckingAuth(false);
   };
 
   if (!mounted) return null;
