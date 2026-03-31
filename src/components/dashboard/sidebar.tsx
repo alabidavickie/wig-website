@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, ShoppingBag, User, Heart, Settings, LogOut, Crown, Bell } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, User, Heart, Settings, LogOut, Crown, Bell, Store } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -92,6 +92,14 @@ export const Sidebar = () => {
             <span className="text-[9px] font-bold text-[#D5A754] uppercase tracking-[0.2em]">Member</span>
           </div>
         </div>
+
+        <Link
+          href="/shop"
+          className="flex items-center justify-center w-full px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all text-[#D5A754] hover:bg-secondary rounded-sm border border-[#D5A754]/30 hover:border-[#D5A754]/60"
+        >
+          <Store className="h-4 w-4 mr-4" />
+          Visit Store
+        </Link>
 
         <button
           onClick={handleLogout}

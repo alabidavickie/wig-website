@@ -159,12 +159,18 @@ export async function forgotPassword(formData: FormData) {
 
   if (!email) return { error: "Email is required" };
 
+  // Use env var with hardcoded production fallback so the link always works
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://silkhausbyfollienn.xyz";
+
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/reset-password`,
+    redirectTo: `${siteUrl}/auth/callback?next=/reset-password`,
   });
 
-  if (error) return { error: error.message };
-  return { success: "Password reset link sent to your email" };
+  // Always return success to avoid leaking whether an email is registered
+  if (error) {
+    console.error("Password reset error:", error.message);
+  }
+  return { success: "If that email is registered, a reset link has been sent. Please check your inbox and spam folder." };
 }
 
 export async function updatePassword(formData: FormData) {
