@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/store/useCartStore";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, Lock, ArrowLeft, Globe2, Tag, X, Loader2 } from "lucide-react";
+import { ShieldCheck, Lock, ArrowLeft, Globe2, Tag, X, Loader2, UserCheck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -16,12 +16,13 @@ import { getStoreSettings } from "@/lib/actions/settings";
 export default function CheckoutPage() {
   const [mounted, setMounted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [profilePrefilled, setProfilePrefilled] = useState(false);
   const { geo, getExchangeRate, initialize, refreshRate } = useGeoStore();
 
   const [formData, setFormData] = useState({
     firstName: "", lastName: "", email: "", address: "", city: "", zip: ""
   });
-  
+
   const [shippingFeeGbp, setShippingFeeGbp] = useState(15.00);
 
   // Discount / promo code state
@@ -38,8 +39,44 @@ export default function CheckoutPage() {
     setMounted(true);
     initialize();
     getStoreSettings().then(s => setShippingFeeGbp(Math.max(0, s.shipping_fee_gbp)));
-    // Always fetch the latest exchange rate before checkout
     refreshRate();
+
+    // Auto-fill shipping form from saved profile
+    const prefillFromProfile = async () => {
+      try {
+        const { createClient } = await import("@/lib/supabase/client");
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("first_name, last_name, phone, address_line1, city, postal_code")
+          .eq("id", user.id)
+          .single();
+
+        if (!profile) return;
+
+        const hasSavedAddress = profile.address_line1 || profile.city || profile.postal_code;
+
+        setFormData(prev => ({
+          firstName: prev.firstName || profile.first_name || "",
+          lastName: prev.lastName || profile.last_name || "",
+          email: prev.email || user.email || "",
+          address: prev.address || profile.address_line1 || "",
+          city: prev.city || profile.city || "",
+          zip: prev.zip || profile.postal_code || "",
+        }));
+
+        if (hasSavedAddress) {
+          setProfilePrefilled(true);
+        }
+      } catch {
+        // Silent fail — user can still fill manually
+      }
+    };
+
+    prefillFromProfile();
   }, [initialize, refreshRate]);
 
   if (!mounted || !geo) return null; // Wait for geo resolution
@@ -180,6 +217,14 @@ export default function CheckoutPage() {
                    <Globe2 className="w-3 h-3" /> Region: {geo.country}
                 </div>
               </div>
+              {profilePrefilled && (
+                <div className="flex items-center gap-3 p-4 bg-[#D5A754]/10 border border-[#D5A754]/30 rounded-xl">
+                  <UserCheck className="w-4 h-4 text-[#D5A754] shrink-0" />
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754]">
+                    Pre-filled from your saved profile — edit below if needed
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   { label: "First Name", name: "firstName", type: "text", placeholder: "Jane" },

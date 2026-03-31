@@ -142,12 +142,15 @@ export async function createNotification(userId: string, title: string, message:
 }
 
 /**
- * Updates an order's status (used by webhooks).
+ * Updates an order's status (used by webhooks and verify routes).
+ * Uses adminClient to bypass RLS — webhooks have no user session.
  */
 export async function updateOrderStatus(reference: string, provider: string, status: OrderStatus) {
-  const supabase = await createClient();
-  
-  const { data, error } = await supabase
+  // Must use admin client: this is called from webhooks (no user session) and verify API routes.
+  // Regular createClient() fails silently when RLS blocks the update in those contexts.
+  const adminClient = createAdminClient();
+
+  const { data, error } = await adminClient
     .from("orders")
     .update({ status })
     .match({ payment_reference: reference, payment_provider: provider })
@@ -174,7 +177,9 @@ export async function updateOrderStatus(reference: string, provider: string, sta
   }
 
   revalidatePath("/dashboard/orders");
+  revalidatePath("/dashboard");
   revalidatePath("/admin");
+  revalidatePath("/admin/orders");
   return data;
 }
 
