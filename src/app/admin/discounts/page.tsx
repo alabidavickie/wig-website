@@ -319,28 +319,7 @@ export default function DiscountsPage() {
         )}
       </div>
 
-      {/* SQL Note for Supabase */}
-      <div className="bg-card border border-border p-5 rounded-sm">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">Required Supabase Migration</p>
-        <pre className="text-[10px] text-muted-foreground overflow-x-auto leading-relaxed">{`CREATE TABLE IF NOT EXISTS discount_codes (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  code TEXT UNIQUE NOT NULL,
-  type TEXT NOT NULL CHECK (type IN ('percentage', 'flat')),
-  value NUMERIC NOT NULL,
-  min_order_amount NUMERIC,
-  expiry_date TIMESTAMPTZ,
-  max_uses INTEGER,
-  current_uses INTEGER DEFAULT 0,
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
 
-CREATE OR REPLACE FUNCTION increment_discount_usage(code_id UUID)
-RETURNS VOID AS $$
-  UPDATE discount_codes SET current_uses = current_uses + 1 WHERE id = code_id;
-$$ LANGUAGE SQL;`}
-        </pre>
-      </div>
     </div>
   );
 }

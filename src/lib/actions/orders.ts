@@ -137,8 +137,32 @@ export async function createNotification(userId: string, title: string, message:
       link,
       read: false
     }]);
-    
+
   if (error) console.error("Error creating notification:", error);
+}
+
+/**
+ * Creates notifications for all admin users (e.g. new order placed, new review).
+ */
+export async function notifyAdmins(title: string, message: string, link?: string) {
+  const adminClient = createAdminClient();
+  const { data: admins } = await adminClient
+    .from("profiles")
+    .select("id")
+    .eq("role", "admin");
+
+  if (!admins || admins.length === 0) return;
+
+  const notifications = admins.map((admin: { id: string }) => ({
+    user_id: admin.id,
+    title,
+    message,
+    link: link || "/admin/orders",
+    read: false,
+  }));
+
+  const { error } = await adminClient.from("notifications").insert(notifications);
+  if (error) console.error("Error creating admin notifications:", error);
 }
 
 /**
@@ -162,10 +186,17 @@ export async function updateOrderStatus(reference: string, provider: string, sta
     return null;
   }
 
-  // If a payment was successful, alert the admin via email and notify the user
+  // If a payment was successful, alert the admin via email + dashboard and notify the user
   if (status === "paid" || status === "processing") {
     await sendAdminPaymentReceived(data.email, data.id, data.total_amount, data.currency);
-    
+
+    // Notify all admins in their dashboard
+    await notifyAdmins(
+      "New Order Received",
+      `${data.email} placed order #SH-${data.id.slice(0, 8)} — ${data.currency === "NGN" ? "₦" : "£"}${Number(data.total_amount).toLocaleString()}`,
+      `/admin/orders/${data.id}`
+    );
+
     if (data.user_id) {
       await createNotification(
         data.user_id,

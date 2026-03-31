@@ -16,7 +16,8 @@ import {
   Menu,
   X,
   FileEdit,
-  Percent
+  Percent,
+  Star
 } from "lucide-react";
 
 export default function AdminLayout({
@@ -62,6 +63,7 @@ export default function AdminLayout({
     { label: "Customers", icon: Users, href: "/admin/customers" },
     { label: "Analytics", icon: BarChart3, href: "/admin/analytics" },
     { label: "Discounts", icon: Percent, href: "/admin/discounts" },
+    { label: "Reviews", icon: Star, href: "/admin/reviews" },
     { label: "Content", icon: FileEdit, href: "/admin/content" },
     { label: "Settings", icon: Settings, href: "/admin/settings" },
   ];

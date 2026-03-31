@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { updateOrderStatus } from "@/lib/actions/orders";
+import { createAdminClient } from "@/lib/supabase/admin";
+
+// In-process deduplication for the verify endpoint — prevents duplicate email/notification
+// firing when the success page is refreshed multiple times before webhook processes.
+const verifiedReferences = new Set<string>();
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get("session_id");
   const reference = searchParams.get("reference");
   const provider = searchParams.get("provider");
+
+  // Derive the dedup key from whichever identifier is present
+  const dedupKey = (provider === "stripe" ? sessionId : reference) ?? "";
 
   try {
     // --- Stripe Verification ---
@@ -20,8 +28,26 @@ export async function GET(req: Request) {
       const session = await stripe.checkout.sessions.retrieve(sessionId);
 
       if (session.payment_status === "paid") {
-        // Fallback: update order status if webhook hasn't done it
-        await updateOrderStatus(sessionId, "stripe", "paid");
+        // Only run updateOrderStatus if not already confirmed in-memory OR in DB
+        const alreadyInMemory = verifiedReferences.has(dedupKey);
+
+        if (!alreadyInMemory) {
+          // Check DB to see if already paid (handles server restarts)
+          const adminClient = createAdminClient();
+          const { data: existingOrder } = await adminClient
+            .from("orders")
+            .select("status")
+            .eq("payment_reference", sessionId)
+            .eq("payment_provider", "stripe")
+            .single();
+
+          const alreadyPaid = ["paid", "processing", "shipped", "delivered"].includes(existingOrder?.status ?? "");
+
+          if (!alreadyPaid) {
+            await updateOrderStatus(sessionId, "stripe", "paid");
+          }
+          verifiedReferences.add(dedupKey);
+        }
 
         return NextResponse.json({
           verified: true,
@@ -53,8 +79,26 @@ export async function GET(req: Request) {
       const verifyData = await verifyRes.json();
 
       if (verifyData.data?.status === "success") {
-        // Fallback: update order status if webhook hasn't done it
-        await updateOrderStatus(reference, "paystack", "paid");
+        const alreadyInMemory = verifiedReferences.has(dedupKey);
+
+        if (!alreadyInMemory) {
+          // Check DB to see if already paid
+          const adminClient = createAdminClient();
+          const { data: existingOrder } = await adminClient
+            .from("orders")
+            .select("status")
+            .eq("payment_reference", reference)
+            .eq("payment_provider", "paystack")
+            .single();
+
+          const alreadyPaid = ["paid", "processing", "shipped", "delivered"].includes(existingOrder?.status ?? "");
+
+          if (!alreadyPaid) {
+            // Fallback: update order status if webhook hasn't done it yet
+            await updateOrderStatus(reference, "paystack", "paid");
+          }
+          verifiedReferences.add(dedupKey);
+        }
 
         return NextResponse.json({
           verified: true,

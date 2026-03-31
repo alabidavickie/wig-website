@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense, useCallback } from "react";
+import { useEffect, useState, Suspense, useCallback, useRef } from "react";
 import { useCartStore } from "@/lib/store/useCartStore";
 import { CheckCircle, Loader2, AlertTriangle, ShoppingBag, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
@@ -21,16 +21,33 @@ function SuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [cleared, setCleared] = useState(false);
   const [verifying, setVerifying] = useState(true);
   const [result, setResult] = useState<VerifyResult | null>(null);
+  // Guard against React StrictMode double-invoke and page refreshes
+  const hasVerified = useRef(false);
 
   const sessionId = searchParams.get("session_id");
   const reference = searchParams.get("reference");
   const provider = searchParams.get("provider");
 
-  // Server-side verification
+  // Derive a stable key for this payment attempt
+  const paymentKey = `silk_verified_${provider}_${reference || sessionId}`;
+
   const verifyPayment = useCallback(async () => {
+    // Idempotency: if this reference was already verified in this browser session, skip the API call
+    try {
+      const cached = sessionStorage.getItem(paymentKey);
+      if (cached) {
+        const cachedResult: VerifyResult = JSON.parse(cached);
+        setResult(cachedResult);
+        // Don't clear cart again — it was already cleared in the first verification
+        setVerifying(false);
+        return;
+      }
+    } catch {
+      // sessionStorage unavailable (SSR guard) — fall through to fresh verify
+    }
+
     try {
       const params = new URLSearchParams();
       if (sessionId) params.set("session_id", sessionId);
@@ -41,19 +58,26 @@ function SuccessContent() {
       const data: VerifyResult = await res.json();
       setResult(data);
 
-      // Clear cart only on verified payment
-      if (data.verified && !cleared) {
+      if (data.verified) {
         clearCart();
-        setCleared(true);
+        // Cache the result in sessionStorage so refreshes don't re-trigger side effects
+        try {
+          sessionStorage.setItem(paymentKey, JSON.stringify(data));
+        } catch {
+          // ignore
+        }
       }
     } catch {
       setResult({ verified: false, error: "Verification failed" });
     } finally {
       setVerifying(false);
     }
-  }, [sessionId, reference, provider, cleared, clearCart]);
+  }, [sessionId, reference, provider, paymentKey, clearCart]);
 
   useEffect(() => {
+    if (hasVerified.current) return;
+    hasVerified.current = true;
+
     if (sessionId || reference) {
       verifyPayment();
     } else {
@@ -65,7 +89,8 @@ function SuccessContent() {
   // Fast auto-redirect after verification
   useEffect(() => {
     if (!result?.verified) return;
-    router.push("/dashboard/orders");
+    const timer = setTimeout(() => router.push("/dashboard/orders"), 4000);
+    return () => clearTimeout(timer);
   }, [result?.verified, router]);
 
   // --- Loading State ---
@@ -169,8 +194,8 @@ function SuccessContent() {
         </p>
 
         <div className="flex items-center justify-center pt-8">
-           <Loader2 className="w-8 h-8 text-[#D5A754] animate-spin" />
-           <span className="ml-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Redirecting to Dashboard...</span>
+          <Loader2 className="w-8 h-8 text-[#D5A754] animate-spin" />
+          <span className="ml-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Redirecting to Dashboard...</span>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
