@@ -36,7 +36,9 @@ export default async function OrderDetailPage({ params }: PageProps) {
   const reviews = await getReviewsByOrderId(id);
   const reviewedProductIds = new Set(reviews.map((r) => r.product_id));
 
-  const currencySymbol = order.currency === "NGN" ? "₦" : "£";
+  // order.total_amount is in the order's currency (NGN or GBP)
+  // order_items[].unit_price is always stored in GBP (base_price)
+  const totalSymbol = order.currency === "NGN" ? "₦" : "£";
   const isDelivered = order.status === "delivered";
 
   const statusSteps = [
@@ -137,8 +139,9 @@ export default async function OrderDetailPage({ params }: PageProps) {
                         <p className="text-[11px] text-muted-foreground mt-1 uppercase tracking-widest">
                           Qty: {item.quantity}
                         </p>
+                        {/* unit_price is always stored in GBP */}
                         <p className="text-[13px] font-bold text-[#D5A754] mt-2">
-                          {currencySymbol}{(item.unit_price * item.quantity).toLocaleString()}
+                          £{(item.unit_price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </p>
                       </div>
                     </div>
@@ -202,7 +205,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
               <div>
                 <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total Paid</p>
                 <p className="text-xl font-bold tracking-tighter text-[#D5A754]">
-                  {currencySymbol}{Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  {totalSymbol}{Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </p>
               </div>
               {order.payment_reference && (
@@ -257,27 +260,29 @@ export default async function OrderDetailPage({ params }: PageProps) {
               <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754]">Order Summary</h2>
             </div>
             <div className="p-6 space-y-3">
+              {/* Items subtotal — unit_price is always stored in GBP */}
               <div className="flex justify-between text-[12px]">
-                <span className="text-muted-foreground uppercase tracking-widest font-bold">Subtotal</span>
+                <span className="text-muted-foreground uppercase tracking-widest font-bold">Items (GBP)</span>
                 <span className="font-bold">
-                  {currencySymbol}
-                  {order.order_items
+                  £{order.order_items
                     ? order.order_items.reduce((acc: number, item: any) => acc + item.unit_price * item.quantity, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })
                     : "—"}
                 </span>
               </div>
+              {/* Shipping fee is in the order's payment currency */}
               {order.shipping_info?.shippingFee != null && (
                 <div className="flex justify-between text-[12px]">
                   <span className="text-muted-foreground uppercase tracking-widest font-bold">Shipping</span>
                   <span className="font-bold">
-                    {currencySymbol}{Number(order.shipping_info.shippingFee).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    {totalSymbol}{Number(order.shipping_info.shippingFee).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               )}
+              {/* Total paid — in the currency charged (NGN or GBP) */}
               <div className="flex justify-between text-[14px] pt-3 border-t border-border">
-                <span className="font-bold uppercase tracking-widest">Total</span>
+                <span className="font-bold uppercase tracking-widest">Total Paid</span>
                 <span className="font-bold text-[#D5A754]">
-                  {currencySymbol}{Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  {totalSymbol}{Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </span>
               </div>
             </div>

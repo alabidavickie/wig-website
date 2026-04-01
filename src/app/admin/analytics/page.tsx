@@ -6,10 +6,19 @@ interface Order {
   id: string;
   status: string;
   total_amount: number;
+  currency: string;
   created_at: string;
   email: string;
   payment_provider?: string;
+  shipping_info?: { exchangeRate?: number };
   order_items?: OrderItem[];
+}
+
+/** Converts any order's total_amount to GBP using the stored exchange rate. */
+function orderToGbp(o: Order): number {
+  if (o.currency !== "NGN") return Number(o.total_amount || 0);
+  const rate = o.shipping_info?.exchangeRate || 2050;
+  return Number(o.total_amount || 0) / rate;
 }
 
 interface OrderItem {
@@ -44,18 +53,18 @@ export default async function AnalyticsPage() {
   // ── Live Metrics ──────────────────────────────────
   const paidStatuses = ["paid", "processing", "shipped", "delivered"];
 
-  // Total Revenue (ALL TIME)
+  // Total Revenue (ALL TIME) — always in GBP equivalent
   const totalRevenue = allOrders
     .filter((o: Order) => paidStatuses.includes(o.status))
-    .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
+    .reduce((sum: number, o: Order) => sum + orderToGbp(o), 0);
 
-  // Revenue This Month
+  // Revenue This Month — GBP equivalent
   const startOfMonth = new Date(currentYear, currentMonth, 1);
   const revenueThisMonth = allOrders
     .filter((o: Order) => new Date(o.created_at) >= startOfMonth && paidStatuses.includes(o.status))
-    .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
+    .reduce((sum: number, o: Order) => sum + orderToGbp(o), 0);
 
-  // Revenue Last Month (for comparison)
+  // Revenue Last Month (for comparison) — GBP equivalent
   const startOfLastMonth = new Date(currentYear, currentMonth - 1, 1);
   const endOfLastMonth = new Date(currentYear, currentMonth, 0);
   const revenueLastMonth = allOrders
@@ -63,7 +72,7 @@ export default async function AnalyticsPage() {
       const d = new Date(o.created_at);
       return d >= startOfLastMonth && d <= endOfLastMonth && paidStatuses.includes(o.status);
     })
-    .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
+    .reduce((sum: number, o: Order) => sum + orderToGbp(o), 0);
 
   const revenueChange = revenueLastMonth > 0
     ? (((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 100).toFixed(1)
@@ -137,23 +146,23 @@ export default async function AnalyticsPage() {
     .sort(([, a], [, b]) => b - a)
     .slice(0, 6);
 
-  // ── Monthly Revenue Chart (Live) ─────────────────
+  // ── Monthly Revenue Chart (Live) — GBP equivalent ──
   const monthlyRevenue = new Array(12).fill(0);
   allOrders.forEach((order: Order) => {
     const d = new Date(order.created_at);
     if (d.getFullYear() === currentYear && paidStatuses.includes(order.status)) {
-      monthlyRevenue[d.getMonth()] += Number(order.total_amount || 0);
+      monthlyRevenue[d.getMonth()] += orderToGbp(order);
     }
   });
   const maxMonthRevenue = Math.max(...monthlyRevenue, 1);
 
-  // ── Payment Provider Split (Live) ────────────────
+  // ── Payment Provider Split (Live) — GBP equivalent ──
   const providerTotals: Record<string, number> = {};
   allOrders
     .filter((o: Order) => paidStatuses.includes(o.status))
     .forEach((o: Order) => {
       const provider = o.payment_provider || "unknown";
-      providerTotals[provider] = (providerTotals[provider] || 0) + Number(o.total_amount || 0);
+      providerTotals[provider] = (providerTotals[provider] || 0) + orderToGbp(o);
     });
   const providerTotal = Object.values(providerTotals).reduce((a, b) => a + b, 0) || 1;
 

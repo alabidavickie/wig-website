@@ -10,7 +10,7 @@ import {
   Mail
 } from "lucide-react";
 import Link from "next/link";
-import { getProducts, getCategories } from "@/lib/actions/products";
+import { getProducts } from "@/lib/actions/products";
 import { getAllOrders } from "@/lib/actions/orders";
 import { getSubscriberCount } from "@/lib/actions/newsletter";
 import Image from "next/image";
@@ -24,7 +24,14 @@ interface Order {
   currency: string;
   payment_provider?: string;
   created_at: string;
+  shipping_info?: { exchangeRate?: number };
   order_items?: OrderItem[];
+}
+
+function orderToGbp(o: Order): number {
+  if (o.currency !== "NGN") return Number(o.total_amount || 0);
+  const rate = o.shipping_info?.exchangeRate || 2050;
+  return Number(o.total_amount || 0) / rate;
 }
 
 interface OrderItem {
@@ -43,7 +50,6 @@ interface Product {
 
 export default async function AdminDashboardPage() {
   const products = await getProducts() as Product[];
-  const categories = await getCategories();
   const allOrders = await getAllOrders() as Order[];
   const subscriberCount = await getSubscriberCount();
 
@@ -57,11 +63,11 @@ export default async function AdminDashboardPage() {
   // 2. Orders Awaiting Dispatch
   const awaitingDispatchCount = allOrders.filter((o: Order) => o.status === "paid" || o.status === "processing").length;
 
-  // 3. Revenue This Month
+  // 3. Revenue This Month — converted to GBP equivalent
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const revenueThisMonth = allOrders
     .filter((o: Order) => new Date(o.created_at) >= startOfMonth && ["paid", "processing", "shipped", "delivered"].includes(o.status))
-    .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
+    .reduce((sum: number, o: Order) => sum + orderToGbp(o), 0);
 
   // 4. Low Stock Alert
   const lowStockCount = products.filter((p: Product) => Number(p.stock) <= 5).length;
@@ -138,10 +144,10 @@ export default async function AdminDashboardPage() {
   const currentYear = new Date().getFullYear();
   const monthlyRevenue = new Array(12).fill(0);
   
-  allOrders.forEach(order => {
+  allOrders.forEach((order: Order) => {
     const orderDate = new Date(order.created_at);
     if (orderDate.getFullYear() === currentYear && ["paid", "processing", "shipped", "delivered"].includes(order.status)) {
-      monthlyRevenue[orderDate.getMonth()] += Number(order.total_amount || 0);
+      monthlyRevenue[orderDate.getMonth()] += orderToGbp(order);
     }
   });
 

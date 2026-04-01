@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getOrderById, updateOrderTracking, processRefund } from "@/lib/actions/orders";
-import { ArrowLeft, Package, Truck, CreditCard, Clock, RotateCcw, Save, Loader2 } from "lucide-react";
+import { getOrderById, updateOrderTracking, processRefund, adminUpdateOrderStatus } from "@/lib/actions/orders";
+import { ArrowLeft, Package, Truck, CreditCard, Clock, RotateCcw, Save, Loader2, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -55,6 +55,7 @@ export default function AdminOrderDetailPage() {
   const [savingTracking, setSavingTracking] = useState(false);
   
   const [refunding, setRefunding] = useState(false);
+  const [markingDelivered, setMarkingDelivered] = useState(false);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -85,6 +86,22 @@ export default function AdminOrderDetailPage() {
       toast.error("Failed to update tracking.");
     } finally {
       setSavingTracking(false);
+    }
+  };
+
+  const handleMarkDelivered = async () => {
+    if (!order) return;
+    const confirmed = window.confirm("Mark this order as Delivered? The customer will be notified.");
+    if (!confirmed) return;
+    setMarkingDelivered(true);
+    try {
+      const updated = await adminUpdateOrderStatus(order.id, "delivered");
+      setOrder(updated);
+      toast.success("Order marked as Delivered. Customer has been notified.");
+    } catch (err) {
+      toast.error("Failed to mark as delivered.");
+    } finally {
+      setMarkingDelivered(false);
     }
   };
 
@@ -177,9 +194,9 @@ export default function AdminOrderDetailPage() {
                     <p className="text-[11px] text-muted-foreground mt-2 uppercase tracking-widest font-bold">Qty: {item.quantity}</p>
                   </div>
                   <div className="text-right">
+                    {/* unit_price is always stored in GBP (base_price) */}
                     <p className="font-bold text-[14px] tracking-tighter">
-                      {order.currency === 'NGN' ? '₦' : order.currency === 'GBP' ? '£' : '$'}
-                      {(item.unit_price * item.quantity).toLocaleString()}
+                      £{(item.unit_price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </p>
                   </div>
                 </div>
@@ -288,14 +305,30 @@ export default function AdminOrderDetailPage() {
                     />
                   </div>
                   
-                  <button 
+                  <button
                     onClick={handleSaveTracking}
-                    disabled={savingTracking || order.status === 'cancelled'}
+                    disabled={savingTracking || order.status === 'cancelled' || order.status === 'delivered'}
                     className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#D5A754] text-black hover:bg-[#E6B964] transition-all text-[10px] font-bold uppercase tracking-[0.2em] rounded-none disabled:opacity-50 mt-2"
                   >
                     {savingTracking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                     Save & Mark Shipped
                   </button>
+
+                  {/* Mark as Fulfilled */}
+                  {order.status === 'shipped' ? (
+                    <button
+                      onClick={handleMarkDelivered}
+                      disabled={markingDelivered}
+                      className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-white hover:bg-emerald-500 transition-all text-[10px] font-bold uppercase tracking-[0.2em] rounded-none disabled:opacity-50"
+                    >
+                      {markingDelivered ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                      Mark as Fulfilled / Delivered
+                    </button>
+                  ) : order.status === 'delivered' ? (
+                    <div className="flex items-center gap-2 px-4 py-3 border border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-[10px] font-bold uppercase tracking-widest">
+                      <CheckCircle2 className="w-4 h-4" /> Order Fulfilled & Delivered
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

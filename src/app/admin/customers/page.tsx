@@ -33,7 +33,14 @@ export default async function AdminCustomersPage() {
   // Fetch all orders for stats using adminClient
   const { data: allOrders } = await adminClient
     .from("orders")
-    .select("id, email, total_amount, currency, status, created_at");
+    .select("id, email, total_amount, currency, status, created_at, shipping_info");
+
+  /** Convert an order's total to GBP equivalent using stored exchange rate. */
+  function orderToGbp(amount: number, currency: string, shippingInfo?: { exchangeRate?: number }): number {
+    if (currency !== "NGN") return amount;
+    const rate = shippingInfo?.exchangeRate || 2050;
+    return amount / rate;
+  }
 
   interface Profile {
     id: string;
@@ -52,23 +59,24 @@ export default async function AdminCustomersPage() {
     currency: string;
     status: string;
     created_at: string;
+    shipping_info?: { exchangeRate?: number };
   }
 
   const customers = (profiles || []).map((profile: Profile) => {
     const customerOrders = (allOrders || []).filter(
       (o: Order) => o.email === profile.email
     );
-    const totalSpent = customerOrders
+    // Convert all orders to GBP equivalent for consistent admin display
+    const totalSpentGbp = customerOrders
       .filter((o: Order) => ["paid", "processing", "shipped", "delivered"].includes(o.status))
-      .reduce((sum: number, o: Order) => sum + Number(o.total_amount || 0), 0);
+      .reduce((sum: number, o: Order) => sum + orderToGbp(Number(o.total_amount || 0), o.currency, o.shipping_info), 0);
     const lastOrder = customerOrders.length > 0 ? customerOrders[0] : null;
 
     return {
       ...profile,
       orderCount: customerOrders.length,
-      totalSpent,
+      totalSpent: totalSpentGbp,
       lastOrderDate: lastOrder?.created_at || null,
-      lastOrderCurrency: lastOrder?.currency || 'GBP',
     };
   });
 
@@ -76,7 +84,6 @@ export default async function AdminCustomersPage() {
     orderCount: number;
     totalSpent: number;
     lastOrderDate: string | null;
-    lastOrderCurrency: string;
   }
 
   const totalCustomers = customers.length;
@@ -206,7 +213,7 @@ export default async function AdminCustomersPage() {
                     {/* Total Spent */}
                     <td className="px-6 md:px-8 py-5">
                       <span className={`text-[12px] font-bold tracking-tighter ${customer.totalSpent > 0 ? "text-[#D5A754]" : "text-zinc-600"}`}>
-                        {customer.lastOrderCurrency === 'NGN' ? '₦' : '£'}{customer.totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        £{customer.totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </td>
 
@@ -259,7 +266,7 @@ export default async function AdminCustomersPage() {
                 <span className="text-emerald-400">{customersWithOrders}</span> active buyers
               </p>
               <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
-                <span className="text-[#D5A754]">£{totalLifetimeValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> lifetime value
+                <span className="text-[#D5A754]">£{totalLifetimeValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> lifetime value (GBP equiv.)
               </p>
             </div>
           </div>
