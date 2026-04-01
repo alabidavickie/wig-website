@@ -202,8 +202,11 @@ export async function POST(req: Request) {
         await incrementDiscountUsage(validatedDiscount.id);
       }
     } catch (orderError: any) {
-      console.warn("[STRIPE_ORDER_SAVE_WARNING] Order save failed but session was created:", orderError.message);
-      // Don't block the payment — the webhook will handle order reconciliation
+      console.error("[STRIPE_ORDER_SAVE_ERROR] Order save failed:", orderError.message);
+      return NextResponse.json(
+        { message: "Failed to create order. Please try again or contact support." },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ url: session.url });
