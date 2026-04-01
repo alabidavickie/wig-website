@@ -7,8 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 const secret = process.env.PAYSTACK_SECRET_KEY!;
 
-// In-process deduplication: prevents double inventory deduction from Paystack retries
-const processedReferences = new Set<string>();
+
 
 export async function POST(req: Request) {
   try {
@@ -27,15 +26,23 @@ export async function POST(req: Request) {
     if (event.event === "charge.success") {
       const reference = event.data.reference;
 
-      // Idempotency: skip if this reference was already processed in-memory
-      if (processedReferences.has(reference)) {
-        console.log(`[PAYSTACK_WEBHOOK] Skipping duplicate reference ${reference}`);
-        return new NextResponse("Already processed", { status: 200 });
+      // Idempotency: skip if this event/reference was already processed
+      const adminClient = createAdminClient();
+      const dedupId = event.data.id ? `paystack_${event.data.id}` : `paystack_ref_${reference}`;
+
+      const { error: insertError } = await adminClient
+        .from("processed_webhook_events")
+        .insert({ id: dedupId, provider: "paystack" });
+
+      if (insertError) {
+        if (insertError.code === "23505" || insertError.message.includes("duplicate key")) {
+          console.log(`[PAYSTACK_WEBHOOK] Skipping duplicate event ${dedupId}`);
+          return new NextResponse("Already processed", { status: 200 });
+        }
+        console.error(`[PAYSTACK_WEBHOOK] Failed to record webhook event:`, insertError);
       }
-      processedReferences.add(reference);
 
       // Idempotency: skip if order is already paid in DB
-      const adminClient = createAdminClient();
       const { data: existingOrder } = await adminClient
         .from("orders")
         .select("status")

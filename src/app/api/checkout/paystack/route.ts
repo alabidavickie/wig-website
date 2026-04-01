@@ -3,6 +3,8 @@ import { z } from "zod";
 import { createOrder, OrderInput } from "@/lib/actions/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { validateDiscountCode, incrementDiscountUsage } from "@/lib/actions/discounts";
+import { rateLimiters, getClientIp } from "@/lib/rate-limit";
+import { isDisposableEmail } from "@/lib/disposable-domains";
 
 export async function POST(req: Request) {
   try {
@@ -18,6 +20,13 @@ export async function POST(req: Request) {
     const supabase = await (await import("@/lib/supabase/server")).createClient();
     const adminClient = createAdminClient();
     const { data: { user } } = await supabase.auth.getUser();
+
+    // 1. Rate Limiting
+    const ip = await getClientIp();
+    const { success: rateLimitSuccess } = await rateLimiters.checkout.limit(ip);
+    if (!rateLimitSuccess) {
+      return NextResponse.json({ message: "Too many requests. Please try again later." }, { status: 429 });
+    }
 
     const body = await req.json();
 
@@ -42,6 +51,7 @@ export async function POST(req: Request) {
       currency: z.string().optional(),
       discountCode: z.string().nullable().optional(),
       discountAmount: z.number().min(0).optional(),
+      recaptchaToken: z.string().optional(),
     });
 
     const validatedData = checkoutSchema.safeParse(body);
@@ -52,36 +62,58 @@ export async function POST(req: Request) {
       );
     }
 
-    const { items, shippingDetails, discountCode } = validatedData.data;
+    const { items, shippingDetails, discountCode, recaptchaToken } = validatedData.data;
+
+    // 2. Disposable Email Check
+    const targetEmail = user?.email || shippingDetails.email;
+    if (isDisposableEmail(targetEmail)) {
+      return NextResponse.json({ message: "Please provide a valid, non-disposable email address." }, { status: 400 });
+    }
+
+    // 3. reCAPTCHA v3 Verification
+    if (!recaptchaToken) {
+      return NextResponse.json({ message: "reCAPTCHA verification missing." }, { status: 400 });
+    }
+    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
+    if (recaptchaSecret) {
+      const recaptchaRes = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${recaptchaSecret}&response=${recaptchaToken}`
+      });
+      const recaptchaData = await recaptchaRes.json();
+      if (!recaptchaData.success || recaptchaData.score < 0.5) {
+        console.error("[PAYSTACK_CHECKOUT] reCAPTCHA failed", recaptchaData);
+        return NextResponse.json({ message: "Automated bot request detected." }, { status: 403 });
+      }
+    }
 
     // Fetch products from database to get authentic prices
-    // Filter out mock IDs for DB lookup (they won't exist in Supabase)
-    const realIds = items.filter(i => !i.id.startsWith("mock-")).map(i => i.id);
+    const itemIds = items.map(i => i.id);
     let dbProducts: any[] = [];
 
-    if (realIds.length > 0) {
+    if (itemIds.length > 0) {
       const { data, error } = await adminClient
         .from("products")
         .select()
-        .in("id", realIds);
+        .in("id", itemIds);
 
       if (!error && data) {
         dbProducts = data;
       }
     }
 
-    // Reject any real-ID items not found in the database (prevents price manipulation)
-    const missingRealProducts = realIds.filter(id => !dbProducts.find((p: any) => p.id === id));
-    if (missingRealProducts.length > 0) {
-      console.error("[PAYSTACK_CHECKOUT] Unknown product IDs:", missingRealProducts);
+    // Reject any items not found in the database (prevents price manipulation)
+    const missingProducts = itemIds.filter(id => !dbProducts.find((p: any) => p.id === id));
+    if (missingProducts.length > 0) {
+      console.error("[PAYSTACK_CHECKOUT] Unknown product IDs:", missingProducts);
       return NextResponse.json({ message: "One or more products could not be verified." }, { status: 400 });
     }
 
-    // Calculate total amount in GBP (base) — always use DB price for real products
+    // Calculate total amount in GBP (base) — always use authentic DB price
     const base_total = items.reduce((acc: number, item: any) => {
       const dbProduct = dbProducts.find((p: any) => p.id === item.id);
-      const unitPrice = dbProduct ? dbProduct.base_price : (item.price || 0); // mock items use client price
-      return acc + (unitPrice * item.quantity);
+      return acc + (dbProduct.base_price * item.quantity);
     }, 0);
 
     if (base_total <= 0) {
@@ -109,7 +141,13 @@ export async function POST(req: Request) {
       const rateRes = await fetch("https://open.er-api.com/v6/latest/GBP", { next: { revalidate: 3600 } });
       const rateData = await rateRes.json();
       if (rateData?.rates?.NGN) {
-        rate = rateData.rates.NGN;
+        const fetchedRate = rateData.rates.NGN;
+        // Sanity Check Bounds (1 GBP = 1000 to 5000 NGN)
+        if (fetchedRate > 1000 && fetchedRate < 5000) {
+          rate = fetchedRate;
+        } else {
+          console.warn("[PAYSTACK_API] Rate out of bounds:", fetchedRate);
+        }
       }
     } catch (e) {
       console.warn("[PAYSTACK_API] Rate fetch failed, using fallback:", e);
@@ -148,7 +186,7 @@ export async function POST(req: Request) {
           product_id: i.id,
           product_name: i.name,
           quantity: i.quantity,
-          unit_price: dbProduct?.base_price || i.price || 0,
+          unit_price: dbProduct.base_price,
           image_url: i.image,
           attributes: i.variant
         };
@@ -190,9 +228,6 @@ export async function POST(req: Request) {
     // Save Pending Order to Database only after successful initialization
     try {
       await createOrder(orderInput);
-      if (validatedDiscount) {
-        await incrementDiscountUsage(validatedDiscount.id);
-      }
     } catch (orderError: any) {
       console.error("[PAYSTACK_ORDER_SAVE_ERROR] Order save failed:", orderError.message);
       return NextResponse.json(

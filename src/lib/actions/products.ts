@@ -279,6 +279,8 @@ export async function createProduct(formData: CreateProductInput) {
     console.warn("Failed to notify users about new product:", notifyError);
   }
 
+  await logAdminAction("create_product", "product", product.id, { name: product.name, slug: product.slug });
+
   return product;
 }
 
@@ -364,6 +366,8 @@ export async function updateProduct(id: string, formData: Partial<CreateProductI
   revalidatePath("/shop");
   revalidatePath("/admin/products");
   revalidatePath(`/shop/${formData.slug || id}`);
+
+  await logAdminAction("update_product", "product", id, { name: formData.name, slug: formData.slug });
 }
 
 export async function deleteProduct(id: string) {
@@ -381,6 +385,7 @@ export async function deleteCategory(id: string) {
   const supabase = createAdminClient();
   const { error } = await supabase.from("categories").delete().eq("id", id);
   if (error) throw new Error(`Failed to delete category: ${error.message}`);
+  await logAdminAction("delete_category", "category", id, { category_id: id });
   revalidatePath("/admin/categories");
   revalidatePath("/admin/products");
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { logAdminAction } from "@/lib/actions/audit";
 
 export interface StoreSettings {
   shipping_fee_gbp: number;
@@ -54,5 +55,6 @@ export async function updateStoreSettings(newSettings: Partial<StoreSettings>) {
 
   revalidatePath("/admin/settings");
   revalidatePath("/checkout");
+  await logAdminAction("update_settings", "store_settings", "global", newSettings);
   return { success: true };
 }

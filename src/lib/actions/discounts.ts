@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
+import { logAdminAction } from "@/lib/actions/audit";
 
 export type DiscountType = "percentage" | "flat";
 
@@ -153,6 +154,7 @@ export async function createDiscountCode(input: {
     throw new Error("Failed to create discount code.");
   }
 
+  await logAdminAction("create_discount", "discount_code", input.code, { code: input.code, type: input.type, value: input.value });
   revalidatePath("/admin/discounts");
 }
 
@@ -168,6 +170,7 @@ export async function toggleDiscountCode(id: string, is_active: boolean) {
     .eq("id", id);
 
   if (error) throw new Error("Failed to update discount code.");
+  await logAdminAction(is_active ? "activate_discount" : "deactivate_discount", "discount_code", id, { id, is_active });
   revalidatePath("/admin/discounts");
 }
 
@@ -179,5 +182,6 @@ export async function deleteDiscountCode(id: string) {
   const adminClient = createAdminClient();
   const { error } = await adminClient.from("discount_codes").delete().eq("id", id);
   if (error) throw new Error("Failed to delete discount code.");
+  await logAdminAction("delete_discount", "discount_code", id, { id });
   revalidatePath("/admin/discounts");
 }

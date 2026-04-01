@@ -3,11 +3,20 @@ import Stripe from "stripe";
 import { updateOrderStatus } from "@/lib/actions/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+import { rateLimiters, getClientIp } from "@/lib/rate-limit";
+
 // In-process deduplication for the verify endpoint — prevents duplicate email/notification
 // firing when the success page is refreshed multiple times before webhook processes.
 const verifiedReferences = new Set<string>();
 
 export async function GET(req: Request) {
+  // Rate limiting
+  const ip = await getClientIp();
+  const { success: rateLimitSuccess } = await rateLimiters.verify.limit(ip);
+  if (!rateLimitSuccess) {
+    return NextResponse.json({ verified: false, error: "Too many requests. Please try again later." }, { status: 429 });
+  }
+
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get("session_id");
   const reference = searchParams.get("reference");

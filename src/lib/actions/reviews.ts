@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
+import { logAdminAction } from "@/lib/actions/audit";
 
 export interface Review {
   id: string;
@@ -233,6 +234,8 @@ export async function adminDeleteReview(reviewId: string) {
 
   const { error } = await adminClient.from("reviews").delete().eq("id", reviewId);
   if (error) throw new Error("Failed to delete review.");
+
+  await logAdminAction("admin_delete_review", "review", reviewId, { reviewId });
 
   revalidatePath("/admin/reviews");
   return { success: true };

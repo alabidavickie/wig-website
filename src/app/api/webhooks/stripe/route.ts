@@ -5,8 +5,6 @@ import { updateOrderStatus, deductInventoryForOrder, type OrderStatus } from "@/
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-// In-process deduplication: prevents double inventory deduction from Stripe retries
-const processedEvents = new Set<string>();
 
 export async function POST(req: Request) {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -37,12 +35,18 @@ export async function POST(req: Request) {
     // Shared admin client for all event handlers (bypasses RLS)
     const adminClient = createAdminClient();
 
-    // ─── Idempotency gate (in-memory) ───
-    if (processedEvents.has(event.id)) {
-      console.log(`[STRIPE_WEBHOOK] Skipping duplicate event ${event.id}`);
-      return new NextResponse("Already processed", { status: 200 });
+    // ─── Idempotency gate (DB) ───
+    const { error: insertError } = await adminClient
+      .from("processed_webhook_events")
+      .insert({ id: event.id, provider: "stripe" });
+
+    if (insertError) {
+      if (insertError.code === "23505" || insertError.message.includes("duplicate key")) {
+        console.log(`[STRIPE_WEBHOOK] Skipping duplicate event ${event.id}`);
+        return new NextResponse("Already processed", { status: 200 });
+      }
+      console.error(`[STRIPE_WEBHOOK] Failed to record webhook event:`, insertError);
     }
-    processedEvents.add(event.id);
 
     // ═══════════════════════════════════════════════════════════════
     // 1. checkout.session.completed

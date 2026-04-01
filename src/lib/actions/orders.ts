@@ -257,6 +257,8 @@ export async function adminUpdateOrderStatus(orderId: string, status: OrderStatu
     }
   }
 
+  await logAdminAction("update_order_status", "order", orderId, { orderId, status, email: order.email });
+
   revalidatePath("/dashboard/orders");
   revalidatePath("/admin/orders");
   return order;
@@ -409,7 +411,7 @@ export async function getOrdersByEmail(email: string) {
 /**
  * Fetches a single order by ID.
  */
-export async function getOrderById(id: string) {
+export async function getOrderById(id: string, guestEmail?: string) {
   if (!id) return null;
   const supabase = await createClient();
 
@@ -431,7 +433,13 @@ export async function getOrderById(id: string) {
   const isOwner = user && order.user_id === user.id;
   const isGuestOrder = order.is_guest === true;
   
-  if (isOwner || isGuestOrder) return order;
+  if (isOwner) return order;
+
+  if (isGuestOrder) {
+    if (guestEmail && order.email && order.email.toLowerCase() === guestEmail.toLowerCase()) {
+      return order;
+    }
+  }
 
   // Final check for admin
   if (user) {
@@ -473,6 +481,8 @@ export async function updateOrderTracking(orderId: string, trackingInfo: { track
 
   if (error) throw new Error("Failed to update tracking");
   
+  await logAdminAction("update_tracking", "order", orderId, { tracking_number: trackingInfo.tracking_number, tracking_url: trackingInfo.tracking_url });
+
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);
   return data;
@@ -502,13 +512,23 @@ export async function deductInventoryForOrder(orderId: string) {
     // Find matching variant(s) for this product
     const { data: variants } = await adminClient
       .from("product_variants")
-      .select("id, inventory_count")
+      .select("id, inventory_count, attributes")
       .eq("product_id", item.product_id)
-      .gt("inventory_count", 0)
-      .limit(1);
+      .gt("inventory_count", 0);
 
     if (variants && variants.length > 0) {
-      const variant = variants[0];
+      let variant = variants[0];
+      
+      // Attempt to match exactly on attributes if they were saved
+      if (item.attributes && Object.keys(item.attributes).length > 0) {
+        const itemAttrs = item.attributes as Record<string, any>;
+        const matchedVariant = variants.find(v => {
+          if (!v.attributes) return false;
+          // Ensure all selected attributes match what's in the DB variant
+          return Object.entries(itemAttrs).every(([key, value]) => v.attributes[key] === value);
+        });
+        if (matchedVariant) variant = matchedVariant;
+      }
       const newCount = Math.max(0, (variant.inventory_count ?? 0) - item.quantity);
       await adminClient
         .from("product_variants")
@@ -530,8 +550,43 @@ export async function processRefund(orderId: string, amount: number) {
 
   const supabase = createAdminClient();
 
-  // In a real app, call Stripe or Paystack API here
-  
+  const { data: existingOrder, error: orderError } = await supabase.from("orders").select("*").eq("id", orderId).single();
+  if (orderError || !existingOrder) throw new Error("Order not found for refund");
+
+  if (existingOrder.payment_provider === "stripe") {
+    const { stripe } = await import("@/lib/stripe");
+    try {
+      const session = await stripe.checkout.sessions.retrieve(existingOrder.payment_reference);
+      if (session.payment_intent) {
+         await stripe.refunds.create({
+           payment_intent: session.payment_intent as string,
+           amount: Math.round(amount * 100)
+         });
+      }
+    } catch (e: any) {
+      console.error("Stripe refund failed:", e);
+      throw new Error(`Stripe refund failed: ${e.message}`);
+    }
+  } else if (existingOrder.payment_provider === "paystack") {
+    const paystackKey = process.env.PAYSTACK_SECRET_KEY;
+    const response = await fetch("https://api.paystack.co/refund", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${paystackKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        transaction: existingOrder.payment_reference,
+        amount: Math.round(amount * 100) // Paystack API expects Kobo
+      })
+    });
+    const result = await response.json();
+    if (!result.status) {
+      console.error("Paystack refund failed:", result);
+      throw new Error(`Paystack refund failed: ${result.message}`);
+    }
+  }
+
   const { data, error } = await supabase
     .from("orders")
     .update({ 

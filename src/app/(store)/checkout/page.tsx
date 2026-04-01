@@ -12,6 +12,7 @@ import { Price } from "@/components/storefront/price";
 import { toast } from "sonner";
 import { validateDiscountCode } from "@/lib/actions/discounts";
 import { getStoreSettings } from "@/lib/actions/settings";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function CheckoutPage() {
   const [mounted, setMounted] = useState(false);
@@ -34,6 +35,7 @@ export default function CheckoutPage() {
 
   const { items, getTotalPrice, clearCart } = useCartStore();
   const router = useRouter();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   useEffect(() => {
     setMounted(true);
@@ -156,6 +158,14 @@ export default function CheckoutPage() {
     setSubmitting(true);
     
     try {
+      if (!executeRecaptcha) {
+        toast.error("Security verification not ready. Please wait.");
+        setSubmitting(false);
+        return;
+      }
+
+      const recaptchaToken = await executeRecaptcha("checkout");
+
       const endpoint = provider === 'stripe' ? '/api/checkout/stripe' : '/api/checkout/paystack';
       
       const response = await fetch(endpoint, {
@@ -167,6 +177,7 @@ export default function CheckoutPage() {
           currency: geo.currency,
           discountCode: appliedDiscount?.code ?? null,
           discountAmount: discountAmountGbp,
+          recaptchaToken,
         }),
       });
 

@@ -19,6 +19,7 @@ import {
   Percent,
   Star
 } from "lucide-react";
+import { AdminSessionTimeout } from "@/components/admin/AdminSessionTimeout";
 
 export default function AdminLayout({
   children,
@@ -105,6 +106,7 @@ export default function AdminLayout({
 
   return (
     <div className="flex min-h-screen bg-background text-foreground font-sans">
+      <AdminSessionTimeout />
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex w-64 bg-card border-r border-border flex-col sticky top-0 h-screen">
         {sidebarContent}

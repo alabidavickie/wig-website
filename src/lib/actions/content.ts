@@ -3,6 +3,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { logAdminAction } from "@/lib/actions/audit";
 
 export interface SiteContent {
   slug: string;
@@ -62,6 +63,8 @@ export async function upsertSiteContent(slug: string, content: string, title?: s
     );
 
   if (error) throw new Error(`Failed to save content: ${error.message}`);
+
+  await logAdminAction("update_content", "site_content", slug, { slug, title: title ?? slug });
 
   // Revalidate storefront pages that use this content
   revalidatePath("/faq");
