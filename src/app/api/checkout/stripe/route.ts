@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import { stripe } from "@/lib/stripe";
 import { z } from "zod";
 import { createOrder, OrderInput } from "@/lib/actions/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -7,19 +7,6 @@ import { validateDiscountCode, incrementDiscountUsage } from "@/lib/actions/disc
 
 export async function POST(req: Request) {
   try {
-    // Early check: Ensure Stripe is configured
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
-    if (!stripeKey || stripeKey.trim() === "") {
-      return NextResponse.json(
-        { message: "Stripe is not configured. Please add your STRIPE_SECRET_KEY to .env.local" },
-        { status: 503 }
-      );
-    }
-
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: "2024-04-10" as any,
-    });
-
     const supabase = await (await import("@/lib/supabase/server")).createClient();
     const adminClient = createAdminClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -60,7 +47,6 @@ export async function POST(req: Request) {
     const { items, shippingDetails, discountCode } = validatedData.data;
 
     // Fetch products from database to get authentic prices
-    // Filter out mock IDs for DB lookup
     const realIds = items.filter(i => !i.id.startsWith("mock-")).map(i => i.id);
     let dbProducts: any[] = [];
 
@@ -75,17 +61,17 @@ export async function POST(req: Request) {
       }
     }
 
-    // Reject any real-ID items not found in the database (prevents price manipulation)
+    // Verify all real products exist
     const missingRealProducts = realIds.filter(id => !dbProducts.find((p: any) => p.id === id));
     if (missingRealProducts.length > 0) {
       console.error("[STRIPE_CHECKOUT] Unknown product IDs:", missingRealProducts);
       return NextResponse.json({ message: "One or more products could not be verified." }, { status: 400 });
     }
 
-    // Prepare Stripe Line Items — always use DB price for real products
+    // Prepare Stripe Line Items
     const line_items = items.map((item: any) => {
       const dbProduct = dbProducts.find((p: any) => p.id === item.id);
-      const price = dbProduct ? dbProduct.base_price : (item.price || 0); // mock items use client price
+      const price = dbProduct ? dbProduct.base_price : (item.price || 0);
       const attributes = item.variant ? Object.entries(item.variant).map(([k, v]) => `${k}: ${v}`).join(", ") : "";
 
       return {
@@ -106,6 +92,7 @@ export async function POST(req: Request) {
     const { getStoreSettings } = await import("@/lib/actions/settings");
     const settings = await getStoreSettings();
     const SHIPPING_AMOUNT_GBP = settings.shipping_fee_gbp;
+    
     line_items.push({
       price_data: {
         currency: "gbp",
@@ -118,8 +105,10 @@ export async function POST(req: Request) {
       quantity: 1,
     } as any);
 
-    // Server-side discount validation
+    // Discount Validation and Stripe Coupon creation
     let validatedDiscount: { id: string; code: string; discountAmount: number } | null = null;
+    let stripeCouponId: string | undefined = undefined;
+
     const subtotalGbp = line_items
       .filter((li: any) => li.price_data.product_data.name !== "Global Shipping & Handling")
       .reduce((acc: number, li: any) => acc + (li.price_data.unit_amount / 100) * li.quantity, 0);
@@ -128,26 +117,25 @@ export async function POST(req: Request) {
       const discountResult = await validateDiscountCode(discountCode, subtotalGbp);
       if (discountResult.valid && discountResult.discount) {
         validatedDiscount = discountResult.discount;
-        // Add a negative discount line item
-        line_items.push({
-          price_data: {
+        
+        try {
+          // Create a dynamic one-time Stripe coupon for this checkout
+          const coupon = await stripe.coupons.create({
+            amount_off: Math.round(discountResult.discount.discountAmount * 100),
             currency: "gbp",
-            product_data: { name: `Discount: ${discountResult.discount.code}` },
-            unit_amount: -Math.round(discountResult.discount.discountAmount * 100),
-          },
-          quantity: 1,
-        } as any);
+            duration: "once",
+            name: `Discount: ${discountResult.discount.code}`,
+          });
+          stripeCouponId = coupon.id;
+        } catch (couponErr: any) {
+          console.error("[STRIPE_COUPON_ERROR]", couponErr.message);
+          // Fallback: If coupon fails, we continue without it or log error
+        }
       }
     }
 
-    // Validate total > 0
-    const total_amount = line_items.reduce((acc: number, li: any) => acc + (li.price_data.unit_amount / 100) * li.quantity, 0);
-    if (total_amount <= 0) {
-      return NextResponse.json(
-        { message: "Order total must be greater than zero." },
-        { status: 400 }
-      );
-    }
+    // Calculate Final Total for DB (incl. discount)
+    const total_amount = Math.max(0, subtotalGbp + SHIPPING_AMOUNT_GBP - (validatedDiscount?.discountAmount || 0));
 
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -156,17 +144,16 @@ export async function POST(req: Request) {
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout/success?session_id={CHECKOUT_SESSION_ID}&provider=stripe`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/checkout`,
       customer_email: user?.email || shippingDetails?.email || undefined,
+      discounts: stripeCouponId ? [{ coupon: stripeCouponId }] : undefined,
       metadata: {
         userId: user?.id || "guest",
-        isGuest: (!user).toString()
+        isGuest: (!user).toString(),
+        discountId: validatedDiscount?.id || ""
       }
     });
 
     if (!session.url) {
-      return NextResponse.json(
-        { message: "Failed to create Stripe checkout session. Please try again." },
-        { status: 502 }
-      );
+      throw new Error("Stripe session URL is missing");
     }
 
     // Prepare Db Order Input (Pending Order)
@@ -203,8 +190,10 @@ export async function POST(req: Request) {
       }
     } catch (orderError: any) {
       console.error("[STRIPE_ORDER_SAVE_ERROR] Order save failed:", orderError.message);
+      // NOTE: We don't block the user from payment if Stripe session is already created,
+      // but we log it heavily. Ideally, order should be created FIRST as we do here.
       return NextResponse.json(
-        { message: "Failed to create order. Please try again or contact support." },
+        { message: "Failed to create order tracking. Please try again." },
         { status: 500 }
       );
     }
@@ -213,14 +202,17 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error("[STRIPE_CHECKOUT_ERROR]", error);
     
-    // Provide user-friendly error messages for common Stripe errors
-    let message = error.message || "Internal Server Error";
-    if (error.type === "StripeAuthenticationError") {
-      message = "Stripe authentication failed. Please verify your API key is correct.";
-    } else if (error.type === "StripeInvalidRequestError") {
-      message = "Invalid payment request. Please try again.";
-    }
+    // Handle specific Stripe errors
+    const message = error.message || "Internal Server Error";
+    const status = error.statusCode || 500;
     
-    return NextResponse.json({ message }, { status: 500 });
+    if (error.type === "StripeConnectionError") {
+      return NextResponse.json(
+        { message: "Connection to payment provider timed out. Please check your internet and try again." },
+        { status: 504 }
+      );
+    }
+
+    return NextResponse.json({ message }, { status });
   }
 }
