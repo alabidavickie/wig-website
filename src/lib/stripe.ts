@@ -15,8 +15,7 @@ if (!stripeKey) {
 export const stripe = new Stripe(stripeKey || "", {
   apiVersion: "2024-04-10" as any,
   maxNetworkRetries: 3,
-  timeout: 30000, // 30 seconds
-  httpClient: Stripe.createNodeHttpClient(), // Ensure native Node client is used
+  timeout: 60000, // 60 seconds (extended for slow connections)
 });
 
 export default stripe;
