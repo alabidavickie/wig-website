@@ -109,7 +109,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
               <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#D5A754]">Ordered Items</h2>
             </div>
             <div className="divide-y divide-border">
-              {order.order_items?.map((item) => {
+              {order.order_items?.map((item: any) => {
                 const hasReview = reviewedProductIds.has(item.product_id);
                 const itemReview = reviews.find((r) => r.product_id === item.product_id);
 
@@ -262,7 +262,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 <span className="font-bold">
                   {currencySymbol}
                   {order.order_items
-                    ? order.order_items.reduce((acc, item) => acc + item.unit_price * item.quantity, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })
+                    ? order.order_items.reduce((acc: number, item: any) => acc + item.unit_price * item.quantity, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })
                     : "—"}
                 </span>
               </div>

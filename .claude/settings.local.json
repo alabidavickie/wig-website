@@ -8,7 +8,10 @@
       "Bash(xargs grep:*)",
       "Bash(cat \"/c/Users/new/OneDrive/Desktop/fullstack-client-dashboard/src/app/\\(store\\)/checkout/page.tsx\")",
       "Bash(cat \"/c/Users/new/OneDrive/Desktop/fullstack-client-dashboard/src/app/\\(store\\)/checkout/success/page.tsx\")",
-      "Bash(find c:UsersnewOneDriveDesktopfullstack-client-dashboard -name .env* -o -name *.env)"
+      "Bash(find c:UsersnewOneDriveDesktopfullstack-client-dashboard -name .env* -o -name *.env)",
+      "Bash(find /c/Users/new/OneDrive/Desktop/fullstack-client-dashboard/src/app -type d -name *store* -o -name *checkout* -o -name *shop*)",
+      "Bash(ls -la \"/c/Users/new/OneDrive/Desktop/fullstack-client-dashboard/src/app/\\(store\\)/checkout/\")",
+      "Bash(grep -h \"\\\\[ERROR\\\\]\\\\|\\\\[WARN\\\\]\" C:/Users/new/.claude/debug/*.txt)"
     ]
   }
 }

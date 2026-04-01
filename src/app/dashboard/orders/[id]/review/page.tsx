@@ -23,7 +23,7 @@ export default async function ReviewPage({ params, searchParams }: PageProps) {
   if (!productId || !productName) redirect(`/dashboard/orders/${orderId}`);
 
   // Verify the product is actually in this order
-  const item = order.order_items?.find((i) => i.product_id === productId);
+  const item = order.order_items?.find((i: any) => i.product_id === productId);
   if (!item) redirect(`/dashboard/orders/${orderId}`);
 
   return (
