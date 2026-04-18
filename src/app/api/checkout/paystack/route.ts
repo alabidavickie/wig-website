@@ -41,12 +41,12 @@ export async function POST(req: Request) {
         variant: z.record(z.string(), z.string()).optional()
       })),
       shippingDetails: z.object({
-        email: z.string().email(),
-        firstName: z.string().min(1),
-        lastName: z.string().min(1),
-        address: z.string().min(5),
-        city: z.string().min(2),
-        zip: z.string().default("")
+        email: z.email().max(255),
+        firstName: z.string().min(1).max(50),
+        lastName: z.string().min(1).max(50),
+        address: z.string().min(5).max(200),
+        city: z.string().min(2).max(100),
+        zip: z.string().max(20).default("")
       }),
       currency: z.string().optional(),
       discountCode: z.string().nullable().optional(),
@@ -75,17 +75,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "reCAPTCHA verification missing." }, { status: 400 });
     }
     const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
-    if (recaptchaSecret) {
-      const recaptchaRes = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `secret=${recaptchaSecret}&response=${recaptchaToken}`
-      });
-      const recaptchaData = await recaptchaRes.json();
-      if (!recaptchaData.success || recaptchaData.score < 0.5) {
-        console.error("[PAYSTACK_CHECKOUT] reCAPTCHA failed", recaptchaData);
-        return NextResponse.json({ message: "Automated bot request detected." }, { status: 403 });
-      }
+    if (!recaptchaSecret) {
+      return NextResponse.json({ message: "Service unavailable. Please try again later." }, { status: 503 });
+    }
+    const recaptchaRes = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${recaptchaSecret}&response=${recaptchaToken}`
+    });
+    const recaptchaData = await recaptchaRes.json();
+    if (!recaptchaData.success || recaptchaData.score < 0.5) {
+      console.error("[PAYSTACK_CHECKOUT] reCAPTCHA failed", recaptchaData);
+      return NextResponse.json({ message: "Automated bot request detected." }, { status: 403 });
     }
 
     // Fetch products from database to get authentic prices
@@ -236,9 +237,16 @@ export async function POST(req: Request) {
       );
     }
 
+    // Track discount usage after order is successfully created
+    if (validatedDiscount) {
+      await incrementDiscountUsage(validatedDiscount.id).catch((e) =>
+        console.error("[PAYSTACK_DISCOUNT_USAGE_ERROR]", e)
+      );
+    }
+
     return NextResponse.json({ url: data.data.authorization_url });
   } catch (error: any) {
     console.error("[PAYSTACK_CHECKOUT_ERROR]", error);
-    return NextResponse.json({ message: error.message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ message: "Payment initialisation failed. Please try again." }, { status: 500 });
   }
 }

@@ -33,12 +33,12 @@ export async function POST(req: Request) {
         variant: z.record(z.string(), z.string()).optional()
       })),
       shippingDetails: z.object({
-        email: z.string().email(),
-        firstName: z.string().min(1),
-        lastName: z.string().min(1),
-        address: z.string().min(5),
-        city: z.string().min(2),
-        zip: z.string().default("")
+        email: z.email().max(255),
+        firstName: z.string().min(1).max(50),
+        lastName: z.string().min(1).max(50),
+        address: z.string().min(5).max(200),
+        city: z.string().min(2).max(100),
+        zip: z.string().max(20).default("")
       }),
       currency: z.string().optional(),
       discountCode: z.string().nullable().optional(),
@@ -67,17 +67,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "reCAPTCHA verification missing." }, { status: 400 });
     }
     const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
-    if (recaptchaSecret) {
-      const recaptchaRes = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `secret=${recaptchaSecret}&response=${recaptchaToken}`
-      });
-      const recaptchaData = await recaptchaRes.json();
-      if (!recaptchaData.success || recaptchaData.score < 0.5) {
-        console.error("[STRIPE_CHECKOUT] reCAPTCHA failed", recaptchaData);
-        return NextResponse.json({ message: "Automated bot request detected." }, { status: 403 });
-      }
+    if (!recaptchaSecret) {
+      return NextResponse.json({ message: "Service unavailable. Please try again later." }, { status: 503 });
+    }
+    const recaptchaRes = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${recaptchaSecret}&response=${recaptchaToken}`
+    });
+    const recaptchaData = await recaptchaRes.json();
+    if (!recaptchaData.success || recaptchaData.score < 0.5) {
+      console.error("[STRIPE_CHECKOUT] reCAPTCHA failed", recaptchaData);
+      return NextResponse.json({ message: "Automated bot request detected." }, { status: 403 });
     }
 
     // Fetch products from database to get authentic prices
@@ -244,6 +245,10 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({ message }, { status });
+    if (error.type === "StripeInvalidRequestError") {
+      return NextResponse.json({ message: "Invalid payment request. Please try again." }, { status: 400 });
+    }
+
+    return NextResponse.json({ message: "Payment initialisation failed. Please try again." }, { status: 500 });
   }
 }

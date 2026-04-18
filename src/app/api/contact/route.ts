@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { rateLimiters, getClientIp } from "@/lib/rate-limit";
 
 const contactSchema = z.object({
   firstName: z.string().min(1, "First name is required").max(50, "First name too long"),
@@ -9,28 +10,11 @@ const contactSchema = z.object({
   message: z.string().min(5, "Message too short").max(5000, "Message too long"),
 });
 
-// Simple in-memory rate limiting: max 5 submissions per IP per 10 minutes
-const ipSubmissions = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 5;
-const RATE_WINDOW_MS = 10 * 60 * 1000;
-
 export async function POST(req: NextRequest) {
-  // Purge expired entries lazily on each request to prevent memory leaks in serverless environments
-  const now = Date.now();
-  for (const [ip, record] of ipSubmissions.entries()) {
-    if (now >= record.resetAt) ipSubmissions.delete(ip);
-  }
-
-  // Rate limiting by IP
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const record = ipSubmissions.get(ip);
-  if (record && now < record.resetAt) {
-    if (record.count >= RATE_LIMIT) {
-      return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
-    }
-    record.count++;
-  } else {
-    ipSubmissions.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+  const ip = await getClientIp();
+  const { success: rateLimitSuccess } = await rateLimiters.contact.limit(ip);
+  if (!rateLimitSuccess) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
 
   try {

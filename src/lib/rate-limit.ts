@@ -19,6 +19,14 @@ export const rateLimiters = {
     analytics: true,
     prefix: "@upstash/ratelimit/verify",
   }),
+
+  // Contact form: 5 submissions per 10 minutes per IP
+  contact: new Ratelimit({
+    redis: kv,
+    limiter: Ratelimit.slidingWindow(5, "10 m"),
+    analytics: true,
+    prefix: "@upstash/ratelimit/contact",
+  }),
 };
 
 /**

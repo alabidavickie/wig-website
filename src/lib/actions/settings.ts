@@ -41,6 +41,14 @@ export async function getStoreSettings(): Promise<StoreSettings> {
 export async function updateStoreSettings(newSettings: Partial<StoreSettings>) {
   const { createAdminClient } = await import("@/lib/supabase/admin");
   const { revalidatePath } = await import("next/cache");
+
+  // Verify caller is an authenticated admin
+  const supabaseUser = await createClient();
+  const { data: { user } } = await supabaseUser.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+  const { data: profile } = await supabaseUser.from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") throw new Error("Unauthorized");
+
   const supabase = createAdminClient();
 
   const { error } = await supabase

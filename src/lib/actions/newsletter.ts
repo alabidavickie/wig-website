@@ -2,15 +2,23 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
+const emailSchema = z.email().max(255).toLowerCase();
 
 export async function subscribeToNewsletter(email: string) {
+  const parsed = emailSchema.safeParse(email);
+  if (!parsed.success) {
+    return { success: false, message: "Please provide a valid email address." };
+  }
+
   try {
     const supabase = await createClient();
 
     // Insert new subscriber or ignore if already subscribed
     const { error } = await supabase
       .from("newsletter_subscribers")
-      .insert({ email });
+      .insert({ email: parsed.data });
 
     if (error) {
       if (error.code === '23505') { 

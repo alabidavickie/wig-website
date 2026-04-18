@@ -136,9 +136,9 @@ CREATE POLICY "Users can see their own order items." ON public.order_items
     )
   );
 
--- Orders: Allow insert for any authenticated user or service role (for checkout)
+-- Orders: Users can only create orders for themselves (or guest orders with no user_id)
 CREATE POLICY "Allow authenticated users to create orders." ON public.orders
-  FOR INSERT WITH CHECK (true);
+  FOR INSERT WITH CHECK (user_id IS NULL OR auth.uid() = user_id);
 CREATE POLICY "Allow authenticated users to create order items." ON public.order_items
   FOR INSERT WITH CHECK (true);
 
@@ -198,3 +198,12 @@ CREATE TABLE IF NOT EXISTS public.admin_logs (
   details JSONB,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+ALTER TABLE public.admin_logs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Only admins can read audit logs." ON public.admin_logs
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
